@@ -1,5 +1,5 @@
 package Entities;
 
-public class Person {
+public class Person extends BaseEntity {
 
 }
