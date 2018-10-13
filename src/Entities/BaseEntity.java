@@ -1,6 +1,6 @@
 package Entities;
 
-public class BaseEntity implements Comparable {
+public class BaseEntity implements Comparable<Object>{
 	
 	private long id;
 	private int version;
