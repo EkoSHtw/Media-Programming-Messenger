@@ -20,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import de.sb.messenger.persistence.BaseEntity;
+import de.sb.messenger.persistence.Group;
 import de.sb.messenger.persistence.Message;
 import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.Copyright;
@@ -79,7 +80,7 @@ public class EntityService {
 	) {
 		final EntityManager messengerManager = RestJpaLifecycleProvider.entityManager("messenger");
 		final Person requester = messengerManager.find(Person.class, requesterIdentity);
-		if (requester == null || requester.getGroup() != ADMIN) throw new ClientErrorException(FORBIDDEN);
+		if (requester == null || requester.getGroup() != Group._ADMIN) throw new ClientErrorException(FORBIDDEN);
 
 		// TODO: check if getReference() works once https://bugs.eclipse.org/bugs/show_bug.cgi?id=460063 is fixed.
 		final BaseEntity entity = messengerManager.find(BaseEntity.class, entityIdentity);
