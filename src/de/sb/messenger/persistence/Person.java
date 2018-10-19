@@ -20,7 +20,6 @@ public class Person extends BaseEntity {
 	
 	private Address address;
 
-
 	public Name getName() {
 		return name;
 	}
