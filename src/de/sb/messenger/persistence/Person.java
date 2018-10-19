@@ -33,7 +33,7 @@ public class Person extends BaseEntity {
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = email.substring(0, 128);
 	}
 
 	public  byte[] getPasword() {
