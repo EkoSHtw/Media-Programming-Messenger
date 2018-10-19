@@ -1,4 +1,4 @@
-package de.sb.messenger.persistence;
+package entities;
 
 public class Address implements Comparable {
 	

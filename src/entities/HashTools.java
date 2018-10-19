@@ -1,4 +1,4 @@
-package de.sb.messenger.persistence;
+package entities;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
