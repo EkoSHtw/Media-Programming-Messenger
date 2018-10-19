@@ -6,6 +6,12 @@ public class Name implements Comparable {
 	private String given;
 	private String firstName;
 
+	
+
+	protected static void main(String[] arg) {
+		Name name = new Name();
+	}
+	
 	@Override
 	public int compareTo(Object o) {
 		// TODO Auto-generated method stub

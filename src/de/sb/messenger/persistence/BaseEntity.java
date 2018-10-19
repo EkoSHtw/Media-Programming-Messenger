@@ -6,7 +6,16 @@ public class BaseEntity implements Comparable<BaseEntity>{
 	private int version;
 	private long creationTimestamp;
 
+	
+	protected static void main(String[] arg) {
+		BaseEntity baseEntity = new BaseEntity();
+	}
 
+
+	@Override
+	public String toString() {
+		return "BaseEntity@" + identity ;
+	}
 
 
 	public long getCreationTimestamp() {

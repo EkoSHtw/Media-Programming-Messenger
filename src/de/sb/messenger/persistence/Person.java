@@ -1,10 +1,22 @@
 package de.sb.messenger.persistence;
 
+import java.util.List;
+
 public class Person extends BaseEntity {
 	
 	private Name name;
 	private String email;
 	private byte[] password;
+	private List<Documents> documents;
+	private List<Message> messages;
+	private Group group;
+	
+	
+
+	protected static void main(String[] arg) {
+		Person person = new Person();
+	}
+	
 	
 	private Address address;
 
