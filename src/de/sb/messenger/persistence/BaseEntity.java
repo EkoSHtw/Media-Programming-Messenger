@@ -14,7 +14,7 @@ public class BaseEntity implements Comparable<BaseEntity>{
 
 	@Override
 	public String toString() {
-		return "BaseEntity@" + identity ;
+		return  this.getClass().getSimpleName() +"@" + identity;
 	}
 
 
