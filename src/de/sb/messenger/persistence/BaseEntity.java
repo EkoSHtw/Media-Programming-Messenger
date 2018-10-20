@@ -8,7 +8,15 @@ public class BaseEntity implements Comparable<BaseEntity>{
 
 	
 	protected static void main(String[] arg) {
-		BaseEntity baseEntity = new BaseEntity();
+		BaseEntity baseEntity = new BaseEntity(12345, 1, System.currentTimeMillis());
+	}
+
+
+	public BaseEntity(long identity, int version, long creationTimestamp) {
+		super();
+		this.identity = identity;
+		this.version = version;
+		this.creationTimestamp = creationTimestamp;
 	}
 
 
