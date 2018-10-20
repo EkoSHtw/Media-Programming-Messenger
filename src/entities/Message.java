@@ -11,13 +11,13 @@ public class Message extends BaseEntity {
 	
 	
 	public Message(@Size(min = 1, max = 4093) String message, Person author) {
-		super(creationTimestamp, version, creationTimestamp);
+		//super(creationTimestamp, version, creationTimestamp);
 		this.message = message;
 		this.author = author;
 	}
 
 	protected static void main(String[] arg) {
-		Message message = new Message("test", new Person());
+		//Message message = new Message("test", new Person());
 	}
 
 	public String getMessage() {

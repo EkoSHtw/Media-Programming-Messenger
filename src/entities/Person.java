@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class Person extends BaseEntity {
@@ -11,13 +13,16 @@ public class Person extends BaseEntity {
 	private Name name;
 	
 
-	
+	@NotNull
+	@NotEmpty
 	@Size(min = 0, max = 128)
 	private String email;
 	
-
+	
+	@NotEmpty
+	@NotNull
 	@Size(min = 32, max = 32)
-	private byte password;
+	private byte[] password;
 	
 	private List<Documents> documents;
 	
@@ -55,13 +60,10 @@ public class Person extends BaseEntity {
 		this.email = email;
 	}
 
-	public  byte getPasword() {
-		return password;
-	}
 
-	public void setPasword( byte password) {
-		this.password = password;
-	}
+	public void setPassword( byte[] password) {
+		this.password = password;	
+		}
 
 	public Address getAddress() {
 		return address;
@@ -78,7 +80,7 @@ public class Person extends BaseEntity {
 
 
 	public Person(long identity, int version, long creationTimestamp, Name name, @Size(min = 0, max = 128) String email,
-			@Size(min = 32, max = 32) byte password, List<Documents> documents, List<Message> messages, Group group,
+			@Size(min = 32, max = 32) byte[] password, List<Documents> documents, List<Message> messages, Group group,
 			List<Person> peopleObserving, Address address) {
 		super(identity, version, creationTimestamp);
 		
@@ -98,6 +100,11 @@ public class Person extends BaseEntity {
 
 	public void addPeopleObserving(Person person) {
 		this.peopleObserving.add(person);
+	}
+
+	public byte[] getPasswordHash() {
+		// TODO Auto-generated method stub
+		return password;
 	}
 
 }
