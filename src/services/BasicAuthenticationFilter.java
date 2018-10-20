@@ -1,4 +1,4 @@
-package de.sb.messenger.rest;
+package services;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE;
@@ -14,12 +14,13 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-import de.sb.messenger.persistence.HashTools;
-import de.sb.messenger.persistence.Person;
+
 import de.sb.toolbox.Copyright;
 import de.sb.toolbox.net.HttpCredentials;
 import de.sb.toolbox.net.RestCredentials;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
+import entities.HashTools;
+import entities.Person;
 
 
 /**
