@@ -1,14 +1,24 @@
 package de.sb.messenger.persistence;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class Documents extends BaseEntity{
 	
+	@NotEmpty
+	@NotNull
 	@Size(min = 32, max = 32)
 	private byte contentHash;
 	
+		@NotNull
+	@NotEmpty
 	@Size(min = 1, max = 63)
 	private String contentType;
+
+	@NotNull
+	@NotEmpty
+	private String fileType;
 	
 	@Size(min = 1, max = 16777215)
 	private byte content;
@@ -24,9 +34,29 @@ public class Documents extends BaseEntity{
 		this.fileType = fileType;
 		this.owner = owner;
 	}
-
-	private String fileType;
 	
+
+	public byte getContentHash() {
+		return contentHash;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public byte getContent() {
+		return content;
+	}
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public Person getOwner() {
+		return owner;
+	}
+
+
 	private Person owner;
 	
 	

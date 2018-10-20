@@ -1,10 +1,23 @@
 package de.sb.messenger.persistence;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class BaseEntity implements Comparable<BaseEntity>{
 	
-	private long identity;
-	private int version;
-	private long creationTimestamp;
+	@NotEmpty
+	@NotNull
+	protected long identity;
+	
+
+	@NotEmpty
+	@NotNull
+	protected int version;
+	
+
+	@NotEmpty
+	@NotNull
+	protected long creationTimestamp;
 
 	
 	protected static void main(String[] arg) {

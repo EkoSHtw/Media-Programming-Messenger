@@ -96,8 +96,8 @@ public class Person extends BaseEntity {
 		return peopleObserving;
 	}
 
-	public void setPeopleObserving(List<Person> peopleObserving) {
-		this.peopleObserving = peopleObserving;
+	public void addPeopleObserving(Person person) {
+		this.peopleObserving.add(person);
 	}
 
 }

@@ -1,8 +1,11 @@
 package de.sb.messenger.persistence;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class Address implements Comparable {
+	
 	
 	@Size(min = 0, max = 63)
 	private String street;
@@ -18,7 +21,7 @@ public class Address implements Comparable {
 		this.city = city;
 	}
 
-
+	@NotEmpty
 	@Size(min = 1, max = 63)
 	private String city;
 

@@ -23,8 +23,8 @@ public class Message extends BaseEntity {
 	public String getMessage() {
 		return message;
 	}
-
-	public void setMessage(String message) {
-		this.message = message;
+	
+	public Person getPerson() {
+		return author;
 	}
 }
