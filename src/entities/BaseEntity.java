@@ -1,4 +1,4 @@
-package de.sb.messenger.persistence;
+package entities;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
