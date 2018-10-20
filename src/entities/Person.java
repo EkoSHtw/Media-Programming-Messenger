@@ -2,6 +2,7 @@ package entities;
 
 import java.util.List;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -15,6 +16,7 @@ public class Person extends BaseEntity {
 
 	@NotNull
 	@NotEmpty
+	@Email
 	@Size(min = 0, max = 128)
 	private String email;
 	
@@ -61,8 +63,8 @@ public class Person extends BaseEntity {
 	}
 
 
-	public void setPassword( byte[] password) {
-		this.password = password;	
+	public void setPassword( String password) {
+		this.password = HashTools.sha256HashCode(password);	
 		}
 
 	public Address getAddress() {
@@ -80,13 +82,13 @@ public class Person extends BaseEntity {
 
 
 	public Person(long identity, int version, long creationTimestamp, Name name, @Size(min = 0, max = 128) String email,
-			@Size(min = 32, max = 32) byte[] password, List<Documents> documents, List<Message> messages, Group group,
+			@Size(min = 32, max = 32) String password, List<Documents> documents, List<Message> messages, Group group,
 			List<Person> peopleObserving, Address address) {
 		super(identity, version, creationTimestamp);
 		
 		this.name = name;
 		this.email = email;
-		this.password = password;
+		this.password = HashTools.sha256HashCode(password);
 		this.documents = documents;
 		this.messages = messages;
 		this.group = group;
