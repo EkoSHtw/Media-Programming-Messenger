@@ -3,23 +3,22 @@ package entities;
 import java.util.List;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class Person extends BaseEntity {
 	
+	@NotNull
 	private Name name;
 	
-
 	@NotNull
-	@NotEmpty
+	private Address address;
+	
+	@NotNull
 	@Email
-	@Size(min = 0, max = 128)
+	@Size(min = 3, max = 128)
 	private String email;
 	
-	
-	@NotEmpty
 	@NotNull
 	@Size(min = 32, max = 32)
 	private byte[] password;
@@ -31,8 +30,6 @@ public class Person extends BaseEntity {
 	private Group group;
 	
 	private List<Person> peopleObserving;
-
-	private Address address;
 	
 	public enum Group{
 		_ADMIN,

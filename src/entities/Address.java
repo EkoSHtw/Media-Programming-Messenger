@@ -1,18 +1,19 @@
 package entities;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class Address implements Comparable {
 	
-	
-	@Size(min = 0, max = 63)
+	@NotNull
+	@Size(min = 1, max = 63)
 	private String street;
 	
-	@Size(min = 0, max = 15)
+	@NotNull
+	@Size(min = 1, max = 15)
 	private String postCode;
 	
-	@NotEmpty
+	@NotNull
 	@Size(min = 1, max = 63)
 	private String city;
 	

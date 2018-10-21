@@ -7,24 +7,21 @@ import javax.validation.constraints.Size;
 public class Documents extends BaseEntity{
 	
 	@NotEmpty
-	@NotNull
 	@Size(min = 32, max = 32)
 	private byte contentHash;
-	
-	@NotNull
+
 	@NotEmpty
 	@Size(min = 1, max = 63)
 	private String contentType;
 
-	@NotNull
 	@NotEmpty
 	private String fileType;
 	
+	@NotEmpty
 	@Size(min = 1, max = 16777215)
 	private byte[] content;
 	
 	@NotNull
-	@NotEmpty
 	private Person owner;
 	
 

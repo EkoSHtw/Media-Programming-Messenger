@@ -2,19 +2,20 @@ package entities;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 public class BaseEntity implements Comparable<BaseEntity>{
 	
 	@NotEmpty
-	@NotNull
+	@PositiveOrZero
 	protected long identity;
 
 	@NotEmpty
-	@NotNull
+	@PositiveOrZero
 	protected int version;
 
 	@NotEmpty
-	@NotNull
+	@PositiveOrZero
 	protected long creationTimestamp;
 
 	
