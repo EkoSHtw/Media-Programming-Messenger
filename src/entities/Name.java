@@ -5,17 +5,26 @@ import javax.validation.constraints.Size;
 public class Name implements Comparable {
 	
 	@Size(min = 1, max = 31)
-	private String family;
-	@Size(min = 1, max = 31)
-	private String given;
+	private String surName;
+	
 	@Size(min = 1, max = 31)
 	private String firstName;
 
 	
+	
 
 	protected static void main(String[] arg) {
-		Name name = new Name("family", "given");
+		Name name = new Name("firstName", "surName");
 	}
+	
+	public Name(@Size(min = 1, max = 31) String firstName, @Size(min = 1, max = 31) String surName) {
+		super();
+		this.firstName = firstName;
+		this.surName = surName;
+	}
+	
+	
+	
 	
 	@Override
 	public int compareTo(Object o) {
@@ -23,26 +32,12 @@ public class Name implements Comparable {
 		return 0;
 	}
 
-	public Name(@Size(min = 1, max = 31) String family, @Size(min = 1, max = 31) String given) {
-		super();
-		this.family = family;
-		this.given = given;
-	}
-
-	public String getFamily() {
-		return family;
-	}
-
-	
-	public String getGiven() {
-		return given;
-	}
-
-
 	public String getFirstName() {
 		return firstName;
 	}
-
-
+	
+	public String getSurName() {
+		return surName;
+	}
 
 }

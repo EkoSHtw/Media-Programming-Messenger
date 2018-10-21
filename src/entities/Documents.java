@@ -11,7 +11,7 @@ public class Documents extends BaseEntity{
 	@Size(min = 32, max = 32)
 	private byte contentHash;
 	
-		@NotNull
+	@NotNull
 	@NotEmpty
 	@Size(min = 1, max = 63)
 	private String contentType;
@@ -22,6 +22,17 @@ public class Documents extends BaseEntity{
 	
 	@Size(min = 1, max = 16777215)
 	private byte[] content;
+	
+	@NotNull
+	@NotEmpty
+	private Person owner;
+	
+
+	
+	
+	protected static void main(String[] arg) {
+		//Documents documents = new Documents(1, 1, System.currentTimeMillis(), null, "xml", null, "html", new Person());
+	}
 	
 	public Documents(long identity, int version, long creationTimestamp, @Size(min = 32, max = 32) byte contentHash,
 			@Size(min = 1, max = 63) String contentType, @Size(min = 1, max = 16777215) String content, String fileType,
@@ -36,6 +47,8 @@ public class Documents extends BaseEntity{
 	}
 	
 
+	
+	
 	public byte getContentHash() {
 		return contentHash;
 	}
@@ -55,18 +68,8 @@ public class Documents extends BaseEntity{
 	public Person getOwner() {
 		return owner;
 	}
-
-
-	private Person owner;
 	
-	
-	protected static void main(String[] arg) {
-		
-		//Documents documents = new Documents(1, 1, System.currentTimeMillis(), null, "xml", null, "html", new Person());
-	}
-	
-	public byte _scaledImageContent(int width, int height) {
-		
+	public byte[] _scaledImageContent(int width, int height) {
 		return content;
 		//return fileType * content * width * height;
 	}
