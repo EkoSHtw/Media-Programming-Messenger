@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -62,7 +64,7 @@ public class BaseEntity implements Comparable<BaseEntity>{
 		else return 1;
 	}
 
-	public Object getMessagesCaused() {
+	public List<Message> getMessagesCaused() {
 		// TODO Auto-generated method stub
 		return null;
 	}

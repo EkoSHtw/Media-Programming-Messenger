@@ -34,11 +34,6 @@ public class Person extends BaseEntity {
 	
 	@NotNull
 	private List<Person> peopleObserving;
-	
-	public enum Group{
-		_ADMIN,
-		_USER;
-	}
 
 	
 	
@@ -48,7 +43,7 @@ public class Person extends BaseEntity {
 	}
 	
 	public Person(long identity, int version, long creationTimestamp, Name name, String email, String password, 
-			List<Documents> documents, List<Message> messages, Group group, List<Person> peopleObserving, Address address) {
+			List<Documents> documents, List<Message> messages, Group group,List<Person> peopleObserving, Address address) {
 		
 		super(identity, version, creationTimestamp);
 		
@@ -84,7 +79,6 @@ public class Person extends BaseEntity {
 
 	
 	public byte[] getPasswordHash() {
-		// TODO Auto-generated method stub
 		return password;
 	}
 	
@@ -103,8 +97,7 @@ public class Person extends BaseEntity {
 
 	
 	public Object getGroup() {
-		// TODO Auto-generated method stub
-		return null;
+		return group;
 	}
 
 	public List<Person> getPeopleObserving() {

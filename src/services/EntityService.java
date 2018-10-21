@@ -1,6 +1,5 @@
 package services;
 
-import static entities.Person.Group.ADMIN;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
