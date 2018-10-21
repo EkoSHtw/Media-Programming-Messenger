@@ -1,8 +1,10 @@
 package entities;
 
+import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Embeddable
 public class Address implements Comparable<Address> {
 	
 	@NotNull

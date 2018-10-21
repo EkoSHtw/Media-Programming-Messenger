@@ -3,11 +3,13 @@ package entities;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
 @Entity
+@Table(name="Messages")
 public class Message extends BaseEntity {
 	
 	@Size(min =1, max = 4093)
