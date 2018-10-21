@@ -2,13 +2,16 @@ package entities;
 
 import java.util.List;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PositiveOrZero;
 
 public class BaseEntity implements Comparable<BaseEntity>{
 	
-	@NotEmpty
-	@PositiveOrZero
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected long identity;
 
 	@NotEmpty

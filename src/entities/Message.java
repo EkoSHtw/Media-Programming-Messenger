@@ -1,14 +1,21 @@
 package entities;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+
+@Entity
 public class Message extends BaseEntity {
 	
 	@Size(min =1, max = 4093)
 	private String body;
 	
 	@NotNull
+	@ManyToOne
+	@PrimaryKeyJoinColumn
 	private Person author;
 
 	

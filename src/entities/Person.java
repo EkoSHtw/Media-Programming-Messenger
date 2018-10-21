@@ -2,10 +2,15 @@ package entities;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Entity
 public class Person extends BaseEntity {
 	
 	@NotNull
@@ -24,15 +29,18 @@ public class Person extends BaseEntity {
 	private byte[] password;
 	
 	@NotNull
-	private List<Document> documents;
+	@OneToOne(mappedBy = "Person")
+	private Document avatar;
 	
 	@NotNull
+	@OneToMany(mappedBy = "Person")
 	private List<Message> messages;
 	
 	@NotNull
 	private Group group;
 	
 	@NotNull
+	@ManyToMany
 	private List<Person> peopleObserving;
 
 	
@@ -43,14 +51,14 @@ public class Person extends BaseEntity {
 	}
 	
 	public Person(long identity, int version, long creationTimestamp, Name name, String email, String password, 
-			List<Document> documents, List<Message> messages, Group group,List<Person> peopleObserving, Address address) {
+			Document avatar, List<Message> messages, Group group,List<Person> peopleObserving, Address address) {
 		
 		super(identity, version, creationTimestamp);
 		
 		this.name = name;
 		this.email = email;
 		this.password = HashTools.sha256HashCode(password);
-		this.documents = documents;
+		this.avatar = avatar;
 		this.messages = messages;
 		this.group = group;
 		this.peopleObserving = peopleObserving;
@@ -106,6 +114,10 @@ public class Person extends BaseEntity {
 
 	public void addPeopleObserving(Person person) {
 		this.peopleObserving.add(person);
+	}
+	
+	public List<Message> getMessages(){
+		return messages;
 	}
 
 }

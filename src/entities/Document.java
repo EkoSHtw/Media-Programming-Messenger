@@ -1,9 +1,14 @@
 package entities;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+
+@Entity
 public class Document extends BaseEntity{
 	
 	@NotEmpty
@@ -22,6 +27,8 @@ public class Document extends BaseEntity{
 	private byte[] content;
 	
 	@NotNull
+	@OneToOne
+	@PrimaryKeyJoinColumn
 	private Person owner;
 	
 
