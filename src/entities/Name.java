@@ -20,7 +20,7 @@ public class Name implements Comparable {
 		Name name = new Name("firstName", "surName");
 	}
 	
-	public Name(@Size(min = 1, max = 31) String firstName, @Size(min = 1, max = 31) String surName) {
+	public Name(String firstName, String surName) {
 		super();
 		this.firstName = firstName;
 		this.surName = surName;

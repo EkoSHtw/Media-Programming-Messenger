@@ -18,7 +18,7 @@ public class Message extends BaseEntity {
 		//Message message = new Message("test", new Person());
 	}
 	
-	public Message(long identity, int version, long creationTimestamp, @Size(min = 1, max = 4093) String body, Person author) {
+	public Message(long identity, int version, long creationTimestamp, String body, Person author) {
 		super(identity, version, creationTimestamp);
 		this.body = body;
 		this.author = author;

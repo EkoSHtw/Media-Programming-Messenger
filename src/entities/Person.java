@@ -23,12 +23,16 @@ public class Person extends BaseEntity {
 	@Size(min = 32, max = 32)
 	private byte[] password;
 	
+	@NotNull
 	private List<Documents> documents;
 	
+	@NotNull
 	private List<Message> messages;
 	
+	@NotNull
 	private Group group;
 	
+	@NotNull
 	private List<Person> peopleObserving;
 	
 	public enum Group{
@@ -43,9 +47,9 @@ public class Person extends BaseEntity {
 		//Person person = new Person();
 	}
 	
-	public Person(long identity, int version, long creationTimestamp, Name name, @Size(min = 0, max = 128) String email,
-			@Size(min = 32, max = 32) String password, List<Documents> documents, List<Message> messages, Group group,
-			List<Person> peopleObserving, Address address) {
+	public Person(long identity, int version, long creationTimestamp, Name name, String email, String password, 
+			List<Documents> documents, List<Message> messages, Group group, List<Person> peopleObserving, Address address) {
+		
 		super(identity, version, creationTimestamp);
 		
 		this.name = name;

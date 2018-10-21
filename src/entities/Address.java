@@ -20,8 +20,7 @@ public class Address implements Comparable {
 	
 	
 	
-	public Address(@Size(min = 0, max = 63) String street, @Size(min = 0, max = 15) String postCode,
-			@Size(min = 1, max = 63) String city) {
+	public Address(String street,String postCode, String city) {
 		super();
 		this.street = street;
 		this.postCode = postCode;
