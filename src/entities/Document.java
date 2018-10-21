@@ -4,7 +4,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class Documents extends BaseEntity{
+public class Document extends BaseEntity{
 	
 	@NotEmpty
 	@Size(min = 32, max = 32)
@@ -27,11 +27,11 @@ public class Documents extends BaseEntity{
 
 	
 	
-	protected static void main(String[] arg) {
+	protected Document() {
 		//Documents documents = new Documents(1, 1, System.currentTimeMillis(), null, "xml", null, "html", new Person());
 	}
 	
-	public Documents(long identity, int version, long creationTimestamp, byte contentHash,
+	public Document(long identity, int version, long creationTimestamp, byte contentHash,
 			String contentType, String content, String fileType, Person owner) {
 		
 		super(identity, version, creationTimestamp);

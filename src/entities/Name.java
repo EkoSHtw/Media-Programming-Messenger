@@ -16,7 +16,7 @@ public class Name implements Comparable<Name> {
 	
 	
 
-	protected static void main(String[] arg) {
+	protected Name() {
 		Name name = new Name("firstName", "surName");
 	}
 	

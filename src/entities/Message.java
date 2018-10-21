@@ -14,7 +14,7 @@ public class Message extends BaseEntity {
 	
 	
 	
-	protected static void main(String[] arg) {
+	protected Message() {
 		//Message message = new Message("test", new Person());
 	}
 	

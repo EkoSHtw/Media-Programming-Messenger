@@ -24,7 +24,7 @@ public class Person extends BaseEntity {
 	private byte[] password;
 	
 	@NotNull
-	private List<Documents> documents;
+	private List<Document> documents;
 	
 	@NotNull
 	private List<Message> messages;
@@ -38,12 +38,12 @@ public class Person extends BaseEntity {
 	
 	
 	
-	protected static void main(String[] arg) {
+	protected Person() {
 		//Person person = new Person();
 	}
 	
 	public Person(long identity, int version, long creationTimestamp, Name name, String email, String password, 
-			List<Documents> documents, List<Message> messages, Group group,List<Person> peopleObserving, Address address) {
+			List<Document> documents, List<Message> messages, Group group,List<Person> peopleObserving, Address address) {
 		
 		super(identity, version, creationTimestamp);
 		

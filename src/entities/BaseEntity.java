@@ -22,7 +22,7 @@ public class BaseEntity implements Comparable<BaseEntity>{
 	
 	
 	
-	protected static void main(String[] arg) {
+	protected BaseEntity() {
 		BaseEntity baseEntity = new BaseEntity(12345, 1, System.currentTimeMillis());
 	}
 
