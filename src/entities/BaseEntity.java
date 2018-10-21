@@ -34,10 +34,6 @@ public class BaseEntity implements Comparable<BaseEntity>{
 
 	
 	
-	@Override
-	public String toString() {
-		return  this.getClass().getSimpleName() +"@" + identity;
-	}
 
 	public long getCreationTimestamp() {
 		return creationTimestamp;
@@ -56,8 +52,12 @@ public class BaseEntity implements Comparable<BaseEntity>{
 	}
 
 	@Override
+	public String toString() {
+		return  this.getClass().getSimpleName() +"@" + identity;
+	}
+	
+	@Override
 	public int compareTo(BaseEntity o) {
-		// TODO Auto-generated method stub
 		if(this.identity < o.getIdentity()) return 0;
 		else return 1;
 	}

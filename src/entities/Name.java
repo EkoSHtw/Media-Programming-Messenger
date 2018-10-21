@@ -3,7 +3,7 @@ package entities;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class Name implements Comparable {
+public class Name implements Comparable<Name> {
 	
 	@NotNull
 	@Size(min = 1, max = 31)
@@ -30,9 +30,9 @@ public class Name implements Comparable {
 	
 	
 	@Override
-	public int compareTo(Object o) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int compareTo(Name o) {
+		int last = this.surName.compareTo(o.surName);
+		return last == 0 ? this.firstName.compareTo(o.firstName) : last;
 	}
 
 	public String getFirstName() {
