@@ -49,8 +49,6 @@ public class Person extends BaseEntity {
 	private List<Person> peopleObserving;
 
 	
-	
-	
 	protected Person() {
 		//Person person = new Person();
 	}
@@ -70,6 +68,15 @@ public class Person extends BaseEntity {
 		this.address = address;
 	}
 	
+	
+	protected long[] getPeopleObservingReference() {
+		long[] observingIds = new long[peopleObserving.size()];
+		for (int i=0; i< peopleObserving.size(); i++) {
+			observingIds[i] = peopleObserving.get(i).getIdentity();
+		}
+		
+		return observingIds;
+	}
 
 	
 	

@@ -21,8 +21,6 @@ public class Message extends BaseEntity {
 	private Person author;
 
 	
-	
-	
 	protected Message() {
 		//Message message = new Message("test", new Person());
 	}
@@ -34,7 +32,14 @@ public class Message extends BaseEntity {
 	}
 
 
+	protected long getAuthorReference() {
+		return author.getIdentity();
+		
+	}
 	
+	protected long getSubjectReference() {
+		return this.getIdentity();
+	}
 	
 	public String getMessage() {
 		return body;
