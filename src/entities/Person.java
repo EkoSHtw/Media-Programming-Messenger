@@ -77,11 +77,23 @@ public class Person extends BaseEntity {
 	}
 	
 	
+	
+	
 	protected long[] getPeopleObservingReference() {
 		long[] observingIds = new long[peopleObserving.size()];
 		for (int i=0; i< peopleObserving.size(); i++) {
 			observingIds[i] = peopleObserving.get(i).getIdentity();
 		}
+		
+		return observingIds;
+	}
+	
+	protected long getAvatarReference(){
+		return avatar.getIdentity();
+	}
+	
+	protected long[] getPeopleObservedReferences(){
+		long[] observingIds = new long[peopleObserving.size()];
 		
 		return observingIds;
 	}

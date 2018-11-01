@@ -15,7 +15,7 @@ import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "dependentTable")
+@DiscriminatorColumn(name = "discriminator")
 public class BaseEntity implements Comparable<BaseEntity>{
 	
 	@Id
