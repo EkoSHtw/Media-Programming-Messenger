@@ -1,10 +1,15 @@
 package entities;
 
+import javax.json.bind.annotation.JsonbVisibility;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Embeddable
+@JsonbVisibility(value = JsonProtectedPropertyStrategy.class)
+@XmlAccessorType(XmlAccessType.NONE)
 public class Address implements Comparable<Address> {
 	
 	@NotNull

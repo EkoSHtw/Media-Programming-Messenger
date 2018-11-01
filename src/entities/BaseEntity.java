@@ -2,6 +2,10 @@ package entities;
 
 import java.util.List;
 
+import javax.json.bind.annotation.JsonbVisibility;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -16,6 +20,9 @@ import javax.validation.constraints.PositiveOrZero;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "discriminator")
+@JsonbVisibility(value = JsonProtectedPropertyStrategy.class)
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlSeeAlso(value = { Person.class, Document.class, Message.class })
 public class BaseEntity implements Comparable<BaseEntity>{
 	
 	@Id
