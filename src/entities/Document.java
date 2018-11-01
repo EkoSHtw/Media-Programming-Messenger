@@ -1,6 +1,7 @@
 package entities;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -10,7 +11,8 @@ import javax.validation.constraints.Size;
 
 
 @Entity
-@Table(name="Documents")
+@Table(name="Documents", schema="messenger")
+@PrimaryKeyJoinColumn(name="IDENTITY_ID")
 public class Document extends BaseEntity{
 	
 	@NotEmpty
@@ -30,7 +32,7 @@ public class Document extends BaseEntity{
 	
 	@NotNull
 	@OneToOne
-	@PrimaryKeyJoinColumn
+	@JoinColumn(name = "IDENTITY_ID")
 	private Person owner;
 	
 

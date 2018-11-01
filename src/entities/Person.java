@@ -4,16 +4,20 @@ import java.util.List;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="People")
+@Table(name="People", schema="messenger")
+@PrimaryKeyJoinColumn(name="IDENTITY_ID")
 public class Person extends BaseEntity {
 	
 	@NotNull
@@ -35,17 +39,21 @@ public class Person extends BaseEntity {
 	
 	@NotNull
 	@OneToOne(mappedBy = "Person")
+	@JoinColumn(name = "IDENTITY_ID")
 	private Document avatar;
 	
 	@NotNull
 	@OneToMany(mappedBy = "Person")
+	@JoinColumn(name = "IDENTITY_ID")
 	private List<Message> messages;
 	
 	@NotNull
+	@Enumerated
 	private Group group;
 	
 	@NotNull
 	@ManyToMany
+	@JoinColumn(name = "IDENTITY_ID")
 	private List<Person> peopleObserving;
 
 	

@@ -1,6 +1,7 @@
 package entities;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -9,7 +10,8 @@ import javax.validation.constraints.Size;
 
 
 @Entity
-@Table(name="Messages")
+@Table(name="Messages", schema="messenger")
+@PrimaryKeyJoinColumn(name="IDENTITY_ID")
 public class Message extends BaseEntity {
 	
 	@Size(min =1, max = 4093)
@@ -17,7 +19,7 @@ public class Message extends BaseEntity {
 	
 	@NotNull
 	@ManyToOne
-	@PrimaryKeyJoinColumn
+	@JoinColumn(name = "IDENTITY_ID")
 	private Person author;
 
 	
