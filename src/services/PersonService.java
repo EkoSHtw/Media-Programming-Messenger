@@ -6,6 +6,7 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -23,6 +25,7 @@ import javax.ws.rs.core.MediaType;
 
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 import entities.Address;
+import entities.BaseEntity;
 import entities.Document;
 import entities.Group;
 import entities.HashTools;
@@ -61,6 +64,11 @@ public class PersonService {
 		return people;
 	}
 	
+	
+	
+	
+	
+	
 	/**
 	 * Creates or updates a person
 	 * @param identity
@@ -93,6 +101,11 @@ public class PersonService {
 		}
 	}
 	
+	
+	
+	
+	
+	
 	/**
 	 * Returns the person with the given identity.
 	 * @param personIdentity the person identity
@@ -112,6 +125,60 @@ public class PersonService {
 
 		return person;
 	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * Returns the avatar content of the person matching the given identity and it's content type
+	 * @param personIdentity the person identity
+	 * @return the document for the person (HTTP 200)
+	 * @throws ClientErrorException (HTTP 404) if the given avatar cannot be found
+	 * @throws PersistenceException (HTTP 500) if there is a problem with the persistence layer
+	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
+	 */
+	@GET
+	@Path("{id}/avatar")
+	@Produces({ APPLICATION_JSON, APPLICATION_XML })
+	public Document getAvatar (@PathParam("id") @Positive final long personIdentity) {
+		
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+		//TODO does it already work? need to add mediatype
+		final Document avatar = em.find(Document.class, personIdentity);
+		
+		if (avatar == null) throw new ClientErrorException(NOT_FOUND);
+		
+		return avatar;
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Updates the avatar content of the person matching the given identity
+	 * @param personIdentity the person identity
+	 * @return the document for the person (HTTP 200)
+	 * @throws ClientErrorException (HTTP 404) if the given person cannot be found
+	 * @throws PersistenceException (HTTP 500) if there is a problem with the persistence layer
+	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
+	 */
+	@PUT
+	@Path("{id}/avatar")
+	public void updateAvatar (@PathParam("id") @Positive final long personIdentity) {
+		
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+		//TODO hier muss die person auch über das dokument geholt werden ? -> seltsam... besser fände ich das doku über die person
+		final Person person = em.find(Person.class, personIdentity);
+		if (person == null) throw new ClientErrorException(NOT_FOUND);
+	}
+	
+	
+	
+	
+	
 	
 	/**
 	 * Creates a new person
@@ -137,6 +204,10 @@ public class PersonService {
 		em.persist(person);
 		em.getTransaction().commit();
 	}
+	
+	
+	
+	
 	
 	/**
 	 * Updates an existing person
