@@ -8,13 +8,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.validation.constraints.Positive;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 import entities.Message;
+import entities.Person;
 
 @Path("messages")
 public class MessageService {
@@ -41,6 +45,10 @@ public class MessageService {
 		return messages;
 	}
 	
+	
+	
+	
+	
 	/**
 	 * Returns the message with the given identity.
 	 * @param messageIdentity the message identity
@@ -59,5 +67,29 @@ public class MessageService {
 		if (message == null) throw new ClientErrorException(NOT_FOUND);
 
 		return message;
+	}
+	
+	
+	
+	/**
+	 * Creates a new message
+	 * @param body
+	 * @param author
+	 * @return the matching people (HTTP 200)
+	 * @throws ClientErrorException (HTTP 404) person is not found
+	 * @throws PersistenceException (HTTP 500) if there is a problem with the persistence layer
+	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
+	 */
+	@POST
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Produces(MediaType.TEXT_PLAIN)
+	public void setMessage( String body, Person author) {
+		
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+		Message message = new Message(body, author);
+		
+		em.getTransaction().begin();
+		em.persist(message);
+		em.getTransaction().commit();
 	}
 }

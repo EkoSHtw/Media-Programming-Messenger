@@ -13,11 +13,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.validation.constraints.Positive;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 import entities.Address;
@@ -77,7 +79,8 @@ public class PersonService {
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
 	@POST
-	@Produces({ APPLICATION_JSON, APPLICATION_XML })
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Produces(MediaType.TEXT_PLAIN)
 	public void setPeople( long identity, String surName, String firstName, String email, String street, String postCode, 
 			String city, String password, Document avatar, Group group) {
 		

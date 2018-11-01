@@ -29,9 +29,7 @@ public class Message extends BaseEntity {
 	private Person author;
 
 	
-	protected Message() {
-		//Message message = new Message("test", new Person());
-	}
+	protected Message() {}
 	
 	public Message(String body, Person author) {
 		super();
