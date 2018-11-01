@@ -48,10 +48,9 @@ public class Document extends BaseEntity{
 		//Documents documents = new Documents(1, 1, System.currentTimeMillis(), null, "xml", null, "html", new Person());
 	}
 	
-	public Document(long identity, int version, long creationTimestamp, byte contentHash,
-			String contentType, String content, String fileType, Person owner) {
+	public Document( byte contentHash, String contentType, String content, String fileType, Person owner) {
 		
-		super(identity, version, creationTimestamp);
+		super();
 		this.contentHash = contentHash;
 		this.contentType = contentType;
 		this.content = HashTools.sha256HashCode(content);

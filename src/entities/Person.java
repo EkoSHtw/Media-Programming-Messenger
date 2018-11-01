@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.json.bind.annotation.JsonbVisibility;
@@ -63,22 +64,19 @@ public class Person extends BaseEntity {
 	private List<Person> peopleObserving;
 
 	
-	protected Person() {
-		//Person person = new Person();
-	}
+	protected Person() {}
 	
-	public Person(long identity, int version, long creationTimestamp, Name name, String email, String password, 
-			Document avatar, List<Message> messages, Group group,List<Person> peopleObserving, Address address) {
+	public Person(Name name, String email, String password, Document avatar, Group group, Address address) {
 		
-		super(identity, version, creationTimestamp);
+		super();
 		
 		this.name = name;
 		this.email = email;
 		this.password = HashTools.sha256HashCode(password);
 		this.avatar = avatar;
-		this.messages = messages;
+		this.messages = new ArrayList<Message>();
 		this.group = group;
-		this.peopleObserving = peopleObserving;
+		this.peopleObserving = new ArrayList<Person>();
 		this.address = address;
 	}
 	
@@ -108,10 +106,6 @@ public class Person extends BaseEntity {
 	
 	public Name getName() {
 		return name;
-	}
-
-	public void setName(Name name) {
-		this.name = name;
 	}
 
 	
@@ -156,6 +150,10 @@ public class Person extends BaseEntity {
 	
 	public List<Message> getMessages(){
 		return messages;
+	}
+	
+	public void addMessage(Message message) {
+		this.messages.add(message);
 	}
 
 }

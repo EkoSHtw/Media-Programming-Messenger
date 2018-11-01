@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.json.bind.annotation.JsonbVisibility;
@@ -40,16 +41,11 @@ public class BaseEntity implements Comparable<BaseEntity>{
 
 	
 	
-	
-	protected BaseEntity() {
-		BaseEntity baseEntity = new BaseEntity(12345, 1, System.currentTimeMillis());
-	}
 
-	public BaseEntity(long identity, int version, long creationTimestamp) {
+	protected BaseEntity() {
 		super();
-		this.identity = identity;
-		this.version = version;
-		this.creationTimestamp = creationTimestamp;
+		this.creationTimestamp = getCreationTimestamp();
+		this.version = 1;
 	}
 
 
@@ -60,16 +56,8 @@ public class BaseEntity implements Comparable<BaseEntity>{
 		return creationTimestamp;
 	}
 
-	public void setCreationTimestamp(long creationTimestamp) {
-		this.creationTimestamp = creationTimestamp;
-	}
-
 	public long getIdentity() {
 		return identity;
-	}
-
-	public void setIdentity(long id) {
-		this.identity = id;
 	}
 
 	@Override
@@ -88,4 +76,9 @@ public class BaseEntity implements Comparable<BaseEntity>{
 		return null;
 	}
 
+	private long getCurrentDateTime() {
+		Date date = new Date();
+		long currentDateTime = date.getTime();
+		return currentDateTime;
+	}
 }

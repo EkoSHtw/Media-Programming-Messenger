@@ -33,8 +33,8 @@ public class Message extends BaseEntity {
 		//Message message = new Message("test", new Person());
 	}
 	
-	public Message(long identity, int version, long creationTimestamp, String body, Person author) {
-		super(identity, version, creationTimestamp);
+	public Message(String body, Person author) {
+		super();
 		this.body = body;
 		this.author = author;
 	}

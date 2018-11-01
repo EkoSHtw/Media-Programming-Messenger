@@ -19,11 +19,32 @@ import entities.Message;
 @Path("messages")
 public class MessageService {
 
+
+	/**
+	 * Returning all messages matching the given criteria.
+	 * @param 
+	 * @return the matching messages (HTTP 200)
+	 * @throws ClientErrorException (HTTP 404) no messages are found
+	 * @throws PersistenceException (HTTP 500) if there is a problem with the persistence layer
+	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
+	 */
+	@GET
+	@Produces({ APPLICATION_JSON, APPLICATION_XML })
+	public Message[] getMessages ( ) {
+		final Message[] messages = null;
+		
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+		
+		//messages = em.find();
+		if (messages == null) throw new ClientErrorException(NOT_FOUND);
+
+		return messages;
+	}
 	
 	/**
 	 * Returns the message with the given identity.
 	 * @param messageIdentity the message identity
-	 * @return the matching entity (HTTP 200)
+	 * @return the matching message (HTTP 200)
 	 * @throws ClientErrorException (HTTP 404) if the given message cannot be found
 	 * @throws PersistenceException (HTTP 500) if there is a problem with the persistence layer
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
@@ -31,10 +52,10 @@ public class MessageService {
 	@GET
 	@Path("{id}")
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public Message queryEntity ( @PathParam("id") @Positive final long messageIdentity ) {
+	public Message getMessage ( @PathParam("id") @Positive final long messageIdentity ) {
 		
-		final EntityManager messengerManager = RestJpaLifecycleProvider.entityManager("messenger");
-		final Message message = messengerManager.find(Message.class, messageIdentity);
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+		final Message message = em.find(Message.class, messageIdentity);
 		if (message == null) throw new ClientErrorException(NOT_FOUND);
 
 		return message;
