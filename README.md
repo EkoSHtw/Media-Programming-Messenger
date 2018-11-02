@@ -17,7 +17,7 @@ Fragen
 
 5. @3.1.1 getPeopleObservedReferences() <-> getPeopleObservingReferences() keine ahnung was man da machen soll, was ist der Unterschied?
 
-6. @3.1.2 JsonProtectedPropertyStrategy.class gibt es nicht
+6. @3.1.2 Wie wird der server gestartet?
 
 7. @3.1.2 woher sollen wir wissen welche getter gemarshaled werden soll und was nicht ?
 
