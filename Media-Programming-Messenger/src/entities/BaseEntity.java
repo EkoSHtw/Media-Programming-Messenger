@@ -28,15 +28,17 @@ public class BaseEntity implements Comparable<BaseEntity>{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="IDENTITY_ID")
+	@Column(name = "IDENTITY_ID", nullable = false, updatable = false, unique = true)
 	protected long identity;
 
 	@NotEmpty
 	@PositiveOrZero
+	@Column(nullable = false, updatable = true)
 	protected int version;
 
 	@NotEmpty
 	@PositiveOrZero
+	@Column(nullable = false, updatable = false)
 	protected long creationTimestamp;
 
 	
