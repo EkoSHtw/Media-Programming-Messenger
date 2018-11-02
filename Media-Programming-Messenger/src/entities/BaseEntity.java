@@ -17,6 +17,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PositiveOrZero;
+import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

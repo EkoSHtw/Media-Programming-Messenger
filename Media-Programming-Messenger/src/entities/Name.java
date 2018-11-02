@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAccessType;
+import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
 @Embeddable
 @JsonbVisibility(value = JsonProtectedPropertyStrategy.class)

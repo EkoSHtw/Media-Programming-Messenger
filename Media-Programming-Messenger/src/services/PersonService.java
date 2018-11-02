@@ -16,6 +16,7 @@ import javax.validation.constraints.Positive;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -117,7 +118,9 @@ public class PersonService {
 	@GET
 	@Path("{id}")
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public Person getPerson ( @PathParam("id") @Positive final long personIdentity ) {
+	public Person getPerson ( 
+			//@HeaderParam(REQUESTER_IDENTITY) @Positive final long Requester_identity, 
+			@PathParam("id") @Positive final long personIdentity ) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		final Person person = em.find(Person.class, personIdentity);
