@@ -3,6 +3,7 @@ package entities;
 import java.util.Date;
 import java.util.List;
 
+import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -54,11 +55,12 @@ public class BaseEntity implements Comparable<BaseEntity>{
 
 	
 	
-
+	@JsonbProperty 
 	public long getCreationTimestamp() {
 		return creationTimestamp;
 	}
 
+	@JsonbProperty 
 	public long getIdentity() {
 		return identity;
 	}
@@ -74,11 +76,13 @@ public class BaseEntity implements Comparable<BaseEntity>{
 		else return 1;
 	}
 
+	@JsonbProperty 
 	public List<Message> getMessagesCaused() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@JsonbProperty 
 	private long getCurrentDateTime() {
 		Date date = new Date();
 		long currentDateTime = date.getTime();
