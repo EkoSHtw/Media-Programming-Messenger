@@ -6,7 +6,12 @@ import java.util.List;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import com.sun.xml.internal.txw2.annotation.XmlAttribute;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -55,12 +60,15 @@ public class BaseEntity implements Comparable<BaseEntity>{
 
 	
 	
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute 
 	public long getCreationTimestamp() {
 		return creationTimestamp;
 	}
 
 	@JsonbProperty 
+	@XmlID
+	//@XmlJavaTypeAdapter(type=long.class,value=this.to)
 	public long getIdentity() {
 		return identity;
 	}

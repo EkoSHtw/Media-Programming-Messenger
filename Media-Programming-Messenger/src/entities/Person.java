@@ -20,6 +20,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import com.sun.xml.internal.txw2.annotation.XmlAttribute;
+
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
 @Entity
@@ -116,11 +119,13 @@ public class Person extends BaseEntity {
 
 	
 	@JsonbProperty 
+	@XmlAttribute 
 	public Name getName() {
 		return name;
 	}
 
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute 
 	public String getEmail() {
 		return email;
 	}
@@ -131,6 +136,7 @@ public class Person extends BaseEntity {
 	}
 
 	@JsonbProperty 
+	@XmlAttribute 
 	public byte[] getPasswordHash() {
 		return password;
 	}
@@ -140,7 +146,8 @@ public class Person extends BaseEntity {
 		this.password = HashTools.sha256HashCode(password);	
 	}
 
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute 
 	public Address getAddress() {
 		return address;
 	}
@@ -151,16 +158,19 @@ public class Person extends BaseEntity {
 	}
 
 	@JsonbProperty 
+	@XmlAttribute 
 	public Object getGroup() {
 		return group;
 	}
 	
 	@JsonbProperty 
+	@XmlAttribute 
 	public List<Person> getPeopleObserving() {
 		return peopleObserving;
 	}
 
 	@JsonbProperty 
+	@XmlAttribute 
 	public List<Person> getPeopleObserved(){
 		return peopleObserved;
 	}
@@ -170,7 +180,8 @@ public class Person extends BaseEntity {
 		this.peopleObserving.add(person);
 	}
 	
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute 
 	public List<Message> getMessages(){
 		return messages;
 	}

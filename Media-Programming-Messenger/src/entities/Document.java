@@ -12,6 +12,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import com.sun.xml.internal.txw2.annotation.XmlAttribute;
+
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
 
@@ -62,32 +65,38 @@ public class Document extends BaseEntity{
 	
 
 	
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute 
 	public byte getContentHash() {
 		return contentHash;
 	}
 
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute 
 	public String getContentType() {
 		return contentType;
 	}
 
 	@JsonbProperty 
+	@XmlAttribute 
 	public byte[] getContent() {
 		return content;
 	}
 
 	@JsonbProperty 
+	@XmlAttribute 
 	public String getFileType() {
 		return fileType;
 	}
 
 	@JsonbProperty 
+	@XmlAttribute 
 	public Person getOwner() {
 		return owner;
 	}
 	
 	@JsonbProperty 
+	@XmlAttribute 
 	public byte[] _scaledImageContent(int width, int height) {
 		return content;
 		//return fileType * content * width * height;
