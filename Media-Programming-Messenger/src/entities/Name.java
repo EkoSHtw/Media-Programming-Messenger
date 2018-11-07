@@ -1,5 +1,6 @@
 package entities;
 
+import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
@@ -43,10 +44,12 @@ public class Name implements Comparable<Name> {
 		return last == 0 ? this.firstName.compareTo(o.firstName) : last;
 	}
 
+	@JsonbProperty 
 	public String getFirstName() {
 		return firstName;
 	}
 	
+	@JsonbProperty 
 	public String getSurName() {
 		return surName;
 	}

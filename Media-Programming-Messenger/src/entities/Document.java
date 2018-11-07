@@ -1,5 +1,6 @@
 package entities;
 
+import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -61,27 +62,32 @@ public class Document extends BaseEntity{
 	
 
 	
-	
+	@JsonbProperty 
 	public byte getContentHash() {
 		return contentHash;
 	}
 
+	@JsonbProperty 
 	public String getContentType() {
 		return contentType;
 	}
 
+	@JsonbProperty 
 	public byte[] getContent() {
 		return content;
 	}
 
+	@JsonbProperty 
 	public String getFileType() {
 		return fileType;
 	}
 
+	@JsonbProperty 
 	public Person getOwner() {
 		return owner;
 	}
 	
+	@JsonbProperty 
 	public byte[] _scaledImageContent(int width, int height) {
 		return content;
 		//return fileType * content * width * height;

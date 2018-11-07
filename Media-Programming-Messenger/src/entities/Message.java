@@ -1,5 +1,6 @@
 package entities;
 
+import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -38,20 +39,23 @@ public class Message extends BaseEntity {
 		this.author = author;
 	}
 
-
+	@JsonbProperty 
 	protected long getAuthorReference() {
 		return author.getIdentity();
 		
 	}
 	
+	@JsonbProperty 
 	protected long getSubjectReference() {
 		return this.getIdentity();
 	}
 	
+	@JsonbProperty 
 	public String getMessage() {
 		return body;
 	}
 	
+	@JsonbProperty 
 	public Person getPerson() {
 		return author;
 	}
