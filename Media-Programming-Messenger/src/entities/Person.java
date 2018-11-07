@@ -99,7 +99,7 @@ public class Person extends BaseEntity {
 		return observingIds;
 	}
 	
-	@JsonbProperty 	protected long getAvatarReference(){
+	protected long getAvatarReference(){
 		return avatar.getIdentity();
 	}
 	

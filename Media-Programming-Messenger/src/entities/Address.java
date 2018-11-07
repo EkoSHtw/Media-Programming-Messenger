@@ -1,5 +1,7 @@
 package entities;
 
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -38,32 +40,32 @@ public class Address implements Comparable<Address> {
 	
 	
 	
-
+	@JsonbProperty 
 	public String getStreet() {
 		return street;
 	}
 
-
+	@JsonbTransient 
 	public void setStreet(String street) {
 		this.street = street;
 	}
 
-
+	@JsonbProperty 
 	public String getPostCode() {
 		return postCode;
 	}
 
-
+	@JsonbTransient 
 	public void setPostCode(String postCode) {
 		this.postCode = postCode;
 	}
 
-
+	@JsonbProperty 
 	public String getCity() {
 		return city;
 	}
 
-
+	@JsonbTransient 
 	public void setCity(String city) {
 		this.city = city;
 	}
