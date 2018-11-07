@@ -82,7 +82,7 @@ public class BaseEntity implements Comparable<BaseEntity>{
 		return null;
 	}
 
-	@JsonbProperty 
+	
 	private long getCurrentDateTime() {
 		Date date = new Date();
 		long currentDateTime = date.getTime();
