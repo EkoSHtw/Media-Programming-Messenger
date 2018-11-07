@@ -64,6 +64,10 @@ public class Person extends BaseEntity {
 	@JoinColumn(name = "IDENTITY_ID")
 	private List<Person> peopleObserving;
 
+	@NotNull
+	@ManyToMany
+	@JoinColumn(name = "IDENTITY_ID")
+	private List<Person> peopleObserved;
 	
 	protected Person() {}
 	
@@ -98,10 +102,14 @@ public class Person extends BaseEntity {
 	}
 	
 	protected long[] getPeopleObservedReferences(){
-		long[] observingIds = new long[peopleObserving.size()];
-		
-		return observingIds;
+		long[] observedIds = new long[peopleObserved.size()];
+		for (int i =0; i < peopleObserved.size(); i++) {
+			observedIds[i] = peopleObserved.get(i).identity;
+		}
+		return observedIds;
 	}
+	
+	
 
 	
 	
