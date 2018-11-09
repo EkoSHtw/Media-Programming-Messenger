@@ -99,7 +99,6 @@ public class Person extends BaseEntity {
 	}
 	
 	
-	
 
 	protected long[] getPeopleObservingReference() {
 		long[] observingIds = new long[peopleObserving.size()];
@@ -173,13 +172,13 @@ public class Person extends BaseEntity {
 	
 	@JsonbProperty 
 	@XmlAttribute 
-	public List<Person> getPeopleObserving() {
+	public Set<Person> getPeopleObserving() {
 		return peopleObserving;
 	}
 
 	@JsonbProperty 
 	@XmlAttribute 
-	public List<Person> getPeopleObserved(){
+	public Set<Person> getPeopleObserved(){
 		return peopleObserved;
 	}
 	
@@ -190,7 +189,7 @@ public class Person extends BaseEntity {
 	
 	@JsonbProperty
 	@XmlAttribute 
-	public List<Message> getMessages(){
+	public Set<Message> getMessages(){
 		return messages;
 	}
 	
