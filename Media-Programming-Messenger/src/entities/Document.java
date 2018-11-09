@@ -43,7 +43,6 @@ public class Document extends BaseEntity{
 	
 	@NotNull
 	@OneToOne
-	@JoinColumn(name = "IDENTITY_ID")
 	private Person owner;
 	
 

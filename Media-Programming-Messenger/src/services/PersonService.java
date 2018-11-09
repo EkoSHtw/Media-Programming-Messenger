@@ -173,7 +173,7 @@ public class PersonService {
 	public void updateAvatar (@PathParam("id") @Positive final long personIdentity) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		//TODO hier muss die person auch über das dokument geholt werden ? -> seltsam... besser fände ich das doku über die person
+		//TODO hier muss die person auch ï¿½ber das dokument geholt werden ? -> seltsam... besser fï¿½nde ich das doku ï¿½ber die person
 		final Person person = em.find(Person.class, personIdentity);
 		if (person == null) throw new ClientErrorException(NOT_FOUND);
 	}

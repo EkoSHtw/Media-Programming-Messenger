@@ -5,6 +5,7 @@ import javax.json.bind.annotation.JsonbVisibility;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -30,7 +31,9 @@ public class Message extends BaseEntity {
 	@JoinColumn(name = "authorReference")
 	private Person author;
 	
-	//TODO wofür ist das ? getter / setter?
+	//TODO wofür ist das ? getter / setter?, datenbank refrence?
+	@NotNull
+	@OneToOne
 	private BaseEntity subject;
 
 	

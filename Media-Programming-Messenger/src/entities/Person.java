@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -46,6 +47,7 @@ public class Person extends BaseEntity {
 	@NotNull
 	@Email
 	@Size(min = 3, max = 128)
+	@Column(unique=true)
 	private String email;
 	
 	@NotNull
@@ -53,13 +55,12 @@ public class Person extends BaseEntity {
 	private byte[] password;
 	
 	@NotNull
-	@OneToOne(mappedBy = "Person")
-	@JoinColumn(name = "IDENTITY_ID")
+	@OneToOne
 	private Document avatar;
 	
 	@NotNull
-	@OneToMany(mappedBy = "Person")
-	@JoinColumn(name = "IDENTITY_ID")
+	@OneToMany
+	@JoinColumn
 	private Set<Message> messages;
 	
 	@NotNull
