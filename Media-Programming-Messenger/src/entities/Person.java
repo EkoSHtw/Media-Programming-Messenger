@@ -79,6 +79,8 @@ public class Person extends BaseEntity {
 	@JoinTable
 	private Set<Person> peopleObserved;
 	
+	
+	
 	protected Person() {
 		this(null);
 	}

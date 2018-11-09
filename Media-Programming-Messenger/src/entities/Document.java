@@ -50,16 +50,16 @@ public class Document extends BaseEntity{
 	
 	
 	protected Document() {
-		//Documents documents = new Documents(1, 1, System.currentTimeMillis(), null, "xml", null, "html", new Person());
+		this(null);
 	}
 	
-	public Document( byte contentHash, String contentType, String content, String fileType, Person owner) {
-		
+	//TODO was soll hier rein? was ist unterschied content / contenthash
+	public Document(Person owner) {
 		super();
 		this.contentHash = contentHash;
 		this.contentType = contentType;
 		this.content = HashTools.sha256HashCode(content);
-		this.fileType = fileType;
+		this.fileType = "jpg";
 		this.owner = owner;
 	}
 	

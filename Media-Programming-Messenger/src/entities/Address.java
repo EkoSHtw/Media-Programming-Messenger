@@ -28,7 +28,9 @@ public class Address implements Comparable<Address> {
 	private String city;
 	
 	
-	
+	protected Address() {
+		this(null, null, null);
+	}
 	
 	public Address(String street,String postCode, String city) {
 		super();
