@@ -26,16 +26,15 @@ public class Name implements Comparable<Name> {
 	
 
 	protected Name() {
-		Name name = new Name("firstName", "surName");
+		this(null, null);
 	}
+	
 	
 	public Name(String firstName, String surName) {
 		super();
 		this.firstName = firstName;
 		this.surName = surName;
 	}
-	
-	
 	
 	
 	@Override
@@ -53,5 +52,13 @@ public class Name implements Comparable<Name> {
 	public String getSurName() {
 		return surName;
 	}
-
+	
+	
+	public void setSurname(String name) {
+		this.surName = name;
+	}
+	
+	public void setFirstName(String name) {
+		this.firstName = name;
+	}
 }
