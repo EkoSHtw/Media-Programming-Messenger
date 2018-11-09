@@ -1,7 +1,11 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
@@ -10,6 +14,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -22,6 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import com.sun.xml.internal.txw2.annotation.XmlAttribute;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
@@ -58,36 +64,38 @@ public class Person extends BaseEntity {
 	@NotNull
 	@OneToMany(mappedBy = "Person")
 	@JoinColumn(name = "IDENTITY_ID")
-	private List<Message> messages;
+	private Set<Message> messages;
 	
 	@NotNull
 	@Enumerated
 	private Group group;
 	
 	@NotNull
-	@ManyToMany
-	@JoinColumn(name = "IDENTITY_ID")
-	private List<Person> peopleObserving;
+	@ManyToMany(mappedBy = "peopleObserved")
+	private Set<Person> peopleObserving;
 
 	@NotNull
 	@ManyToMany
-	@JoinColumn(name = "IDENTITY_ID")
-	private List<Person> peopleObserved;
+	@JoinTable
+	private Set<Person> peopleObserved;
 	
-	protected Person() {}
+	protected Person() {
+		this(null);
+	}
 	
-	public Person(Name name, String email, String password, Document avatar, Group group, Address address) {
+	public Person( Document avatar) {
 		
 		super();
 		
-		this.name = name;
+		this.name = new Name();
 		this.email = email;
 		this.password = HashTools.sha256HashCode(password);
 		this.avatar = avatar;
-		this.messages = new ArrayList<Message>();
-		this.group = group;
-		this.peopleObserving = new ArrayList<Person>();
-		this.address = address;
+		this.messages = Collections.emptySet();
+		this.group = Group.USER;
+		this.peopleObserving = Collections.emptySet();
+		this.peopleObserved = new HashSet<>();
+		this.address = new Address();
 	}
 	
 	

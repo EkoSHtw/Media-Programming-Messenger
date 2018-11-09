@@ -81,7 +81,7 @@ public class EntityService {
 	) {
 		final EntityManager messengerManager = RestJpaLifecycleProvider.entityManager("messenger");
 		final Person requester = messengerManager.find(Person.class, requesterIdentity);
-		if (requester == null || requester.getGroup() != Group._ADMIN) throw new ClientErrorException(FORBIDDEN);
+		if (requester == null || requester.getGroup() != Group.ADMIN) throw new ClientErrorException(FORBIDDEN);
 
 		// TODO: check if getReference() works once https://bugs.eclipse.org/bugs/show_bug.cgi?id=460063 is fixed.
 		final BaseEntity entity = messengerManager.find(BaseEntity.class, entityIdentity);

@@ -27,16 +27,19 @@ public class Message extends BaseEntity {
 	
 	@NotNull
 	@ManyToOne
-	@JoinColumn(name = "IDENTITY_ID")
+	@JoinColumn(name = "authorReference")
 	private Person author;
+	
+	private BaseEntity subject;
 
 	
 	protected Message() {}
 	
-	public Message(String body, Person author) {
+	public Message(String body, Person author, BaseEntity subject) {
 		super();
 		this.body = body;
 		this.author = author;
+		this.subject = subject;
 	}
 
 	@JsonbProperty 

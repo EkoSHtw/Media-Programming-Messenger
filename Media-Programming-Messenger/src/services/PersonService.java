@@ -200,7 +200,7 @@ public class PersonService {
 		
 		Address address = new Address(street, postCode, city);
 		Name name = new Name(firstName, surName);
-		Group group = Group._USER;
+		Group group = Group.USER;
 		Person person = new Person(name, email, password, avatar, group, address);
 		
 		em.getTransaction().begin();
