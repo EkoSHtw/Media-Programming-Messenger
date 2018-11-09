@@ -33,7 +33,9 @@ public class Message extends BaseEntity {
 	private BaseEntity subject;
 
 	
-	protected Message() {}
+	protected Message() {
+		this(null, null, null);
+	}
 	
 	public Message(String body, Person author, BaseEntity subject) {
 		super();
