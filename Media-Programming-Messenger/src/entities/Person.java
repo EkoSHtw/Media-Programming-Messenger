@@ -1,10 +1,7 @@
 package entities;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.json.bind.annotation.JsonbProperty;
@@ -27,7 +24,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import com.sun.xml.internal.txw2.annotation.XmlAttribute;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
@@ -85,6 +81,7 @@ public class Person extends BaseEntity {
 		this(null);
 	}
 	
+	//TODO wieso avatar übergeben? und keine mail ? wie wird das alles gesetzt beim anmelden ?
 	public Person( Document avatar) {
 		
 		super();
@@ -135,6 +132,12 @@ public class Person extends BaseEntity {
 	@XmlAttribute 
 	public Name getName() {
 		return name;
+	}
+	
+	
+	@JsonbTransient
+	public void setName(Name name) {
+		this.name = name;
 	}
 
 	@JsonbProperty
