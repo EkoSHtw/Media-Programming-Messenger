@@ -104,8 +104,10 @@ public class Person extends BaseEntity {
 
 	protected long[] getPeopleObservingReference() {
 		long[] observingIds = new long[peopleObserving.size()];
-		for (int i=0; i< peopleObserving.size(); i++) {
-			observingIds[i] = peopleObserving.get(i).getIdentity();
+		int i =0;
+		for(Person p: peopleObserving) {
+			observingIds[i] = p.identity;
+			i++;
 		}
 		
 		return observingIds;
@@ -118,8 +120,10 @@ public class Person extends BaseEntity {
 
 	protected long[] getPeopleObservedReferences(){
 		long[] observedIds = new long[peopleObserved.size()];
-		for (int i =0; i < peopleObserved.size(); i++) {
-			observedIds[i] = peopleObserved.get(i).identity;
+		int i =0;
+		for(Person p: peopleObserved) {
+			observedIds[i] = p.identity;
+			i++;
 		}
 		return observedIds;
 	}
