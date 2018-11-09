@@ -198,10 +198,13 @@ public class PersonService {
 	private void createPerson(EntityManager em, String surName, String firstName, String email, String street, 
 			String postCode, String city, String password, Document avatar) {
 		
+		Person person = new Person(avatar);
 		Address address = new Address(street, postCode, city);
 		Name name = new Name(firstName, surName);
-		Group group = Group.USER;
-		Person person = new Person(name, email, password, avatar, group, address);
+		person.setAddress(address);
+		person.setName(name);
+		person.setEmail(email);
+		person.setPassword(password);
 		
 		em.getTransaction().begin();
 		em.persist(person);

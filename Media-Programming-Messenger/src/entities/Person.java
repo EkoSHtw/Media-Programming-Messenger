@@ -87,8 +87,8 @@ public class Person extends BaseEntity {
 		super();
 		
 		this.name = new Name();
-		this.email = email;
-		this.password = HashTools.sha256HashCode(password);
+		this.email = "";
+		this.password = HashTools.sha256HashCode("");
 		this.avatar = avatar;
 		this.messages = Collections.emptySet();
 		this.group = Group.USER;

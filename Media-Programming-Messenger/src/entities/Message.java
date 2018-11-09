@@ -30,6 +30,7 @@ public class Message extends BaseEntity {
 	@JoinColumn(name = "authorReference")
 	private Person author;
 	
+	//TODO wofür ist das ? getter / setter?
 	private BaseEntity subject;
 
 	

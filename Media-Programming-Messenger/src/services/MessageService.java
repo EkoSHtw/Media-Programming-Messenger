@@ -17,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
+import entities.BaseEntity;
 import entities.Message;
 import entities.Person;
 
@@ -83,10 +84,10 @@ public class MessageService {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Produces(MediaType.TEXT_PLAIN)
-	public void setMessage( String body, Person author) {
+	public void setMessage( String body, Person author, BaseEntity subject) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		Message message = new Message(body, author);
+		Message message = new Message(body, author, subject);
 		
 		em.getTransaction().begin();
 		em.persist(message);
