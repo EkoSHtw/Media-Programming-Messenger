@@ -2,7 +2,7 @@ package services;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -58,9 +58,9 @@ public class PersonService {
 		final Person[] people = null;
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		
 		//people = em.find(); TODO implement here search function
 		if (people == null) throw new ClientErrorException(NOT_FOUND);
+		if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
 
 		return people;
 	}
