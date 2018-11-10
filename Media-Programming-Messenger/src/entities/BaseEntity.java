@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.sun.xml.internal.txw2.annotation.XmlAttribute;
+import com.sun.xml.internal.txw2.annotation.XmlElement;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.persistence.Column;
@@ -68,6 +69,7 @@ public class BaseEntity implements Comparable<BaseEntity>{
 
 	@JsonbProperty 
 	@XmlID
+	@XmlElement
 	//@XmlJavaTypeAdapter(type=long.class,value=this.to)
 	public long getIdentity() {
 		return identity;

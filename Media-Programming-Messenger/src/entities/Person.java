@@ -99,7 +99,7 @@ public class Person extends BaseEntity {
 	}
 	
 	
-
+	@JsonbProperty
 	protected long[] getPeopleObservingReference() {
 		long[] observingIds = new long[peopleObserving.size()];
 		int i =0;
@@ -111,11 +111,12 @@ public class Person extends BaseEntity {
 		return observingIds;
 	}
 	
+	@JsonbProperty
 	protected long getAvatarReference(){
 		return avatar.getIdentity();
 	}
 	
-
+	@JsonbProperty
 	protected long[] getPeopleObservedReferences(){
 		long[] observedIds = new long[peopleObserved.size()];
 		int i =0;
