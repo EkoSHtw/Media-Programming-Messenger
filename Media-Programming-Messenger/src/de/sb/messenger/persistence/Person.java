@@ -1,4 +1,4 @@
-package entities;
+package de.sb.messenger.persistence;
 
 import java.util.Collections;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package entities;
+package de.sb.messenger.persistence;
 
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;

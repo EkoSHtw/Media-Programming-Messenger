@@ -4,7 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import entities.BaseEntity;
+import de.sb.messenger.persistence.BaseEntity;
 
 public class SanityCheck {
 

@@ -1,4 +1,4 @@
-package services;
+package de.sb.messenger.rest;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
@@ -16,10 +16,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import de.sb.messenger.persistence.BaseEntity;
+import de.sb.messenger.persistence.Message;
+import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
-import entities.BaseEntity;
-import entities.Message;
-import entities.Person;
 
 @Path("messages")
 public class MessageService {

@@ -1,4 +1,4 @@
-package services;
+package de.sb.messenger.rest;
 
 import javax.annotation.Priority;
 import javax.ws.rs.BadRequestException;

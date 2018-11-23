@@ -1,13 +1,17 @@
-package entities;
+package de.sb.messenger.persistence;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.sun.xml.internal.txw2.annotation.XmlAttribute;
@@ -23,8 +27,10 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
+import de.sb.toolbox.bind.XmlLongToStringAdapter;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -32,30 +38,26 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 @JsonbVisibility(value = JsonProtectedPropertyStrategy.class)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlSeeAlso(value = { Person.class, Document.class, Message.class })
-public class BaseEntity implements Comparable<BaseEntity>{
+public abstract class BaseEntity implements Comparable<BaseEntity>{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "IDENTITY_ID", nullable = false, updatable = false, unique = true)
-	protected long identity;
+	private long identity;
 
-	@NotEmpty
-	@PositiveOrZero
+	@Positive
 	@Column(nullable = false, updatable = true)
-	protected int version;
+	private int version;
 
-	@NotEmpty
-	@PositiveOrZero
 	@Column(nullable = false, updatable = false)
-	protected long creationTimestamp;
+	private long creationTimestamp;
 
+	private Set<Message> messagesCaused;
 	
-	
-
-	protected BaseEntity() {
+	public BaseEntity() {
 		super();
-		this.creationTimestamp = getCreationTimestamp();
+		this.creationTimestamp = System.currentTimeMillis();
 		this.version = 1;
+		this.messagesCaused = Collections.emptySet();
 	}
 
 
@@ -68,11 +70,22 @@ public class BaseEntity implements Comparable<BaseEntity>{
 	}
 
 	@JsonbProperty 
+	@XmlAttribute
 	@XmlID
-	@XmlElement
-	//@XmlJavaTypeAdapter(type=long.class,value=this.to)
+	@XmlJavaTypeAdapter(type=long.class,value=XmlLongToStringAdapter.class)
 	public long getIdentity() {
 		return identity;
+	}
+
+	@JsonbProperty 
+	@XmlAttribute
+	public int getVersion() {
+		return version;
+	}
+
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	@Override
@@ -82,20 +95,12 @@ public class BaseEntity implements Comparable<BaseEntity>{
 	
 	@Override
 	public int compareTo(BaseEntity o) {
-		if(this.identity < o.getIdentity()) return 0;
-		else return 1;
+		return Long.compare(this.identity, o.identity);
 	}
 
-	@JsonbProperty 
-	public List<Message> getMessagesCaused() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	private long getCurrentDateTime() {
-		Date date = new Date();
-		long currentDateTime = date.getTime();
-		return currentDateTime;
+	@JsonbTransient 
+	@XmlTransient
+	public Set<Message> getMessagesCaused() {
+		return this.messagesCaused;
 	}
 }

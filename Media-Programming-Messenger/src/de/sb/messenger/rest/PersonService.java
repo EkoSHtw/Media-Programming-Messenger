@@ -1,4 +1,4 @@
-package services;
+package de.sb.messenger.rest;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
@@ -24,15 +24,15 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import de.sb.messenger.persistence.Address;
+import de.sb.messenger.persistence.BaseEntity;
+import de.sb.messenger.persistence.Document;
+import de.sb.messenger.persistence.Group;
+import de.sb.messenger.persistence.HashTools;
+import de.sb.messenger.persistence.Message;
+import de.sb.messenger.persistence.Name;
+import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
-import entities.Address;
-import entities.BaseEntity;
-import entities.Document;
-import entities.Group;
-import entities.HashTools;
-import entities.Message;
-import entities.Name;
-import entities.Person;
 
 @Path("people")
 public class PersonService {
@@ -56,15 +56,15 @@ public class PersonService {
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	public Person[] getPeople ( String surName, String firstName, String email, String street, String postCode, String city, Group group) {
 		final Person[] people = null;
+	
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");	
+		//people = em.find(email, firstName, surName, street, city);
 		
-		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		//people = em.find(); TODO implement here search function
 		if (people == null) throw new ClientErrorException(NOT_FOUND);
 		if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
 
 		return people;
 	}
-	
 	
 	
 	
@@ -209,6 +209,7 @@ public class PersonService {
 		em.getTransaction().begin();
 		em.persist(person);
 		em.getTransaction().commit();
+		em.flush();
 	}
 	
 	
@@ -237,5 +238,6 @@ public class PersonService {
 		person.setEmail(email);
 		//TODO implement here update function
 		em.getTransaction().commit();
+		em.flush();
 	}
 }
