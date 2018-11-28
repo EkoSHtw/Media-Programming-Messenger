@@ -62,7 +62,6 @@ public abstract class BaseEntity implements Comparable<BaseEntity>{
 
 
 	
-	
 	@JsonbProperty
 	@XmlAttribute 
 	public long getCreationTimestamp() {
