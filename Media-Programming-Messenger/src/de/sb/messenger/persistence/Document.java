@@ -55,9 +55,11 @@ public class Document extends BaseEntity{
 	//TODO was soll hier rein? was ist unterschied content / contenthash
 	public Document(Person owner) {
 		super();
+		//platzhalter
 		this.contentHash = contentHash;
 		this.contentType = contentType;
 		this.content = HashTools.sha256HashCode(content);
+		
 		this.fileType = "jpg";
 		this.owner = owner;
 	}

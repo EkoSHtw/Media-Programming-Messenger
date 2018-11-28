@@ -85,7 +85,7 @@ public class Person extends BaseEntity {
 		this(null);
 	}
 	
-	//TODO wieso avatar übergeben? und keine mail ? wie wird das alles gesetzt beim anmelden ?
+	//TODO wieso avatar ï¿½bergeben? und keine mail ? wie wird das alles gesetzt beim anmelden ?
 	public Person( Document avatar) {
 		
 		super();
@@ -97,7 +97,7 @@ public class Person extends BaseEntity {
 		this.messages = Collections.emptySet();
 		this.group = Group.USER;
 		this.peopleObserving = Collections.emptySet();
-		this.peopleObserved = new HashSet<>();
+		this.peopleObserved = Collections.emptySet();
 		this.address = new Address();
 	}
 	
