@@ -43,10 +43,6 @@ public class Person extends BaseEntity {
 	@Embedded
 	private Name name;
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long identity;
-	
 	@NotNull
 	@Embedded
 	private Address address;
@@ -111,7 +107,7 @@ public class Person extends BaseEntity {
 		long[] observingIds = new long[peopleObserving.size()];
 		int i =0;
 		for(Person p: peopleObserving) {
-			observingIds[i] = p.identity;
+			observingIds[i] = p.getIdentity();
 			i++;
 		}
 		
@@ -128,7 +124,7 @@ public class Person extends BaseEntity {
 		long[] observedIds = new long[peopleObserved.size()];
 		int i =0;
 		for(Person p: peopleObserved) {
-			observedIds[i] = p.identity;
+			observedIds[i] = p.getIdentity();
 			i++;
 		}
 		return observedIds;
