@@ -5,6 +5,8 @@ import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,15 +17,12 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Address implements Comparable<Address> {
 	
-	@NotNull
 	@Size(min = 1, max = 63)
 	private String street;
 	
-	@NotNull
 	@Size(min = 1, max = 15)
 	private String postCode;
-	
-	@NotNull
+
 	@Size(min = 1, max = 63)
 	private String city;
 	
@@ -43,31 +42,37 @@ public class Address implements Comparable<Address> {
 	
 	
 	@JsonbProperty 
+	@XmlAttribute
 	public String getStreet() {
 		return street;
 	}
 
-	@JsonbTransient 
+	@JsonbTransient
+	@XmlTransient
 	public void setStreet(String street) {
 		this.street = street;
 	}
 
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute
 	public String getPostCode() {
 		return postCode;
 	}
 
-	@JsonbTransient 
+	@JsonbTransient
+	@XmlTransient
 	public void setPostCode(String postCode) {
 		this.postCode = postCode;
 	}
 
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute
 	public String getCity() {
 		return city;
 	}
 
-	@JsonbTransient 
+	@JsonbTransient
+	@XmlTransient
 	public void setCity(String city) {
 		this.city = city;
 	}

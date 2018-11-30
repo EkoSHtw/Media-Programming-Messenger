@@ -8,8 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
@@ -26,13 +26,13 @@ public class Message extends BaseEntity {
 	@Size(min =1, max = 4093)
 	private String body;
 	
-	@NotNull
+	//@NotNull
 	@ManyToOne
 	@JoinColumn(name = "authorReference")
 	private Person author;
 	
 	//TODO wofür ist das ? getter / setter?, datenbank refrence?
-	@NotNull
+	//@NotNull
 	@OneToOne
 	private BaseEntity subject;
 
@@ -48,23 +48,27 @@ public class Message extends BaseEntity {
 		this.subject = subject;
 	}
 
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute
 	protected long getAuthorReference() {
 		return author.getIdentity();
 		
 	}
 	
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute
 	protected long getSubjectReference() {
 		return this.getIdentity();
 	}
 	
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute
 	public String getMessage() {
 		return body;
 	}
 	
-	@JsonbProperty 
+	@JsonbProperty
+	@XmlAttribute
 	public Person getPerson() {
 		return author;
 	}
