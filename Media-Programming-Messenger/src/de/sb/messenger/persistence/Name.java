@@ -1,11 +1,14 @@
 package de.sb.messenger.persistence;
 
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlAccessType;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
@@ -14,11 +17,11 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Name implements Comparable<Name> {
 	
-	@NotNull
+//	@NotNull
 	@Size(min = 1, max = 31)
 	private String surName;
 	
-	@NotNull
+//	@NotNull
 	@Size(min = 1, max = 31)
 	private String firstName;
 
@@ -44,20 +47,25 @@ public class Name implements Comparable<Name> {
 	}
 
 	@JsonbProperty 
+	@XmlAttribute
 	public String getFirstName() {
 		return firstName;
 	}
 	
 	@JsonbProperty 
+	@XmlAttribute
 	public String getSurName() {
 		return surName;
 	}
 	
-	
+	@JsonbTransient
+	@XmlTransient
 	public void setSurname(String name) {
 		this.surName = name;
 	}
 	
+	@JsonbTransient
+	@XmlTransient
 	public void setFirstName(String name) {
 		this.firstName = name;
 	}

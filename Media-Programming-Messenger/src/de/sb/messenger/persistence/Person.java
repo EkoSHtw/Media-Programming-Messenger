@@ -21,6 +21,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import com.sun.xml.internal.txw2.annotation.XmlAttribute;
@@ -35,42 +36,41 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 @XmlType
 public class Person extends BaseEntity {
 	
-	@NotNull
+//	@NotNull
 	@Embedded
 	private Name name;
 	
-	@NotNull
+//	@NotNull
 	@Embedded
 	private Address address;
 	
-	@NotNull
 	@Email
 	@Size(min = 3, max = 128)
 	@Column(unique=true)
 	private String email;
 	
-	@NotNull
+//	@NotNull
 	@Size(min = 32, max = 32)
 	private byte[] password;
 	
-	@NotNull
+//	@NotNull
 	@OneToOne
 	private Document avatar;
 	
-	@NotNull
+//	@NotNull
 	@OneToMany
 	@JoinColumn
 	private Set<Message> messages;
 	
-	@NotNull
+//	@NotNull
 	@Enumerated
 	private Group group;
 	
-	@NotNull
+//	@NotNull
 	@ManyToMany(mappedBy = "peopleObserved")
 	private Set<Person> peopleObserving;
 
-	@NotNull
+//	@NotNull
 	@ManyToMany
 	@JoinTable
 	private Set<Person> peopleObserved;
@@ -99,6 +99,7 @@ public class Person extends BaseEntity {
 	
 	
 	@JsonbProperty
+	@XmlAttribute
 	protected long[] getPeopleObservingReference() {
 		long[] observingIds = new long[peopleObserving.size()];
 		int i =0;
@@ -111,11 +112,13 @@ public class Person extends BaseEntity {
 	}
 	
 	@JsonbProperty
+	@XmlAttribute
 	protected long getAvatarReference(){
 		return avatar.getIdentity();
 	}
 	
 	@JsonbProperty
+	@XmlAttribute
 	protected long[] getPeopleObservedReferences(){
 		long[] observedIds = new long[peopleObserved.size()];
 		int i =0;
@@ -125,7 +128,6 @@ public class Person extends BaseEntity {
 		}
 		return observedIds;
 	}
-	
 	
 
 	
@@ -137,6 +139,7 @@ public class Person extends BaseEntity {
 	
 	
 	@JsonbTransient
+	@XmlTransient
 	public void setName(Name name) {
 		this.name = name;
 	}
@@ -148,6 +151,7 @@ public class Person extends BaseEntity {
 	}
 
 	@JsonbTransient 
+	@XmlTransient
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -159,6 +163,7 @@ public class Person extends BaseEntity {
 	}
 	
 	@JsonbTransient 
+	@XmlTransient
 	public void setPassword( String password) {
 		this.password = HashTools.sha256HashCode(password);	
 	}
@@ -169,7 +174,8 @@ public class Person extends BaseEntity {
 		return address;
 	}
 
-	@JsonbTransient 
+	@JsonbTransient
+	@XmlTransient
 	public void setAddress(Address address) {
 		this.address = address;
 	}
@@ -192,7 +198,8 @@ public class Person extends BaseEntity {
 		return peopleObserved;
 	}
 	
-	@JsonbTransient 
+	@JsonbTransient
+	@XmlTransient
 	public void addPeopleObserving(Person person) {
 		this.peopleObserving.add(person);
 	}
@@ -203,7 +210,8 @@ public class Person extends BaseEntity {
 		return messages;
 	}
 	
-	@JsonbTransient 
+	@JsonbTransient
+	@XmlTransient
 	public void addMessage(Message message) {
 		this.messages.add(message);
 	}
