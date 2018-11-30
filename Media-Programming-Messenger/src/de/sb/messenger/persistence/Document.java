@@ -26,22 +26,18 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 @XmlType
 public class Document extends BaseEntity{
 	
-	@NotEmpty
 	@Size(min = 32, max = 32)
 	private byte contentHash;
 
-	@NotEmpty
 	@Size(min = 1, max = 63)
 	private String contentType;
 
-	@NotEmpty
 	private String fileType;
-	
-	@NotEmpty
+
 	@Size(min = 1, max = 16777215)
 	private byte[] content;
 	
-	@NotNull
+	//@NotNull
 	@OneToOne
 	private Person owner;
 	
