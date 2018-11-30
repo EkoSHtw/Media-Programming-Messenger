@@ -10,6 +10,7 @@ import javax.validation.constraints.Positive;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -84,7 +85,7 @@ public class MessageService {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Produces(MediaType.TEXT_PLAIN)
-	public void setMessage( String body, Person author, BaseEntity subject) {
+	public void setMessage( @HeaderParam("body") String body,@HeaderParam("author") Person author,BaseEntity subject) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		Message message = new Message(body, author, subject);

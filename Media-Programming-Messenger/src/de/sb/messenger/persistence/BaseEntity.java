@@ -102,4 +102,5 @@ public abstract class BaseEntity implements Comparable<BaseEntity>{
 	public Set<Message> getMessagesCaused() {
 		return this.messagesCaused;
 	}
+	
 }

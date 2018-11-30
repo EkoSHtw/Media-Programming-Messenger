@@ -54,7 +54,7 @@ public class PersonService {
 	 */
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public Person[] getPeople ( String surName, String firstName, String email, String street, String postCode, String city, Group group) {
+	public Person[] getPeople (@HeaderParam("surName") String surName,@HeaderParam("firstName") String firstName, @HeaderParam("email")String email,@HeaderParam("street") String street, @HeaderParam("postCode")String postCode, @HeaderParam("city")String city, @HeaderParam("group")Group group) {
 		final Person[] people = null;
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");	
@@ -90,8 +90,8 @@ public class PersonService {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Produces(MediaType.TEXT_PLAIN)
-	public void setPeople( long identity, String surName, String firstName, String email, String street, String postCode, 
-			String city, String password, Document avatar, Group group) {
+	public void setPeople(@HeaderParam("identity") long identity,@HeaderParam("surName") String surName,@HeaderParam("firstName") String firstName,@HeaderParam("email") String email, @HeaderParam("street")String street, @HeaderParam("postCode")String postCode, 
+			@HeaderParam("city") String city, @HeaderParam("password") String password,@HeaderParam("avatar") Document avatar, @HeaderParam("group")Group group) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		
