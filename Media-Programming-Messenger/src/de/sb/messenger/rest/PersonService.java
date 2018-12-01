@@ -37,7 +37,6 @@ import de.sb.toolbox.net.RestJpaLifecycleProvider;
 @Path("people")
 public class PersonService {
 
-	
 	/**
 	 * Returning all people matching the given criteria.
 	 * @param surName
@@ -105,8 +104,6 @@ public class PersonService {
 	
 	
 	
-	
-	
 	/**
 	 * Returns the person with the given identity.
 	 * @param personIdentity the person identity
@@ -116,7 +113,7 @@ public class PersonService {
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
 	@GET
-	@Path("{id}")
+	@Path("/{id}")
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	public Person getPerson ( 
 			//@HeaderParam(REQUESTER_IDENTITY) @Positive final long Requester_identity, 
@@ -143,7 +140,7 @@ public class PersonService {
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
 	@GET
-	@Path("{id}/avatar")
+	@Path("/{id}/avatar")
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	public Document getAvatar (@PathParam("id") @Positive final long personIdentity) {
 		
@@ -169,7 +166,7 @@ public class PersonService {
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
 	@PUT
-	@Path("{id}/avatar")
+	@Path("/{id}/avatar")
 	public void updateAvatar (@PathParam("id") @Positive final long personIdentity) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
@@ -195,8 +192,9 @@ public class PersonService {
 	 * @param password
 	 * @param avatar
 	 */
-	private void createPerson(EntityManager em, String surName, String firstName, String email, String street, 
-			String postCode, String city, String password, Document avatar) {
+	@POST
+	private void createPerson(EntityManager em,@PathParam("surName") String surName,@PathParam("firstName") String firstName,@PathParam("email") String email,@PathParam("street") String street, 
+			@PathParam("postCode")String postCode, @PathParam("city")String city,@PathParam("password") String password, @PathParam("avatar")Document avatar) {
 		
 		Person person = new Person(avatar);
 		Address address = new Address(street, postCode, city);
@@ -229,8 +227,10 @@ public class PersonService {
 	 * @param avatar
 	 * @param group
 	 */
-	private void updatePerson(EntityManager em, long identity, String surName, String firstName, String email, 
-			String street, String postCode, String city, Document avatar, Group group) {
+	@PUT
+	@Path("/{id}")
+	private void updatePerson(EntityManager em, @PathParam("id") long identity, @PathParam("surNAme")String surName,@PathParam("firstName") String firstName,@PathParam("email") String email, 
+			@PathParam("street")String street, @HeaderParam("postCode")String postCode, @PathParam("city")String city, @PathParam("avatar")Document avatar, Group group) {
 		
 		Person person = em.find(Person.class, identity);
 
@@ -239,5 +239,11 @@ public class PersonService {
 		//TODO implement here update function
 		em.getTransaction().commit();
 		em.flush();
+	}
+	
+	@PUT
+	@Path("/{id}/peopleObserved")
+	private void updatePeopleObserved(EntityManager em, @PathParam("id")long identity, @PathParam("id")long neObserved) {
+		
 	}
 }
