@@ -251,7 +251,7 @@ public class PersonService {
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	@Path("/{id}/peopleObserved")
-	private void updatePeopleObserved(EntityManager em, @PathParam("id")long identity, @PathParam("id")long neObserved) {
+	private void updatePeopleObserved(EntityManager em, @PathParam("id")long identity, long newObserved) {
 		
 	}
 }
