@@ -166,6 +166,8 @@ public class PersonService {
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
 	@PUT
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
+	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	@Path("/{id}/avatar")
 	public void updateAvatar (@PathParam("id") @Positive final long personIdentity) {
 		
@@ -193,8 +195,10 @@ public class PersonService {
 	 * @param avatar
 	 */
 	@POST
-	private void createPerson(EntityManager em,@PathParam("surName") String surName,@PathParam("firstName") String firstName,@PathParam("email") String email,@PathParam("street") String street, 
-			@PathParam("postCode")String postCode, @PathParam("city")String city,@PathParam("password") String password, @PathParam("avatar")Document avatar) {
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
+	@Produces({ APPLICATION_JSON, APPLICATION_XML })
+	private void createPerson(EntityManager em, String surName, String firstName, String email,String street, 
+			String postCode,String city, String password,Document avatar) {
 		
 		Person person = new Person(avatar);
 		Address address = new Address(street, postCode, city);
@@ -228,8 +232,10 @@ public class PersonService {
 	 * @param group
 	 */
 	@PUT
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
+	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	@Path("/{id}")
-	private void updatePerson(EntityManager em, @PathParam("id") long identity, @PathParam("surNAme")String surName,@PathParam("firstName") String firstName,@PathParam("email") String email, 
+	private void updatePerson(EntityManager em, @PathParam("id") long identity, @PathParam("surName")String surName,@PathParam("firstName") String firstName,@PathParam("email") String email, 
 			@PathParam("street")String street, @HeaderParam("postCode")String postCode, @PathParam("city")String city, @PathParam("avatar")Document avatar, Group group) {
 		
 		Person person = em.find(Person.class, identity);
@@ -242,6 +248,8 @@ public class PersonService {
 	}
 	
 	@PUT
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
+	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	@Path("/{id}/peopleObserved")
 	private void updatePeopleObserved(EntityManager em, @PathParam("id")long identity, @PathParam("id")long neObserved) {
 		
