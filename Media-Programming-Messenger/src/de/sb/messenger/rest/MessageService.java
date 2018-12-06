@@ -22,7 +22,7 @@ import de.sb.messenger.persistence.Message;
 import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 
-@Path("messages")
+@Path("/messages")
 public class MessageService {
 
 

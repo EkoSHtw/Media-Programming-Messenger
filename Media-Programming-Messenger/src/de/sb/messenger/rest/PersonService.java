@@ -251,7 +251,10 @@ public class PersonService {
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	@Path("/{id}/peopleObserved")
-	private void updatePeopleObserved(EntityManager em, @PathParam("id")long identity, long newObserved) {
-		
+	private void updatePeopleObserved(EntityManager em, @PathParam("id")long identity, long newObservedId) {
+		Person person = em.find(Person.class, identity);
+		//TODO 
+		//loop for newObser vedId if it is already in list remove else add
+		person.addPeopleObserving(em.find(Person.class, newObservedId));
 	}
 }
