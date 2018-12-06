@@ -34,7 +34,7 @@ import de.sb.messenger.persistence.Name;
 import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 
-@Path("people")
+@Path("person")
 public class PersonService {
 
 	/**
