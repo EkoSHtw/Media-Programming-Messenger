@@ -18,7 +18,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -36,11 +35,9 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 @XmlType
 public class Person extends BaseEntity {
 	
-//	@NotNull
 	@Embedded
 	private Name name;
 	
-//	@NotNull
 	@Embedded
 	private Address address;
 	
@@ -49,28 +46,22 @@ public class Person extends BaseEntity {
 	@Column(unique=true)
 	private String email;
 	
-//	@NotNull
 	@Size(min = 32, max = 32)
 	private byte[] password;
 	
-//	@NotNull
 	@OneToOne
 	private Document avatar;
 	
-//	@NotNull
 	@OneToMany
 	@JoinColumn
 	private Set<Message> messages;
 	
-//	@NotNull
 	@Enumerated
 	private Group group;
 	
-//	@NotNull
 	@ManyToMany(mappedBy = "peopleObserved")
 	private Set<Person> peopleObserving;
 
-//	@NotNull
 	@ManyToMany
 	@JoinTable
 	private Set<Person> peopleObserved;

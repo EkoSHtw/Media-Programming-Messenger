@@ -4,12 +4,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.Response.Status.*;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.validation.constraints.Positive;
@@ -25,16 +19,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import de.sb.messenger.persistence.Address;
-import de.sb.messenger.persistence.BaseEntity;
 import de.sb.messenger.persistence.Document;
 import de.sb.messenger.persistence.Group;
-import de.sb.messenger.persistence.HashTools;
-import de.sb.messenger.persistence.Message;
 import de.sb.messenger.persistence.Name;
 import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 
-@Path("person")
+@Path("people")
 public class PersonService {
 
 	/**

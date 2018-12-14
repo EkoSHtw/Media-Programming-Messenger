@@ -26,13 +26,11 @@ public class Message extends BaseEntity {
 	@Size(min =1, max = 4093)
 	private String body;
 	
-	//@NotNull
 	@ManyToOne
 	@JoinColumn(name = "authorReference")
 	private Person author;
 	
 	//TODO wofür ist das ? getter / setter?, datenbank refrence?
-	//@NotNull
 	@OneToOne
 	private BaseEntity subject;
 

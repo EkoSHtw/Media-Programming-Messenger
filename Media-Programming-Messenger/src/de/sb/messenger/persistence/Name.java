@@ -4,7 +4,6 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -17,11 +16,9 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Name implements Comparable<Name> {
 	
-//	@NotNull
 	@Size(min = 1, max = 31)
 	private String surName;
 	
-//	@NotNull
 	@Size(min = 1, max = 31)
 	private String firstName;
 
