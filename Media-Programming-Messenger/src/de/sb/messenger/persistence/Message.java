@@ -2,6 +2,7 @@ package de.sb.messenger.persistence;
 
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbVisibility;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -16,24 +17,24 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
 
 @Entity
-@Table(name="Messages", schema="messenger")
-@PrimaryKeyJoinColumn(name="IDENTITY_ID")
+@Table(name="Message", schema="messenger")
+@PrimaryKeyJoinColumn(name="messageIdentity")
 @JsonbVisibility(value = JsonProtectedPropertyStrategy.class)
 @XmlRootElement
 @XmlType
 public class Message extends BaseEntity {
 	
+	@Column(nullable = false, updatable = false, insertable = true)
 	@Size(min =1, max = 4093)
 	private String body;
-	
-	//@NotNull
-	@ManyToOne
-	@JoinColumn(name = "authorReference")
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "authorReference", nullable = false, updatable = false, insertable = true)
 	private Person author;
 	
-	//TODO wofür ist das ? getter / setter?, datenbank refrence?
-	//@NotNull
-	@OneToOne
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "subjectReference", nullable = false, updatable = false, insertable = true)
 	private BaseEntity subject;
 
 	

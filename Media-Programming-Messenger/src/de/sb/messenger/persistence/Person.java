@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -29,12 +30,18 @@ import com.sun.xml.internal.txw2.annotation.XmlAttribute;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
 @Entity
-@Table(name="People", schema="messenger")
-@PrimaryKeyJoinColumn(name="IDENTITY_ID")
+@Table(name="Person", schema="messenger")
+@PrimaryKeyJoinColumn(name="personIdentity")
 @JsonbVisibility(value = JsonProtectedPropertyStrategy.class)
 @XmlRootElement
 @XmlType
 public class Person extends BaseEntity {
+	
+	
+
+	static private final String DEFAULT_PASSWORD = "";
+	static private final byte[] DEFAULT_PASSWORD_HASH = HashTools.sha256HashCode(DEFAULT_PASSWORD);
+	
 	
 //	@NotNull
 	@Embedded
@@ -51,46 +58,47 @@ public class Person extends BaseEntity {
 	
 //	@NotNull
 	@Size(min = 32, max = 32)
-	private byte[] password;
+	private byte[] passwordHash;
 	
 //	@NotNull
 	@OneToOne
 	private Document avatar;
 	
 //	@NotNull
-	@OneToMany
-	@JoinColumn
-	private Set<Message> messages;
+	@OneToMany(mappedBy = "author", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
+	private Set<Message> messagesAuthored;
 	
 //	@NotNull
 	@Enumerated
 	private Group group;
 	
 //	@NotNull
-	@ManyToMany(mappedBy = "peopleObserved")
+	@ManyToMany(mappedBy = "peopleObserved", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
 	private Set<Person> peopleObserving;
 
 //	@NotNull
 	@ManyToMany
-	@JoinTable
+	@JoinTable(
+			schema = "messenger",
+			name = "ObservationAssociation",
+			joinColumns = ,
+			inverseJoinColumns = ,
+			uniqueConstraints = 
+	)
 	private Set<Person> peopleObserved;
 	
 	
 	
 	protected Person() {
 		this(null);
-	}
+	}	
 	
-	//TODO wieso avatar übergeben? und keine mail ? wie wird das alles gesetzt beim anmelden ?
-	public Person( Document avatar) {
-		
-		super();
-		
+	public Person( Document avatar) {			
 		this.name = new Name();
-		this.email = "";
-		this.password = HashTools.sha256HashCode("");
+		this.email = null;
+		this.passwordHash = DEFAULT_PASSWORD_HASH;
 		this.avatar = avatar;
-		this.messages = Collections.emptySet();
+		this.messagesAuthored = Collections.emptySet();
 		this.group = Group.USER;
 		this.peopleObserving = Collections.emptySet();
 		this.peopleObserved = Collections.emptySet();
@@ -129,7 +137,6 @@ public class Person extends BaseEntity {
 		return observedIds;
 	}
 	
-
 	
 	@JsonbProperty 
 	@XmlAttribute 
@@ -137,35 +144,24 @@ public class Person extends BaseEntity {
 		return name;
 	}
 	
-	
-	@JsonbTransient
-	@XmlTransient
-	public void setName(Name name) {
-		this.name = name;
-	}
-
 	@JsonbProperty
 	@XmlAttribute 
 	public String getEmail() {
 		return email;
 	}
 
-	@JsonbTransient 
-	@XmlTransient
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	@JsonbProperty 
-	@XmlAttribute 
+	@JsonbTransient 
+	@XmlTransient 
 	public byte[] getPasswordHash() {
-		return password;
+		return passwordHash;
 	}
 	
-	@JsonbTransient 
-	@XmlTransient
-	public void setPassword( String password) {
-		this.password = HashTools.sha256HashCode(password);	
+	public void setPasswordHash( byte[] passwordHash) {
+		this.passwordHash = passwordHash;	
 	}
 
 	@JsonbProperty
@@ -174,11 +170,6 @@ public class Person extends BaseEntity {
 		return address;
 	}
 
-	@JsonbTransient
-	@XmlTransient
-	public void setAddress(Address address) {
-		this.address = address;
-	}
 
 	@JsonbProperty 
 	@XmlAttribute 
@@ -186,34 +177,23 @@ public class Person extends BaseEntity {
 		return group;
 	}
 	
-	@JsonbProperty 
-	@XmlAttribute 
+	@JsonbTransient 
+	@XmlTransient
 	public Set<Person> getPeopleObserving() {
 		return peopleObserving;
 	}
 
-	@JsonbProperty 
-	@XmlAttribute 
+	@JsonbTransient 
+	@XmlTransient	
 	public Set<Person> getPeopleObserved(){
 		return peopleObserved;
 	}
-	
-	@JsonbTransient
-	@XmlTransient
-	public void addPeopleObserving(Person person) {
-		this.peopleObserving.add(person);
-	}
-	
-	@JsonbProperty
-	@XmlAttribute 
-	public Set<Message> getMessages(){
-		return messages;
-	}
-	
-	@JsonbTransient
-	@XmlTransient
-	public void addMessage(Message message) {
-		this.messages.add(message);
-	}
 
+	@JsonbTransient 
+	@XmlTransient	
+	public Set<Message> getMessagesAuthored(){
+		return messagesAuthored;
+	}
+	
+	//getReference
 }
