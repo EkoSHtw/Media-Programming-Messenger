@@ -20,7 +20,7 @@ public class Name implements Comparable<Name> {
 	private String surName;
 	
 	@Size(min = 1, max = 31)
-	private String firstName;
+	private String foreName;
 
 	
 	
@@ -32,7 +32,7 @@ public class Name implements Comparable<Name> {
 	
 	public Name(String firstName, String surName) {
 		super();
-		this.firstName = firstName;
+		this.foreName = firstName;
 		this.surName = surName;
 	}
 	
@@ -40,13 +40,13 @@ public class Name implements Comparable<Name> {
 	@Override
 	public int compareTo(Name o) {
 		int last = this.surName.compareTo(o.surName);
-		return last == 0 ? this.firstName.compareTo(o.firstName) : last;
+		return last == 0 ? this.foreName.compareTo(o.foreName) : last;
 	}
 
 	@JsonbProperty 
 	@XmlAttribute
 	public String getFirstName() {
-		return firstName;
+		return foreName;
 	}
 	
 	@JsonbProperty 
@@ -64,6 +64,6 @@ public class Name implements Comparable<Name> {
 	@JsonbTransient
 	@XmlTransient
 	public void setFirstName(String name) {
-		this.firstName = name;
+		this.foreName = name;
 	}
 }

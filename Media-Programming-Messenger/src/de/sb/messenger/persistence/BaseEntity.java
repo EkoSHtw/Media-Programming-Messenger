@@ -26,6 +26,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -33,6 +34,7 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 import de.sb.toolbox.bind.XmlLongToStringAdapter;
 
 @Entity
+@Table(name="BaseEntity", schema="messenger")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "discriminator")
 @JsonbVisibility(value = JsonProtectedPropertyStrategy.class)
@@ -48,7 +50,7 @@ public abstract class BaseEntity implements Comparable<BaseEntity>{
 	@Column(nullable = false, updatable = true)
 	private int version;
 
-	@Column(nullable = false, updatable = false)
+	@Column(nullable = false, updatable = false, insertable = true)
 	private long creationTimestamp;
 
 	private Set<Message> messagesCaused;

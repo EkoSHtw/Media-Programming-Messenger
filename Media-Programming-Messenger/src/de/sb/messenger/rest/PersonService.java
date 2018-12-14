@@ -6,6 +6,7 @@ import static javax.ws.rs.core.Response.Status.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.validation.constraints.Positive;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -25,7 +26,11 @@ import de.sb.messenger.persistence.Name;
 import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 
+<<<<<<< HEAD
 @Path("people")
+=======
+@Path("/people")
+>>>>>>> 9f786809f468b6788bfcfdcd365a4a0466abe101
 public class PersonService {
 
 	/**
@@ -44,13 +49,17 @@ public class PersonService {
 	 */
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public Person[] getPeople (@HeaderParam("surName") String surName,@HeaderParam("firstName") String firstName, @HeaderParam("email")String email,@HeaderParam("street") String street, @HeaderParam("postCode")String postCode, @HeaderParam("city")String city, @HeaderParam("group")Group group) {
-		final Person[] people = null;
+	public Person[] getPeople (@HeaderParam("surName") String surName,@HeaderParam("foreName") String firstName, @HeaderParam("email")String email) {
+		Person[] people = null;
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");	
-		//people = em.find(email, firstName, surName, street, city);
+		//find(surNameemail, firstName, email,  street, city);
+		Query query = em.createQuery("Select p.identity from Person as p where (:surName = p.surName)");
+		List<Person> pList = query.getResultList();
+		
 		
 		if (people == null) throw new ClientErrorException(NOT_FOUND);
+		
 		if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
 
 		return people;
@@ -84,6 +93,7 @@ public class PersonService {
 			@HeaderParam("city") String city, @HeaderParam("password") String password,@HeaderParam("avatar") Document avatar, @HeaderParam("group")Group group) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+	
 		
 		if(identity == 0) {
 			createPerson(em, surName, firstName, email, street, postCode, city, password, avatar);
@@ -189,15 +199,18 @@ public class PersonService {
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	private void createPerson(EntityManager em, String surName, String firstName, String email,String street, 
-			String postCode,String city, String password,Document avatar) {
+			String postCode,String city, byte[] passwordHash,Document avatar) {
 		
 		Person person = new Person(avatar);
 		Address address = new Address(street, postCode, city);
 		Name name = new Name(firstName, surName);
-		person.setAddress(address);
-		person.setName(name);
+		person.getAddress().setCity(city);
+		person.getAddress().setPostCode(postCode);
+		person.getAddress().setStreet(street);
+		person.getName().setFirstName(firstName);
+		person.getName().setSurname(surName);
 		person.setEmail(email);
-		person.setPassword(password);
+		person.setPasswordHash(passwordHash);
 		
 		em.getTransaction().begin();
 		em.persist(person);

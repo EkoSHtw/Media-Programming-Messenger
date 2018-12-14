@@ -1,7 +1,9 @@
 package de.sb.messenger.persistence;
 
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -11,6 +13,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import com.sun.xml.internal.txw2.annotation.XmlAttribute;
@@ -19,52 +22,45 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
 
 @Entity
-@Table(name="Documents", schema="messenger")
-@PrimaryKeyJoinColumn(name="IDENTITY_ID")
+@Table(name="Document", schema="messenger")
+@PrimaryKeyJoinColumn(name="documentIdentity")
 @JsonbVisibility(value = JsonProtectedPropertyStrategy.class)
 @XmlRootElement
 @XmlType
 public class Document extends BaseEntity{
 	
+	static private final byte[] DEFAULT_CONTENT = new byte[0];
+	static private final byte[] DEFAULT_CONTENT_HASH = HashTools.sha256HashCode(DEFAULT_CONTENT);
+	
+	@Column(nullable = false, updatable = false, insertable = true)
+	@NotNull
 	@Size(min = 32, max = 32)
-	private byte contentHash;
-
+	private byte[] contentHash;
+	
+	@Column(nullable = false, updatable = false, insertable = true)
+	@NotNull
 	@Size(min = 1, max = 63)
 	private String contentType;
 
-	private String fileType;
-
+	@Column(nullable = false, updatable = false, insertable = true)
+	@NotNull
 	@Size(min = 1, max = 16777215)
 	private byte[] content;
-	
-	//@NotNull
-	@OneToOne
-	private Person owner;
-	
+		
 
 	
-	
-	protected Document() {
-		this(null);
-	}
-	
-	//TODO was soll hier rein? was ist unterschied content / contenthash
-	public Document(Person owner) {
+	public Document() {
 		super();
-		//platzhalter
-		this.contentHash = contentHash;
-		this.contentType = contentType;
-		this.content = HashTools.sha256HashCode(content);
-		
-		this.fileType = "jpg";
-		this.owner = owner;
+		this.content = DEFAULT_CONTENT;
+		this.contentHash = DEFAULT_CONTENT_HASH;
+		this.contentType = "application/octet-stream";
 	}
 	
 
 	
 	@JsonbProperty
 	@XmlAttribute 
-	public byte getContentHash() {
+	public byte[] getContentHash() {
 		return contentHash;
 	}
 
@@ -74,28 +70,17 @@ public class Document extends BaseEntity{
 		return contentType;
 	}
 
-	@JsonbProperty 
-	@XmlAttribute 
+	@JsonbTransient
+	@XmlTransient
 	public byte[] getContent() {
 		return content;
 	}
-
-	@JsonbProperty 
-	@XmlAttribute 
-	public String getFileType() {
-		return fileType;
-	}
-
-	@JsonbProperty 
-	@XmlAttribute 
-	public Person getOwner() {
-		return owner;
-	}
 	
+	
+	//TODO get image size and resize
 	@JsonbProperty 
 	@XmlAttribute 
-	public byte[] _scaledImageContent(int width, int height) {
+	static public byte[] scaledImageContent(int width, int height) {
 		return content;
-		//return fileType * content * width * height;
 	}
 }
