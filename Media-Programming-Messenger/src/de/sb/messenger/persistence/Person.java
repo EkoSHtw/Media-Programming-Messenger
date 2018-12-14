@@ -70,10 +70,10 @@ public class Person extends BaseEntity {
 	@ManyToMany
 	@JoinTable(
 			schema = "messenger",
-			name = "ObservationAssociation",
-			joinColumns = ,
-			inverseJoinColumns = ,
-			uniqueConstraints = 
+			name = "ObservationAssociation"
+//			joinColumns = @JoinColumn(peopleObserved),
+//			inverseJoinColumns = @JoinColumn(peopleObserving),
+//			uniqueConstraints = 
 	)
 	private Set<Person> peopleObserved;
 	

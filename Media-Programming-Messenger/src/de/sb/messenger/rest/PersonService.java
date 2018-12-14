@@ -4,6 +4,8 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.Response.Status.*;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -87,7 +89,7 @@ public class PersonService {
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Produces(MediaType.TEXT_PLAIN)
 	public void setPeople(@HeaderParam("identity") long identity,@HeaderParam("surName") String surName,@HeaderParam("firstName") String firstName,@HeaderParam("email") String email, @HeaderParam("street")String street, @HeaderParam("postCode")String postCode, 
-			@HeaderParam("city") String city, @HeaderParam("password") String password,@HeaderParam("avatar") Document avatar, @HeaderParam("group")Group group) {
+			@HeaderParam("city") String city, @HeaderParam("password") byte[] password,@HeaderParam("avatar") Document avatar, @HeaderParam("group")Group group) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 	

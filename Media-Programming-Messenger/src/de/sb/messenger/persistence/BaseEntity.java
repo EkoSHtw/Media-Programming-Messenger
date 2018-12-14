@@ -1,8 +1,6 @@
 package de.sb.messenger.persistence;
 
 import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import javax.json.bind.annotation.JsonbProperty;
@@ -15,7 +13,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.sun.xml.internal.txw2.annotation.XmlAttribute;
-import com.sun.xml.internal.txw2.annotation.XmlElement;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.persistence.Column;
@@ -27,9 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 import de.sb.toolbox.bind.XmlLongToStringAdapter;
 
