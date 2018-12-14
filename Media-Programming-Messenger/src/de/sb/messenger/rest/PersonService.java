@@ -54,11 +54,11 @@ public class PersonService {
 	 */
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public Person[] getPeople (@HeaderParam("surName") String surName,@HeaderParam("firstName") String firstName, @HeaderParam("email")String email) {
+	public Person[] getPeople (@HeaderParam("surName") String surName,@HeaderParam("foreName") String firstName, @HeaderParam("email")String email) {
 		Person[] people = null;
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");	
-		//people = em.find(surNameemail, firstName, email,  street, city);
+		//find(surNameemail, firstName, email,  street, city);
 		Query query = em.createQuery("Select p.identity from Person as p where (:surName = p.surName)");
 		List<Person> pList = query.getResultList();
 		
@@ -204,15 +204,18 @@ public class PersonService {
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	private void createPerson(EntityManager em, String surName, String firstName, String email,String street, 
-			String postCode,String city, String password,Document avatar) {
+			String postCode,String city, byte[] passwordHash,Document avatar) {
 		
 		Person person = new Person(avatar);
 		Address address = new Address(street, postCode, city);
 		Name name = new Name(firstName, surName);
-		person.setAddress(address);
-		person.setName(name);
+		person.getAddress().setCity(city);
+		person.getAddress().setPostCode(postCode);
+		person.getAddress().setStreet(street);
+		person.getName().setFirstName(firstName);
+		person.getName().setSurname(surName);
 		person.setEmail(email);
-		person.setPassword(password);
+		person.setPasswordHash(passwordHash);
 		
 		em.getTransaction().begin();
 		em.persist(person);
