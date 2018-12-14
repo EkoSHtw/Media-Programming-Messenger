@@ -59,7 +59,7 @@ public class PersonService {
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");	
 		//people = em.find(surNameemail, firstName, email,  street, city);
-		Query query = em.createQuery("Select " + surName + " from person");
+		Query query = em.createQuery("Select p.identity from Person as p where (:surName = p.surName)");
 		List<Person> pList = query.getResultList();
 		
 		
