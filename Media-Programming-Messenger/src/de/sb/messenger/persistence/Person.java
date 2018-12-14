@@ -184,6 +184,4 @@ public class Person extends BaseEntity {
 	public Set<Message> getMessagesAuthored(){
 		return messagesAuthored;
 	}
-	
-	//getReference
 }

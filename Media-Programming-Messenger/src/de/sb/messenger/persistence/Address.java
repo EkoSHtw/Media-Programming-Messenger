@@ -1,14 +1,11 @@
 package de.sb.messenger.persistence;
 
 import javax.json.bind.annotation.JsonbProperty;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
@@ -25,6 +22,8 @@ public class Address implements Comparable<Address> {
 
 	@Size(min = 1, max = 63)
 	private String city;
+	
+	
 	
 	
 	protected Address() {
@@ -47,8 +46,6 @@ public class Address implements Comparable<Address> {
 		return street;
 	}
 
-	@JsonbTransient
-	@XmlTransient
 	public void setStreet(String street) {
 		this.street = street;
 	}
@@ -59,8 +56,6 @@ public class Address implements Comparable<Address> {
 		return postCode;
 	}
 
-	@JsonbTransient
-	@XmlTransient
 	public void setPostCode(String postCode) {
 		this.postCode = postCode;
 	}
@@ -71,8 +66,6 @@ public class Address implements Comparable<Address> {
 		return city;
 	}
 
-	@JsonbTransient
-	@XmlTransient
 	public void setCity(String city) {
 		this.city = city;
 	}

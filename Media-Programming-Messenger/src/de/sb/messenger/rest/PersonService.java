@@ -201,8 +201,6 @@ public class PersonService {
 			String postCode,String city, byte[] passwordHash,Document avatar) {
 		
 		Person person = new Person(avatar);
-		Address address = new Address(street, postCode, city);
-		Name name = new Name(firstName, surName);
 		person.getAddress().setCity(city);
 		person.getAddress().setPostCode(postCode);
 		person.getAddress().setStreet(street);

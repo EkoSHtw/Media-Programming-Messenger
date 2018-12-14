@@ -1,13 +1,11 @@
 package de.sb.messenger.persistence;
 
 import javax.json.bind.annotation.JsonbProperty;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlAccessType;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
@@ -55,14 +53,10 @@ public class Name implements Comparable<Name> {
 		return surName;
 	}
 	
-	@JsonbTransient
-	@XmlTransient
 	public void setSurname(String name) {
 		this.surName = name;
 	}
 	
-	@JsonbTransient
-	@XmlTransient
 	public void setFirstName(String name) {
 		this.foreName = name;
 	}
