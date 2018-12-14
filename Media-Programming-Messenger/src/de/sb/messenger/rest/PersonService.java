@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.validation.constraints.Positive;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -34,7 +35,7 @@ import de.sb.messenger.persistence.Name;
 import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 
-@Path("person")
+@Path("/people")
 public class PersonService {
 
 	/**
@@ -54,12 +55,17 @@ public class PersonService {
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	public Person[] getPeople (@HeaderParam("surName") String surName,@HeaderParam("firstName") String firstName, @HeaderParam("email")String email,@HeaderParam("street") String street, @HeaderParam("postCode")String postCode, @HeaderParam("city")String city, @HeaderParam("group")Group group) {
-		final Person[] people = null;
+		Person[] people = null;
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");	
-		//people = em.find(email, firstName, surName, street, city);
+		//people = em.find(surNameemail, firstName, email,  street, city);
+		Query query = em.createQuery("Select " + surName + " from Person");
+		List<Person> pList = query.getResultList();
 		
+		
+		System.out.println("get people");
 		if (people == null) throw new ClientErrorException(NOT_FOUND);
+		
 		if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
 
 		return people;
@@ -93,6 +99,7 @@ public class PersonService {
 			@HeaderParam("city") String city, @HeaderParam("password") String password,@HeaderParam("avatar") Document avatar, @HeaderParam("group")Group group) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+	
 		
 		if(identity == 0) {
 			createPerson(em, surName, firstName, email, street, postCode, city, password, avatar);
