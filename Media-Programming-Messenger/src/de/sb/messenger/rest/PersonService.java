@@ -254,8 +254,7 @@ public class PersonService {
 	@Path("/{id}/peopleObserved")
 	private void updatePeopleObserved(EntityManager em, @PathParam("id")long identity, long newObservedId) {
 		Person person = em.find(Person.class, identity);
-		//TODO 
-		//loop for newObser vedId if it is already in list remove else add
+		//TODO loop for newObser vedId if it is already in list remove else add
 		person.addPeopleObserving(em.find(Person.class, newObservedId));
 	}
 }

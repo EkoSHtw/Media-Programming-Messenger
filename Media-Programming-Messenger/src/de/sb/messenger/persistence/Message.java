@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,6 +26,7 @@ public class Message extends BaseEntity {
 	
 	@Column(nullable = false, updatable = false, insertable = true)
 	@Size(min =1, max = 4093)
+	@NotNull
 	private String body;
 
 	@ManyToOne(optional = false)

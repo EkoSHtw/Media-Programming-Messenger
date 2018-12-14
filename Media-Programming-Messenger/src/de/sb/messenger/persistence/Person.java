@@ -19,6 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -49,10 +50,13 @@ public class Person extends BaseEntity {
 	
 	@Email
 	@Size(min = 3, max = 128)
-	@Column(unique=true)
+	@Column(unique=true, nullable = false, updatable = true)
+	@NotNull
 	private String email;
 	
 	@Size(min = 32, max = 32)
+	@Column(nullable = false, updatable = true)
+	@NotNull
 	private byte[] passwordHash;
 	
 	@OneToOne

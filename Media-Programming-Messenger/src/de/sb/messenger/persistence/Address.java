@@ -5,7 +5,9 @@ import javax.json.bind.annotation.JsonbVisibility;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
@@ -14,13 +16,19 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Address implements Comparable<Address> {
 	
+	@NotNull
 	@Size(min = 1, max = 63)
+	@Column(nullable = false, updatable = true)
 	private String street;
 	
+	@NotNull
 	@Size(min = 1, max = 15)
+	@Column(nullable = false, updatable = true)
 	private String postCode;
 
+	@NotNull
 	@Size(min = 1, max = 63)
+	@Column(nullable = false, updatable = true)
 	private String city;
 	
 	

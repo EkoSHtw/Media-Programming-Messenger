@@ -24,6 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 import de.sb.toolbox.bind.XmlLongToStringAdapter;
@@ -46,6 +47,7 @@ public abstract class BaseEntity implements Comparable<BaseEntity>{
 	private int version;
 
 	@Column(nullable = false, updatable = false, insertable = true)
+	@NotNull
 	private long creationTimestamp;
 
 	private Set<Message> messagesCaused;
