@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -27,15 +26,6 @@ public class Message extends BaseEntity {
 	@Column(nullable = false, updatable = false, insertable = true)
 	@Size(min =1, max = 4093)
 	private String body;
-<<<<<<< HEAD
-	
-	@ManyToOne
-	@JoinColumn(name = "authorReference")
-	private Person author;
-	
-	//TODO wofür ist das ? getter / setter?, datenbank refrence?
-	@OneToOne
-=======
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "authorReference", nullable = false, updatable = false, insertable = true)
@@ -44,7 +34,6 @@ public class Message extends BaseEntity {
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "subjectReference", nullable = false, updatable = false, insertable = true)
->>>>>>> 9f786809f468b6788bfcfdcd365a4a0466abe101
 	private BaseEntity subject;
 
 	

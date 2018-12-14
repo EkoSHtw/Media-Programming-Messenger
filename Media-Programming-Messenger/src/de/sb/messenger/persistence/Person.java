@@ -36,16 +36,11 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 @XmlType
 public class Person extends BaseEntity {
 	
-<<<<<<< HEAD
-=======
-	
 
 	static private final String DEFAULT_PASSWORD = "";
 	static private final byte[] DEFAULT_PASSWORD_HASH = HashTools.sha256HashCode(DEFAULT_PASSWORD);
 	
 	
-//	@NotNull
->>>>>>> 9f786809f468b6788bfcfdcd365a4a0466abe101
 	@Embedded
 	private Name name;
 	
@@ -63,25 +58,13 @@ public class Person extends BaseEntity {
 	@OneToOne
 	private Document avatar;
 	
-<<<<<<< HEAD
-	@OneToMany
-	@JoinColumn
-	private Set<Message> messages;
-=======
-//	@NotNull
 	@OneToMany(mappedBy = "author", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
 	private Set<Message> messagesAuthored;
->>>>>>> 9f786809f468b6788bfcfdcd365a4a0466abe101
 	
 	@Enumerated
 	private Group group;
 	
-<<<<<<< HEAD
-	@ManyToMany(mappedBy = "peopleObserved")
-=======
-//	@NotNull
 	@ManyToMany(mappedBy = "peopleObserved", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
->>>>>>> 9f786809f468b6788bfcfdcd365a4a0466abe101
 	private Set<Person> peopleObserving;
 
 	@ManyToMany
