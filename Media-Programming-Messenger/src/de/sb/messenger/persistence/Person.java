@@ -66,7 +66,7 @@ public class Person extends BaseEntity {
 	private Set<Message> messagesAuthored;
 	
 	@Enumerated
-	private Group group;
+	private Group groupAlias;
 	
 	@ManyToMany(mappedBy = "peopleObserved", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
 	private Set<Person> peopleObserving;
@@ -93,7 +93,7 @@ public class Person extends BaseEntity {
 		this.passwordHash = DEFAULT_PASSWORD_HASH;
 		this.avatar = avatar;
 		this.messagesAuthored = Collections.emptySet();
-		this.group = Group.USER;
+		this.groupAlias = Group.USER;
 		this.peopleObserving = Collections.emptySet();
 		this.peopleObserved = Collections.emptySet();
 		this.address = new Address();
@@ -168,7 +168,7 @@ public class Person extends BaseEntity {
 	@JsonbProperty 
 	@XmlAttribute 
 	public Object getGroup() {
-		return group;
+		return groupAlias;
 	}
 	
 	@JsonbTransient 

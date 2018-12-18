@@ -2,7 +2,8 @@ package de.sb.messenger.rest;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
-import static javax.ws.rs.core.Response.Status.*;
+import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import javax.persistence.Query;
 import javax.validation.constraints.Positive;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -21,10 +23,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import de.sb.messenger.persistence.Address;
 import de.sb.messenger.persistence.Document;
 import de.sb.messenger.persistence.Group;
-import de.sb.messenger.persistence.Name;
 import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 
@@ -48,7 +48,10 @@ public class PersonService {
 	 */
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public Person[] getPeople (@HeaderParam("surName") String surName,@HeaderParam("foreName") String firstName, @HeaderParam("email")String email) {
+	public Person[] getPeople (
+			@HeaderParam("surName") String surName,
+			@HeaderParam("foreName") String firstName, 
+			@HeaderParam("email") String email) {
 		Person[] people = null;
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");	
@@ -88,14 +91,23 @@ public class PersonService {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Produces(MediaType.TEXT_PLAIN)
-	public void setPeople(@HeaderParam("identity") long identity,@HeaderParam("surName") String surName,@HeaderParam("firstName") String firstName,@HeaderParam("email") String email, @HeaderParam("street")String street, @HeaderParam("postCode")String postCode, 
-			@HeaderParam("city") String city, @HeaderParam("password") byte[] password,@HeaderParam("avatar") Document avatar, @HeaderParam("group")Group group) {
+	public void setPeople(
+			@FormParam("identity") long identity,
+			@FormParam("surName") String surName, 
+			@FormParam("firstName") String firstName,
+			@FormParam("email") String email, 
+			@FormParam("street") String street, 
+			@FormParam("postCode") String postCode, 
+			@FormParam("city") String city, 
+			@FormParam("password") String password,
+			@FormParam("avatar") Document avatar, 
+			@FormParam("group") Group group) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 	
 		
 		if(identity == 0) {
-			createPerson(em, surName, firstName, email, street, postCode, city, password, avatar);
+			//createPerson(em, surName, firstName, email, street, postCode, city, password, avatar);
 		}else{
 			updatePerson(em, identity, surName, firstName, email, street, postCode, city, avatar, group);
 		}
@@ -197,8 +209,16 @@ public class PersonService {
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	private void createPerson(EntityManager em, String surName, String firstName, String email,String street, 
-			String postCode,String city, byte[] passwordHash,Document avatar) {
+	public void createPerson(
+			EntityManager em, 
+			@FormParam("surName") String surName, 
+			@FormParam("firstName") String firstName, 
+			@FormParam("email") String email,
+			@FormParam("street") String street, 
+			@FormParam("postCode") String postCode,
+			@FormParam("city") String city, 
+			@FormParam("passwordHash") String passwordHash,
+			@FormParam("avatar") Document avatar) {
 		
 		Person person = new Person(avatar);
 		person.getAddress().setCity(city);
@@ -207,7 +227,7 @@ public class PersonService {
 		person.getName().setFirstName(firstName);
 		person.getName().setSurname(surName);
 		person.setEmail(email);
-		person.setPasswordHash(passwordHash);
+		//person.setPasswordHash(passwordHash);
 		
 		em.getTransaction().begin();
 		em.persist(person);
@@ -236,8 +256,17 @@ public class PersonService {
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	@Path("/{id}")
-	private void updatePerson(EntityManager em, @PathParam("id") long identity, @PathParam("surName")String surName,@PathParam("firstName") String firstName,@PathParam("email") String email, 
-			@PathParam("street")String street, @HeaderParam("postCode")String postCode, @PathParam("city")String city, @PathParam("avatar")Document avatar, Group group) {
+	public void updatePerson(
+			EntityManager em, 
+			@FormParam("id") long identity, 
+			@FormParam("surName")String surName,
+			@FormParam("firstName") String firstName,
+			@FormParam("email") String email, 
+			@FormParam("street")String street, 
+			@FormParam("postCode")String postCode, 
+			@FormParam("city")String city, 
+			@FormParam("avatar")Document avatar, 
+			@FormParam("group")Group group) {
 		
 		Person person = em.find(Person.class, identity);
 
@@ -252,9 +281,12 @@ public class PersonService {
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	@Path("/{id}/peopleObserved")
-	private void updatePeopleObserved(EntityManager em, @PathParam("id")long identity, long newObservedId) {
+	public void updatePeopleObserved(
+			EntityManager em, 
+			@FormParam("id")long identity, 
+			@FormParam("newObservedId") long newObservedId) {
 		Person person = em.find(Person.class, identity);
 		//TODO loop for newObser vedId if it is already in list remove else add
-		person.addPeopleObserving(em.find(Person.class, newObservedId));
+		//person.addPeopleObserving(em.find(Person.class, newObservedId));
 	}
 }
