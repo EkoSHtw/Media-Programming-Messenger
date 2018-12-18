@@ -60,6 +60,7 @@ public class Person extends BaseEntity {
 	private byte[] passwordHash;
 	
 	@OneToOne
+	@JoinColumn(name="avatarReference", nullable = false, updatable = true)
 	private Document avatar;
 	
 	@OneToMany(mappedBy = "author", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
