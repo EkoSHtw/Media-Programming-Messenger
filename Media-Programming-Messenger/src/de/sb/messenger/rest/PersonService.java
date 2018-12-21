@@ -21,6 +21,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import de.sb.messenger.persistence.Document;
@@ -49,20 +50,23 @@ public class PersonService {
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	public Person[] getPeople (
-			@HeaderParam("surName") String surName,
-			@HeaderParam("foreName") String firstName, 
-			@HeaderParam("email") String email) {
+			@QueryParam("surName") String surName,
+			@QueryParam("foreName") String foreName, 
+			@QueryParam("email") String email, 
+			@QueryParam("address") String address){
 		Person[] people = null;
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");	
-		//find(surNameemail, firstName, email,  street, city);
-		Query query = em.createQuery("Select p.identity from Person as p where (:surName = p.surName)");
+	
+		//so richtig????
+		Query query = em.createQuery("Select p.identity from Person as p where (:surName = p.surName, :foreName = p.foreName)", Person.class);
+	
 		List<Person> pList = query.getResultList();
 		
 		
 		if (people == null) throw new ClientErrorException(NOT_FOUND);
 		
-		if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
+		//if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
 
 		return people;
 	}
@@ -224,7 +228,7 @@ public class PersonService {
 		person.getAddress().setCity(city);
 		person.getAddress().setPostCode(postCode);
 		person.getAddress().setStreet(street);
-		person.getName().setFirstName(firstName);
+		person.getName().setForename(firstName);
 		person.getName().setSurname(surName);
 		person.setEmail(email);
 		//person.setPasswordHash(passwordHash);

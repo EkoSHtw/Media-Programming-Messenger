@@ -6,6 +6,7 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.validation.constraints.Positive;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -40,6 +41,7 @@ public class MessageService {
 		final Message[] messages = null;
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+		Query query;
 		
 		//messages = em.find();
 		if (messages == null) throw new ClientErrorException(NOT_FOUND);
@@ -88,8 +90,7 @@ public class MessageService {
 	public void setMessage( @HeaderParam("body") String body,@HeaderParam("author") Person author,BaseEntity subject) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		Message message = new Message(body, author, subject);
-		
+		Message message = new Message(author, subject);
 		em.getTransaction().begin();
 		em.persist(message);
 		em.getTransaction().commit();
