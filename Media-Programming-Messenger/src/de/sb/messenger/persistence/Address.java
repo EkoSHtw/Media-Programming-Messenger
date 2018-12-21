@@ -33,21 +33,6 @@ public class Address implements Comparable<Address> {
 	
 	
 	
-	
-	protected Address() {
-		this(null, null, null);
-	}
-	
-	public Address(String street,String postCode, String city) {
-		super();
-		this.street = street;
-		this.postCode = postCode;
-		this.city = city;
-	}
-
-	
-	
-	
 	@JsonbProperty 
 	@XmlAttribute
 	public String getStreet() {

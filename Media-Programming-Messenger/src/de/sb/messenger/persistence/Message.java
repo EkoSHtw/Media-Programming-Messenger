@@ -1,6 +1,7 @@
 package de.sb.messenger.persistence;
 
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
@@ -24,7 +26,7 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 @XmlType
 public class Message extends BaseEntity {
 	
-	@Column(nullable = false, updatable = false, insertable = true)
+	@Column(nullable = false, updatable = true)
 	@Size(min =1, max = 4093)
 	@NotNull
 	private String body;
@@ -40,12 +42,11 @@ public class Message extends BaseEntity {
 
 	
 	protected Message() {
-		this(null, null, null);
+		this(null, null);
 	}
 	
-	public Message(String body, Person author, BaseEntity subject) {
+	public Message(Person author, BaseEntity subject) {
 		super();
-		this.body = body;
 		this.author = author;
 		this.subject = subject;
 	}
@@ -63,15 +64,26 @@ public class Message extends BaseEntity {
 		return this.getIdentity();
 	}
 	
-	@JsonbProperty
-	@XmlAttribute
-	public String getMessage() {
-		return body;
-	}
-	
-	@JsonbProperty
-	@XmlAttribute
-	public Person getPerson() {
+	@JsonbTransient
+	@XmlTransient
+	public Person getAuthor() {
 		return author;
 	}
+	
+
+	@JsonbTransient
+	@XmlTransient
+	public BaseEntity getSubject() {
+		return subject;
+	}
+
+	@JsonbProperty
+	@XmlAttribute
+	public String getBody() {
+		return body;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
+	}	
 }

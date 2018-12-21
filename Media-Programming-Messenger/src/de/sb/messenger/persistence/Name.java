@@ -28,18 +28,6 @@ public class Name implements Comparable<Name> {
 
 	
 	
-
-	protected Name() {
-		this(null, null);
-	}
-	
-	
-	public Name(String firstName, String surName) {
-		super();
-		this.foreName = firstName;
-		this.surName = surName;
-	}
-	
 	
 	@Override
 	public int compareTo(Name o) {
@@ -49,8 +37,12 @@ public class Name implements Comparable<Name> {
 
 	@JsonbProperty 
 	@XmlAttribute
-	public String getFirstName() {
+	public String getForename() {
 		return foreName;
+	}
+	
+	public void setForename(String name) {
+		this.foreName = name;
 	}
 	
 	@JsonbProperty 
@@ -63,7 +55,5 @@ public class Name implements Comparable<Name> {
 		this.surName = name;
 	}
 	
-	public void setFirstName(String name) {
-		this.foreName = name;
-	}
+	
 }

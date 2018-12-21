@@ -1,5 +1,6 @@
 package de.sb.messenger.persistence;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -18,15 +20,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-
-import com.sun.xml.internal.txw2.annotation.XmlAttribute;
-
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
 @Entity
@@ -43,9 +46,11 @@ public class Person extends BaseEntity {
 	
 	
 	@Embedded
+	@Valid
 	private Name name;
 	
 	@Embedded
+	@Valid
 	private Address address;
 	
 	@Email
@@ -63,22 +68,26 @@ public class Person extends BaseEntity {
 	@JoinColumn(name="avatarReference", nullable = false, updatable = true)
 	private Document avatar;
 	
+	@NotNull
 	@OneToMany(mappedBy = "author", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
 	private Set<Message> messagesAuthored;
 	
-	@Enumerated
+	@Enumerated(EnumType.STRING)
+	@NotNull
 	private Group groupAlias;
 	
+	@NotNull
 	@ManyToMany(mappedBy = "peopleObserved", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
 	private Set<Person> peopleObserving;
 
+	@NotNull
 	@ManyToMany
 	@JoinTable(
 			schema = "messenger",
-			name = "ObservationAssociation"
-//			joinColumns = @JoinColumn(peopleObserved),
-//			inverseJoinColumns = @JoinColumn(peopleObserving),
-//			uniqueConstraints = 
+			name = "ObservationAssociation",
+			joinColumns = @JoinColumn(name = "observingReference"),
+			inverseJoinColumns = @JoinColumn(name = "observedReference"),
+			uniqueConstraints = @UniqueConstraint(columnNames = {"observingReference", "observedReference"})
 	)
 	private Set<Person> peopleObserved;
 	
@@ -102,16 +111,11 @@ public class Person extends BaseEntity {
 	
 	
 	@JsonbProperty
-	@XmlAttribute
+	@XmlElement
 	protected long[] getPeopleObservingReference() {
-		long[] observingIds = new long[peopleObserving.size()];
-		int i =0;
-		for(Person p: peopleObserving) {
-			observingIds[i] = p.getIdentity();
-			i++;
-		}
-		
-		return observingIds;
+		final long[] references = this.peopleObserving.stream().mapToLong( Person :: getIdentity).toArray();
+		Arrays.sort(references);
+		return references;
 	}
 	
 	@JsonbProperty
@@ -121,15 +125,11 @@ public class Person extends BaseEntity {
 	}
 	
 	@JsonbProperty
-	@XmlAttribute
+	@XmlElement
 	protected long[] getPeopleObservedReferences(){
-		long[] observedIds = new long[peopleObserved.size()];
-		int i =0;
-		for(Person p: peopleObserved) {
-			observedIds[i] = p.getIdentity();
-			i++;
-		}
-		return observedIds;
+		final long[] references = this.peopleObserved.stream().mapToLong(Person::getIdentity).toArray();
+		Arrays.sort(references);
+		return references;
 	}
 	
 	
