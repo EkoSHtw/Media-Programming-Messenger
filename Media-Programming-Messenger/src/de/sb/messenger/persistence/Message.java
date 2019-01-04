@@ -54,14 +54,14 @@ public class Message extends BaseEntity {
 	@JsonbProperty
 	@XmlAttribute
 	protected long getAuthorReference() {
-		return author.getIdentity();
+		return this.author == null ? 0 : this.author.getIdentity();
 		
 	}
 	
 	@JsonbProperty
 	@XmlAttribute
 	protected long getSubjectReference() {
-		return this.getIdentity();
+		return this.subject == null ? 0 : this.subject.getIdentity();
 	}
 	
 	@JsonbTransient

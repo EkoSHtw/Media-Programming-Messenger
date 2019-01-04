@@ -112,24 +112,20 @@ public class Person extends BaseEntity {
 	
 	@JsonbProperty
 	@XmlElement
-	protected long[] getPeopleObservingReference() {
-		final long[] references = this.peopleObserving.stream().mapToLong( Person :: getIdentity).toArray();
-		Arrays.sort(references);
-		return references;
+	protected long[] getPeopleObservingReferences() {
+		return this.peopleObserving.stream().sorted().mapToLong(Person::getIdentity).toArray();
 	}
 	
 	@JsonbProperty
 	@XmlAttribute
 	protected long getAvatarReference(){
-		return avatar.getIdentity();
+		return this.avatar == null ? 0 : this.avatar.getIdentity();
 	}
 	
 	@JsonbProperty
 	@XmlElement
 	protected long[] getPeopleObservedReferences(){
-		final long[] references = this.peopleObserved.stream().mapToLong(Person::getIdentity).toArray();
-		Arrays.sort(references);
-		return references;
+		return this.peopleObserved.stream().sorted().mapToLong(Person::getIdentity).toArray();
 	}
 	
 	

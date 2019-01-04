@@ -5,13 +5,19 @@ import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.OK;
+import static de.sb.messenger.rest.BasicAuthenticationFilter.REQUESTER_IDENTITY;
 
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.RollbackException;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -24,6 +30,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 
 import de.sb.messenger.persistence.Document;
 import de.sb.messenger.persistence.Group;
@@ -34,6 +41,15 @@ import de.sb.toolbox.net.RestJpaLifecycleProvider;
 @Path("/people")
 public class PersonService {
 
+	static private final String QUERY_PEOPLE = "Select p.identity from Person as p where "
+			+ "(:surname is null or :surname = p.name.surname) and "
+			+ "(:forename is null or :forename = p.name.forename) and "
+			+ "(:email is null or :email = p.email)";
+	
+	static private final Comparator<Person> PERSON_COMPARATOR = Comparator
+			.comparing(Person::getName)
+			.thenComparing(Person::getEmail);
+	
 	/**
 	 * Returning all people matching the given criteria.
 	 * @param surName
@@ -50,19 +66,21 @@ public class PersonService {
 	 */
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public Person[] getPeople (
-			@QueryParam("surName") String surName,
-			@QueryParam("foreName") String foreName, 
+	public Person[] queryPeople (
+			@QueryParam("surname") String surname,
+			@QueryParam("forename") String forename, 
 			@QueryParam("email") String email, 
-			@QueryParam("address") String address){
-		Person[] people = null;
+			@QueryParam("street") String street,
+			@QueryParam("postcode") String postcode,
+			@QueryParam("city") String city,
+			@QueryParam("group") Group group
+	){
 	
-		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");	
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");			
 	
 		//so richtig????
-		Query query = em.createQuery("Select p.identity from Person as p where (:surName = p.surName, :foreName = p.foreName, "
-				+ ":email = p.email, :address = p.address").setParameter("surName", surName)
-				.setParameter("foreName", foreName).setParameter("email", email).setParameter("address", address);
+		Query query = em.createQuery(QUERY_PEOPLE).setParameter("surName", surname)
+				.setParameter("foreName", forename).setParameter("email", email).setParameter("address", address);
 		int resultOffSet = 1;
 		int resultLimit = 20;
 		List<Person> pList = query.setFirstResult(resultOffSet).setMaxResults(resultLimit).getResultList();
@@ -98,26 +116,38 @@ public class PersonService {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Produces(MediaType.TEXT_PLAIN)
-	public void setPeople(
-			@FormParam("identity") long identity,
-			@FormParam("surName") String surName, 
-			@FormParam("firstName") String firstName,
-			@FormParam("email") String email, 
-			@FormParam("street") String street, 
-			@FormParam("postCode") String postCode, 
-			@FormParam("city") String city, 
-			@FormParam("password") String password,
-			@FormParam("avatar") Document avatar, 
-			@FormParam("group") Group group) {
+	public long modifyPerson(
+			@HeaderParam(REQUESTER_IDENTITY) @Positive final long requesterIdentity,
+			@HeaderParam("Set-Password") @Size(min=4) String password,
+			@NotNull Person personTemplate
+	) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 	
-		
-		if(identity == 0) {
-			createPerson(em, surName, firstName, email, street, postCode, city, password, avatar);
+		final Person person;
+		final boolean insertMode = personTemplate.getIdentity() == 0;
+		if(insertMode) {
+			//TODO create person
 		}else{
-			updatePerson(em, identity, surName, firstName, email, street, postCode, city, avatar, group);
+			//TODO find person
 		}
+		//TODO get set data from person template into person
+		
+		if(insertMode) {
+			//TODO em.persist(person);
+		}else{
+			//TODO em.flush();
+		}
+		
+		try {
+			em.getTransaction().commit();
+		}catch(RollbackException e){
+			throw new ClientErrorException(Status.CONFLICT);
+		}finally {
+			em.getTransaction().begin();
+		}
+		
+		return person.getIdentity();
 	}
 	
 	
@@ -134,12 +164,14 @@ public class PersonService {
 	@GET
 	@Path("/{id}")
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public Person getPerson ( 
-			//@HeaderParam(REQUESTER_IDENTITY) @Positive final long Requester_identity, 
-			@PathParam("id") @Positive final long personIdentity ) {
-		
+	public Person findPerson ( 
+			@HeaderParam(REQUESTER_IDENTITY) @Positive final long requesterIdentity, 
+			@PathParam("id") @PositiveOrZero final long personIdentity 
+	) {
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		final Person person = em.find(Person.class, personIdentity);
+		final long identity = personIdentity == 0 ? requesterIdentity : personIdentity;
+		
+		final Person person = em.find(Person.class, identity);
 		if (person == null) throw new ClientErrorException(NOT_FOUND);
 
 		return person;
