@@ -78,15 +78,17 @@ public class PersonService {
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");			
 	
-		//so richtig????
-		Query query = em.createQuery(QUERY_PEOPLE).setParameter("surName", surname)
-				.setParameter("foreName", forename).setParameter("email", email).setParameter("address", address);
 		int resultOffSet = 1;
 		int resultLimit = 20;
-		List<Person> pList = query.setFirstResult(resultOffSet).setMaxResults(resultLimit).getResultList();
-		people = (Person[]) pList.toArray();
+		//so richtig????
+		Person[] people = (Person[]) em.createQuery(QUERY_PEOPLE)
+				.setParameter("surName", surname)
+				.setParameter("foreName", forename).setParameter("email", email)
+				.setFirstResult(resultOffSet).setMaxResults(resultLimit)
+				.getResultList()
+				.toArray();
 		if (people == null) throw new ClientErrorException(NOT_FOUND);
-		if(people.length > 0) throw new ClientErrorException(OK);
+		//if(people.length > 0) throw new ClientErrorException(OK);
 		if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
 
 		return people;
