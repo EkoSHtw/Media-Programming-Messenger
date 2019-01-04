@@ -59,7 +59,9 @@ public class PersonService {
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");	
 	
 		//so richtig????
-		Query query = em.createQuery("Select p.identity from Person as p where (:surName = p.surName, :foreName = p.foreName)", Person.class);
+		Query query = em.createQuery("Select p.identity from Person as p where (:surName = p.surName, :foreName = p.foreName, "
+				+ ":email = p.email, :address = p.address").setParameter("surName", surName)
+				.setParameter("foreName", foreName).setParameter("email", email).setParameter("address", address);
 	
 		List<Person> pList = query.getResultList();
 		
