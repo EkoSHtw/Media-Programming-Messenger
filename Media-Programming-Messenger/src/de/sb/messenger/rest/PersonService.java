@@ -63,10 +63,10 @@ public class PersonService {
 	
 		List<Person> pList = query.getResultList();
 		
-		
+		people = (Person[]) pList.toArray();
 		if (people == null) throw new ClientErrorException(NOT_FOUND);
 		
-		//if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
+		if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
 
 		return people;
 	}
@@ -111,7 +111,7 @@ public class PersonService {
 	
 		
 		if(identity == 0) {
-			//createPerson(em, surName, firstName, email, street, postCode, city, password, avatar);
+			createPerson(em, surName, firstName, email, street, postCode, city, password, avatar);
 		}else{
 			updatePerson(em, identity, surName, firstName, email, street, postCode, city, avatar, group);
 		}
