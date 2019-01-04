@@ -4,6 +4,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.OK;
 
 import java.util.List;
 
@@ -62,12 +63,12 @@ public class PersonService {
 		Query query = em.createQuery("Select p.identity from Person as p where (:surName = p.surName, :foreName = p.foreName, "
 				+ ":email = p.email, :address = p.address").setParameter("surName", surName)
 				.setParameter("foreName", foreName).setParameter("email", email).setParameter("address", address);
-	
-		List<Person> pList = query.getResultList();
-		
+		int resultOffSet = 1;
+		int resultLimit = 20;
+		List<Person> pList = query.setFirstResult(resultOffSet).setMaxResults(resultLimit).getResultList();
 		people = (Person[]) pList.toArray();
 		if (people == null) throw new ClientErrorException(NOT_FOUND);
-		
+		if(people.length > 0) throw new ClientErrorException(OK);
 		if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
 
 		return people;
