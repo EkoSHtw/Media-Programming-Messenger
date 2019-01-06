@@ -91,7 +91,8 @@ public class PersonService {
 				.setParameter("postcode", postcode)
 				.setParameter("city", city)
 				.setParameter("group", group)
-				.setFirstResult(resultOffSet).setMaxResults(resultLimit)
+				.setFirstResult(resultOffSet)
+				.setMaxResults(resultLimit)
 				.getResultList()
 				.toArray();
 		if (people == null) throw new ClientErrorException(NOT_FOUND);
@@ -244,11 +245,12 @@ public class PersonService {
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	@Path("/{id}/avatar")
-	public void updateAvatar (@PathParam("id") @Positive final long personIdentity) {
+	public void updateAvatar (@PathParam("id") @Positive final long personIdentity, byte[] content) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		//TODO hier muss die person auch �ber das dokument geholt werden ? -> seltsam... besser f�nde ich das doku �ber die person
 		final Person person = em.find(Person.class, personIdentity);
+		
 		if (person == null) throw new ClientErrorException(NOT_FOUND);
 	}
 	

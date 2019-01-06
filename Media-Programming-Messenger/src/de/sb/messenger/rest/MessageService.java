@@ -16,6 +16,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import de.sb.messenger.persistence.BaseEntity;
@@ -27,6 +28,10 @@ import de.sb.toolbox.net.RestJpaLifecycleProvider;
 public class MessageService {
 
 
+	static private final String QUERY_MESSAGES = "Select m.identity from Message as p where "
+			+ "(:body = m.body) and "
+			+ "(:timestamp = m.timestamp)";
+	
 	/**
 	 * Returning all messages matching the given criteria.
 	 * @param 
@@ -37,11 +42,19 @@ public class MessageService {
 	 */
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public Message[] getMessages ( ) {
-		final Message[] messages = null;
+	public Message[] getMessages (@QueryParam("body") String body,@QueryParam("timestamp") long timestamp ) {
+		 
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		Query query;
+		int resultOffSet = 1;
+		int resultLimit = 20;
+		final Message[] messages = (Message[]) em.createQuery(QUERY_MESSAGES)
+				.setParameter("body", body)
+				.setParameter("timestamp", timestamp)
+				.setFirstResult(resultOffSet)
+				.setMaxResults(resultLimit)
+				.getResultList()
+				.toArray();
 		
 		//messages = em.find();
 		if (messages == null) throw new ClientErrorException(NOT_FOUND);
