@@ -32,8 +32,11 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
+import com.sun.istack.internal.Nullable;
+
 import de.sb.messenger.persistence.Document;
 import de.sb.messenger.persistence.Group;
+import de.sb.messenger.persistence.HashTools;
 import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 
@@ -146,12 +149,12 @@ public class PersonService {
 		person.getAddress().setStreet(personTemplate.getAddress().getStreet());
 		person.getAddress().setCity(personTemplate.getAddress().getCity());
 		person.getAddress().setPostCode(personTemplate.getAddress().getPostCode());
-	
+		person.setPasswordHash(HashTools.sha256HashCode(password));
+		person.setVersion(personTemplate.getVersion());
+		
 		if(insertMode) {
 			em.persist(person);
-			//TODO em.persist(person);
 		}else{
-			//TODO em.flush();
 			em.flush();
 		}
 		
@@ -162,7 +165,7 @@ public class PersonService {
 		}finally {
 			em.getTransaction().begin();
 		}
-		
+		em.close();
 		return person.getIdentity();
 	}
 	
@@ -209,14 +212,19 @@ public class PersonService {
 	@GET
 	@Path("/{id}/avatar")
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public Document getAvatar (@PathParam("id") @Positive final long personIdentity) {
+	public Document getAvatar (@PathParam("id") @Positive final long personIdentity, @QueryParam("width") @Nullable int width, 
+			@QueryParam("height") @Nullable int height) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		//TODO does it already work? need to add mediatype
 		final Document avatar = em.find(Document.class, personIdentity);
-		
+		byte[] content;
+		avatar.getContent();
 		if (avatar == null) throw new ClientErrorException(NOT_FOUND);
-		
+		if(width  > 0 && height > 0 ) {
+			 content = Document.scaledImageContent(avatar.getContent(), width, height);
+		}
+		//MediaType.WILDCARD was muss damit gemacht werden??
 		return avatar;
 	}
 	
