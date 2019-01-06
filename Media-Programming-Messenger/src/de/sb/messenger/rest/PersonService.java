@@ -80,15 +80,18 @@ public class PersonService {
 	
 		int resultOffSet = 1;
 		int resultLimit = 20;
-		//so richtig????
 		Person[] people = (Person[]) em.createQuery(QUERY_PEOPLE)
 				.setParameter("surName", surname)
-				.setParameter("foreName", forename).setParameter("email", email)
+				.setParameter("foreName", forename)
+				.setParameter("email", email)
+				.setParameter("street", street)
+				.setParameter("postcode", postcode)
+				.setParameter("city", city)
+				.setParameter("group", group)
 				.setFirstResult(resultOffSet).setMaxResults(resultLimit)
 				.getResultList()
 				.toArray();
 		if (people == null) throw new ClientErrorException(NOT_FOUND);
-		//if(people.length > 0) throw new ClientErrorException(OK);
 		if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
 
 		return people;
@@ -130,15 +133,26 @@ public class PersonService {
 		final boolean insertMode = personTemplate.getIdentity() == 0;
 		if(insertMode) {
 			//TODO create person
+			person = new Person();
 		}else{
 			//TODO find person
+			person = em.find(Person.class, personTemplate.getIdentity());
 		}
 		//TODO get set data from person template into person
 		
+		person.getName().setSurname(personTemplate.getName().getSurname());
+		person.getName().setForename(personTemplate.getName().getForename());
+		person.setEmail(personTemplate.getEmail());
+		person.getAddress().setStreet(personTemplate.getAddress().getStreet());
+		person.getAddress().setCity(personTemplate.getAddress().getCity());
+		person.getAddress().setPostCode(personTemplate.getAddress().getPostCode());
+	
 		if(insertMode) {
+			em.persist(person);
 			//TODO em.persist(person);
 		}else{
 			//TODO em.flush();
+			em.flush();
 		}
 		
 		try {
