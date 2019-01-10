@@ -86,7 +86,7 @@ public class Document extends BaseEntity{
 	}
 	
 	
-	//TODO get image size and resize
+	
 	@JsonbProperty 
 	@XmlAttribute 
 	static public byte[] scaledImageContent(byte[] content, int width, int height) {

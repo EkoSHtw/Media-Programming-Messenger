@@ -220,7 +220,6 @@ public class PersonService {
 			@QueryParam("height") @Nullable int height) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		//TODO does it already work? need to add mediatype
 		final Document avatar = em.find(Person.class, personIdentity).getAvatar();
 		byte[] content = avatar.getContent();
 		if (content == null) throw new ClientErrorException(NOT_FOUND);
@@ -352,6 +351,8 @@ public class PersonService {
 		em.flush();
 	}
 	
+	
+	
 	@PUT
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
@@ -360,8 +361,14 @@ public class PersonService {
 			EntityManager em, 
 			@HeaderParam(REQUESTER_IDENTITY) @Positive final long identity, 
 			@FormParam("newObservedId") long newObservedId) {
+		
 		Person person = em.find(Person.class, identity);
-		//TODO loop for newObser vedId if it is already in list remove else add
-		//person.addPeopleObserving(em.find(Person.class, newObservedId));
+		boolean exists = person.getPeopleObserved().stream().anyMatch(p -> p.getIdentity() == newObservedId);
+		if(!exists) person.getPeopleObserved().add(em.find(Person.class, newObservedId));
+		
+		em.getTransaction().begin();
+		em.persist(person);
+		em.getTransaction().commit();
+		em.flush();
 	}
 }
