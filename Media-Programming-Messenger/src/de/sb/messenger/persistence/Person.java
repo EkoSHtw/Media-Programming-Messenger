@@ -159,6 +159,12 @@ public class Person extends BaseEntity {
 	public Address getAddress() {
 		return address;
 	}
+	
+	@JsonbProperty
+	@XmlElement
+	public Document getAvatar() {
+		return avatar;
+	}
 
 
 	@JsonbProperty 

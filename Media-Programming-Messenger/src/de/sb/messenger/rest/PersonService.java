@@ -215,21 +215,19 @@ public class PersonService {
 	 */
 	@GET
 	@Path("/{id}/avatar")
-	@Produces({ APPLICATION_JSON, APPLICATION_XML })
+	@Produces({MediaType.WILDCARD})
 	public Document getAvatar (@PathParam("id") @Positive final long personIdentity, @QueryParam("width") @Nullable int width, 
 			@QueryParam("height") @Nullable int height) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		//TODO does it already work? need to add mediatype
-		final Document avatar = em.find(Document.class, personIdentity); // ! TODO nullpointerexception
-		byte[] content;
-		avatar.getContent();
-		if (avatar == null) throw new ClientErrorException(NOT_FOUND);
+		final Document avatar = em.find(Person.class, personIdentity).getAvatar();
+		byte[] content = avatar.getContent();
+		if (content == null) throw new ClientErrorException(NOT_FOUND);
 		if(width  > 0 && height > 0 ) {
-			 content = Document.scaledImageContent(avatar.getContent(), width, height);
+			 content = Document.scaledImageContent(content, width, height);
 		}
-		//MediaType.WILDCARD was muss damit gemacht werden??
-		return avatar;
+		return avatar; // TODO ! throws nullpointerexception even if a avatar (5) is found
 	}
 	
 	
