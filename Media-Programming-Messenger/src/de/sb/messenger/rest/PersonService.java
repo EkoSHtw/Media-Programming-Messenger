@@ -140,13 +140,12 @@ public class PersonService {
 		final Person person;
 		final boolean insertMode = personTemplate.getIdentity() == 0;
 		if(insertMode) {
-			//TODO create person
 			person = new Person();
+			
 		}else{
-			//TODO find person
 			person = em.find(Person.class, personTemplate.getIdentity());
 		}
-		//TODO get set data from person template into person
+		//get set data from person template into person
 		
 		person.getName().setSurname(personTemplate.getName().getSurname());
 		person.getName().setForename(personTemplate.getName().getForename());
@@ -195,10 +194,10 @@ public class PersonService {
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		final long identity = personIdentity == 0 ? requesterIdentity : personIdentity;
 		
-		final Person person = em.find(Person.class, identity); // TODO ! can find any person
+		final Person person = em.find(Person.class, identity); // TODO ! can find person with id 1/2
 		if (person == null) throw new ClientErrorException(NOT_FOUND);
 
-		return person;
+		return person; // TODO ! throws nullpointerexception even if a person (5) is found
 	}
 	
 	
@@ -222,7 +221,7 @@ public class PersonService {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		//TODO does it already work? need to add mediatype
-		final Document avatar = em.find(Document.class, personIdentity);
+		final Document avatar = em.find(Document.class, personIdentity); // ! TODO nullpointerexception
 		byte[] content;
 		avatar.getContent();
 		if (avatar == null) throw new ClientErrorException(NOT_FOUND);
@@ -286,7 +285,7 @@ public class PersonService {
 			@FormParam("street") String street, 
 			@FormParam("postCode") String postCode,
 			@FormParam("city") String city, 
-			@FormParam("passwordHash") String passwordHash,
+			@FormParam("password") String password,
 			@FormParam("avatar") Document avatar) {
 		
 		Person person = new Person(avatar);
@@ -296,7 +295,7 @@ public class PersonService {
 		person.getName().setForename(firstName);
 		person.getName().setSurname(surName);
 		person.setEmail(email);
-		//person.setPasswordHash(passwordHash);
+		person.setPasswordHash(HashTools.sha256HashCode(password));
 		
 		em.getTransaction().begin();
 		em.persist(person);
@@ -340,8 +339,12 @@ public class PersonService {
 		Person person = em.find(Person.class, identity);
 
 		em.getTransaction().begin();
+		person.getAddress().setCity(city);
+		person.getAddress().setPostCode(postCode);
+		person.getAddress().setStreet(street);
+		person.getName().setForename(firstName);
+		person.getName().setSurname(surName);
 		person.setEmail(email);
-		//TODO implement here update function
 		em.getTransaction().commit();
 		em.flush();
 	}

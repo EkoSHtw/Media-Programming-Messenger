@@ -129,7 +129,7 @@ public class Person extends BaseEntity {
 	
 	
 	@JsonbProperty 
-	@XmlAttribute 
+	@XmlElement
 	public Name getName() {
 		return name;
 	}
@@ -155,7 +155,7 @@ public class Person extends BaseEntity {
 	}
 
 	@JsonbProperty
-	@XmlAttribute 
+	@XmlElement
 	public Address getAddress() {
 		return address;
 	}
