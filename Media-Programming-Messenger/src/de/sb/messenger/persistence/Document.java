@@ -81,6 +81,10 @@ public class Document extends BaseEntity{
 		return content;
 	}
 	
+	public void setContent(byte[] content) {
+		this.content = content;
+	}
+	
 	
 	//TODO get image size and resize
 	@JsonbProperty 

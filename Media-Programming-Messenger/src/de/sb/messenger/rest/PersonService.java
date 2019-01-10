@@ -216,7 +216,7 @@ public class PersonService {
 	@GET
 	@Path("/{id}/avatar")
 	@Produces({MediaType.WILDCARD})
-	public Document getAvatar (@PathParam("id") @Positive final long personIdentity, @QueryParam("width") @Nullable int width, 
+	public Document getAvatar (@HeaderParam(REQUESTER_IDENTITY) @Positive final long personIdentity, @QueryParam("width") @Nullable int width, 
 			@QueryParam("height") @Nullable int height) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
@@ -243,16 +243,21 @@ public class PersonService {
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
 	@PUT
-	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
-	@Produces({ APPLICATION_JSON, APPLICATION_XML })
+	@Consumes({MediaType.WILDCARD})
 	@Path("/{id}/avatar")
-	public void updateAvatar (@PathParam("id") @Positive final long personIdentity, byte[] content) {
+	public void updateAvatar (@HeaderParam(REQUESTER_IDENTITY) @Positive final long personIdentity, byte[] content) {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		//TODO hier muss die person auch �ber das dokument geholt werden ? -> seltsam... besser f�nde ich das doku �ber die person
-		final Person person = em.find(Person.class, personIdentity);
+		final Document avatar = em.find(Person.class, personIdentity).getAvatar();
 		
-		if (person == null) throw new ClientErrorException(NOT_FOUND);
+		if (avatar == null) throw new ClientErrorException(NOT_FOUND);
+		else {
+			avatar.setContent(content);
+			em.getTransaction().begin();
+			em.persist(avatar);
+			em.getTransaction().commit();
+			em.flush();
+		}
 	}
 	
 	
@@ -353,7 +358,7 @@ public class PersonService {
 	@Path("/{id}/peopleObserved")
 	public void updatePeopleObserved(
 			EntityManager em, 
-			@FormParam("id")long identity, 
+			@HeaderParam(REQUESTER_IDENTITY) @Positive final long identity, 
 			@FormParam("newObservedId") long newObservedId) {
 		Person person = em.find(Person.class, identity);
 		//TODO loop for newObser vedId if it is already in list remove else add
