@@ -47,7 +47,11 @@ public class PersonService {
 	static private final String QUERY_PEOPLE = "Select p.identity from Person as p where "
 			+ "(:surname is null or :surname = p.name.surname) and "
 			+ "(:forename is null or :forename = p.name.forename) and "
-			+ "(:email is null or :email = p.email)";
+			+ "(:email is null or :email = p.email) and "
+			+ "(:street is null or :street = p.address.street) and "
+			+ "(:postCode is null or :postCode = p.address.postCode) and "
+			+ "(:city is null or :city = p.address.city) and "
+			+ "(:groupAlias is null or :groupAlias = p.groupAlias)";
 	
 	static private final Comparator<Person> PERSON_COMPARATOR = Comparator
 			.comparing(Person::getName)
@@ -61,7 +65,7 @@ public class PersonService {
 	 * @param street
 	 * @param postCode
 	 * @param city
-	 * @param group
+	 * @param groupAlias
 	 * @return the matching people (HTTP 200)
 	 * @throws ClientErrorException (HTTP 404) no people are found
 	 * @throws PersistenceException (HTTP 500) if there is a problem with the persistence layer
@@ -74,23 +78,23 @@ public class PersonService {
 			@QueryParam("forename") String forename, 
 			@QueryParam("email") String email, 
 			@QueryParam("street") String street,
-			@QueryParam("postcode") String postcode,
+			@QueryParam("postCode") String postCode,
 			@QueryParam("city") String city,
-			@QueryParam("group") Group group
+			@QueryParam("groupAlias") Group groupAlias
 	){
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");			
 	
 		int resultOffSet = 1;
 		int resultLimit = 20;
-		Person[] people = (Person[]) em.createQuery(QUERY_PEOPLE)
-				.setParameter("surName", surname)
-				.setParameter("foreName", forename)
+		Person[] people = (Person[]) em.createQuery(QUERY_PEOPLE) // TODO ! cant convert object to person
+				.setParameter("surname", surname)
+				.setParameter("forename", forename)
 				.setParameter("email", email)
 				.setParameter("street", street)
-				.setParameter("postcode", postcode)
+				.setParameter("postCode", postCode)
 				.setParameter("city", city)
-				.setParameter("group", group)
+				.setParameter("groupAlias", groupAlias)
 				.setFirstResult(resultOffSet)
 				.setMaxResults(resultLimit)
 				.getResultList()
@@ -191,7 +195,7 @@ public class PersonService {
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		final long identity = personIdentity == 0 ? requesterIdentity : personIdentity;
 		
-		final Person person = em.find(Person.class, identity);
+		final Person person = em.find(Person.class, identity); // TODO ! can find any person
 		if (person == null) throw new ClientErrorException(NOT_FOUND);
 
 		return person;
