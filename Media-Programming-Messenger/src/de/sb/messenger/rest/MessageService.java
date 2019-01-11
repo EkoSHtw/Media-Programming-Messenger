@@ -28,7 +28,7 @@ import de.sb.toolbox.net.RestJpaLifecycleProvider;
 public class MessageService {
 
 
-	static private final String QUERY_MESSAGES = "Select m.identity from Message as p where "
+	static private final String QUERY_MESSAGES = "Select m.identity from Message as m where "
 			+ "(:body = m.body) and "
 			+ "(:timestamp = m.timestamp)";
 	
