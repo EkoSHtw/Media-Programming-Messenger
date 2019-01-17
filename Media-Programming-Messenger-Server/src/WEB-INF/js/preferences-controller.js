@@ -140,14 +140,25 @@
 		configurable: false,
 		value: async function (avatarFile) {
 			const imageElement = document.querySelector("section.preferences img");
+			const sessionOwner = Controller.sessionOwner;
 			this.displayError();
 
 			// TODO: call PUT /services/people/{id}/avatar" to store the given avatar file, using
-			// either fetch() or Controller.xhr(). Throw an exception if the call fails. If it
-			// succeeds, increment the version of Controller.sessionOwner by 1. In case of an error,
-			// call this.displayError(error). In any case, alter the src-property of the imageElement
+			// either fetch() or Controller.xhr(). 
+			try{
+				const response = JSON.parse(await this.xhr("/services/people/{id}/avatar", "PUT", {"Accept": "application/json"}, "", "text", email, password));
+				//  Throw an exception if the call fails.
+				if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
+				// If it succeeds, increment the version of Controller.sessionOwner by 1.
+				// TODO 
+			// In case of an error, call this.displayError(error). 
+			} catch (error) {
+				this.displayError(error);
+			}
+			// In any case, alter the src-property of the imageElement
 			// to "/services/people/{id}/avatar?cache-bust=" + Date.now() in order to bypass the
 			// browser's image cache and display the modified image.
+			imageElement.src = "/services/people/" + sessionOwner.identity + "/avatar?cache-bust=" + Date.now();
 		}
 	});
 
