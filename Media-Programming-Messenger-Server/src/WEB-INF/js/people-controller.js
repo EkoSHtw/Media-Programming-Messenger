@@ -59,7 +59,25 @@
 		enumerable: false,
 		configurable: false,
 		value: async function () {
-			// TODO
+			if (!Controller.sessionOwner) return;
+			this.displayError();
+			
+			try{
+				const sectionElement = document.querySelector("section.candidates");
+				const inputElements = sectionElement.querySelectorAll("input");
+
+				String email = inputElements[0].value.trim();
+				String given = inputElements[1].value.trim();
+				String family = inputElements[2].value.trim();
+				String street = inputElements[3].value.trim();
+				String city = inputElements[4].value.trim();
+				
+				Person[] people = JSON.parse(await Controller.xhr("/services/people", "GET", {"Accept": "application/json"}, email, given, family, street, city));
+				
+				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people, //TODO dont know here);
+			}catch(error){
+				this.displayError(error);
+			}
 		}
 	});
 

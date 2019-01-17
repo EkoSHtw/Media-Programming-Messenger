@@ -74,13 +74,11 @@ public class PersonService {
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	public Person[] queryPeople (
+			@QueryParam("email") String email,
 			@QueryParam("surname") String surname,
 			@QueryParam("forename") String forename, 
-			@QueryParam("email") String email, 
 			@QueryParam("street") String street,
-			@QueryParam("postCode") String postCode,
-			@QueryParam("city") String city,
-			@QueryParam("groupAlias") Group groupAlias
+			@QueryParam("city") String city
 	){
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");			
@@ -92,9 +90,7 @@ public class PersonService {
 				.setParameter("forename", forename)
 				.setParameter("email", email)
 				.setParameter("street", street)
-				.setParameter("postCode", postCode)
 				.setParameter("city", city)
-				.setParameter("groupAlias", groupAlias)
 				.setFirstResult(resultOffSet)
 				.setMaxResults(resultLimit)
 				.getResultList()
