@@ -361,6 +361,7 @@ public class PersonService {
 		Person person = em.find(Person.class, identity);
 		boolean exists = person.getPeopleObserved().stream().anyMatch(p -> p.getIdentity() == newObservedId);
 		if(!exists) person.getPeopleObserved().add(em.find(Person.class, newObservedId));
+		else person.getPeopleObserved().remove(em.find(Person.class, newObservedId));
 		
 		em.getTransaction().begin();
 		em.persist(person);

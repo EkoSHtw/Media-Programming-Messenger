@@ -91,7 +91,17 @@
 		enumerable: false,
 		configurable: false,
 		value: async function (personIdentity) {
-			// TODO
+			if (!Controller.sessionOwner) return;
+			this.displayError();
+			
+			try{
+				//TODO is header requester identity already there? probably not but its needed?
+				const response = JSON.parse(await Controller.xhr("/services/people/"+ personIdentity +"/peopleObserved", "PUT", {"Accept": "application/json"}));
+				// adding and removing is handled by the service
+				if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
+			}catch(error){
+				this.displayError(error);
+			}
 		}
 	});
 
