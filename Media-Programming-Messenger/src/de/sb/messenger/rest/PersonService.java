@@ -79,7 +79,9 @@ public class PersonService {
 			@QueryParam("surname") String surname,
 			@QueryParam("forename") String forename, 
 			@QueryParam("street") String street,
-			@QueryParam("city") String city
+			@QueryParam("postCode") String postCode,
+			@QueryParam("city") String city,
+			@QueryParam("groupAlias") Group groupAlias
 	){
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");			
@@ -91,7 +93,9 @@ public class PersonService {
 				.setParameter("forename", forename)
 				.setParameter("email", email)
 				.setParameter("street", street)
+				.setParameter("postCode", postCode)
 				.setParameter("city", city)
+				.setParameter("groupAlias", groupAlias)
 				.setFirstResult(resultOffSet)
 				.setMaxResults(resultLimit)
 				.getResultList();
@@ -100,7 +104,7 @@ public class PersonService {
 				.stream()
 				.map(reference -> em.find(Person.class, reference))
 				.filter(person -> person != null)
-				.sorted(Comparator.comparing(Person::getName).thenComparing(Person::getEmail))
+				.sorted(PERSON_COMPARATOR)
 				.toArray(Length -> new Person[Length]);
 
 		return people;
@@ -195,10 +199,10 @@ public class PersonService {
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		final long identity = personIdentity == 0 ? requesterIdentity : personIdentity;
 		
-		final Person person = em.find(Person.class, identity); // TODO ! can find person with id 1/2
+		final Person person = em.find(Person.class, identity);
 		if (person == null) throw new ClientErrorException(NOT_FOUND);
 
-		return person; // TODO ! throws nullpointerexception even if a person (5) is found
+		return person;
 	}
 	
 	
@@ -227,7 +231,7 @@ public class PersonService {
 		if(width  > 0 && height > 0 ) {
 			 content = Document.scaledImageContent(content, width, height);
 		}
-		return avatar; // TODO ! throws nullpointerexception even if a avatar (5) is found
+		return avatar; 
 	}
 	
 	
