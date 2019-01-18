@@ -7,6 +7,7 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.OK;
 import static de.sb.messenger.rest.BasicAuthenticationFilter.REQUESTER_IDENTITY;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -85,7 +86,7 @@ public class PersonService {
 	
 		int resultOffSet = 1;
 		int resultLimit = 20;
-		Person[] people = (Person[]) em.createQuery(QUERY_PEOPLE) // TODO ! cant convert object to person
+		List<Long> peopleReferences = em.createQuery(QUERY_PEOPLE, Long.class)
 				.setParameter("surname", surname)
 				.setParameter("forename", forename)
 				.setParameter("email", email)
@@ -93,10 +94,14 @@ public class PersonService {
 				.setParameter("city", city)
 				.setFirstResult(resultOffSet)
 				.setMaxResults(resultLimit)
-				.getResultList()
-				.toArray();
-		if (people == null) throw new ClientErrorException(NOT_FOUND);
-		if (!em.isOpen()) throw new ClientErrorException(INTERNAL_SERVER_ERROR); 
+				.getResultList();
+		
+		final Person[] people = peopleReferences
+				.stream()
+				.map(reference -> em.find(Person.class, reference))
+				.filter(person -> person != null)
+				.sorted(Comparator.comparing(Person::getName).thenComparing(Person::getEmail))
+				.toArray(Length -> new Person[Length]);
 
 		return people;
 	}

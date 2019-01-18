@@ -50,7 +50,7 @@ public class Document extends BaseEntity{
 	@Column(nullable = false, updatable = false, insertable = true)
 	@NotNull
 	@Size(min = 1, max = 16777215)
-	private static byte[] content;
+	private byte[] content;
 		
 
 	
@@ -86,9 +86,6 @@ public class Document extends BaseEntity{
 	}
 	
 	
-	
-	@JsonbProperty 
-	@XmlAttribute 
 	static public byte[] scaledImageContent(byte[] content, int width, int height) {
 		  ByteArrayInputStream in = new ByteArrayInputStream(content);
 			try {

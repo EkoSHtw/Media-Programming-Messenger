@@ -151,6 +151,7 @@
 				if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
 				// If it succeeds, increment the version of Controller.sessionOwner by 1.
 				// TODO 
+				sessionOwner.setVersion()
 			// In case of an error, call this.displayError(error). 
 			} catch (error) {
 				this.displayError(error);

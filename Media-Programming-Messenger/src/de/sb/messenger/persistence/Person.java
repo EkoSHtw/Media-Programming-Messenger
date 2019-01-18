@@ -160,8 +160,8 @@ public class Person extends BaseEntity {
 		return address;
 	}
 	
-	@JsonbProperty
-	@XmlElement
+	@JsonbTransient
+	@XmlTransient
 	public Document getAvatar() {
 		return avatar;
 	}
