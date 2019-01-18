@@ -17,6 +17,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -64,7 +65,7 @@ public class Document extends BaseEntity{
 
 	
 	@JsonbProperty
-	@XmlAttribute 
+	@XmlElement
 	public byte[] getContentHash() {
 		return contentHash;
 	}

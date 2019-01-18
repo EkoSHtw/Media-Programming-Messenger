@@ -1,6 +1,7 @@
 package de.sb.messenger.persistence;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.json.bind.annotation.JsonbProperty;
@@ -104,7 +105,7 @@ public class Person extends BaseEntity {
 		this.messagesAuthored = Collections.emptySet();
 		this.groupAlias = Group.USER;
 		this.peopleObserving = Collections.emptySet();
-		this.peopleObserved = Collections.emptySet();
+		this.peopleObserved = new HashSet<>();
 		this.address = new Address();
 	}
 	

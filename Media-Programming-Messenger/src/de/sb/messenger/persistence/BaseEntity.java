@@ -7,10 +7,8 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.sun.xml.internal.txw2.annotation.XmlAttribute;
 
@@ -27,7 +25,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
-import de.sb.toolbox.bind.XmlLongToStringAdapter;
 
 @Entity
 @Table(name="BaseEntity", schema="messenger")
@@ -69,8 +66,6 @@ public abstract class BaseEntity implements Comparable<BaseEntity>{
 
 	@JsonbProperty 
 	@XmlAttribute
-	@XmlID
-	@XmlJavaTypeAdapter(type=long.class,value=XmlLongToStringAdapter.class)
 	public long getIdentity() {
 		return identity;
 	}
