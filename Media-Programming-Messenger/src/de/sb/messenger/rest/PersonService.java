@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
+import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -71,6 +72,8 @@ public class PersonService {
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	public Person[] queryPeople (
+			@QueryParam("resultOffset")@Positive int resultOffset,
+			@QueryParam("resultLimit")@Positive int resultLimit,
 			@QueryParam("email") String email,
 			@QueryParam("surname") String surname,
 			@QueryParam("forename") String forename, 
@@ -81,7 +84,10 @@ public class PersonService {
 	){
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");		//TODO überarbeiten message
-		List<Long> peopleReferences = em.createQuery(QUERY_PEOPLE, Long.class)
+		TypedQuery<Long> query = em.createQuery(QUERY_PEOPLE, Long.class);
+		if (resultOffset > 0 ) query.setFirstResult(resultOffset);
+		if(resultLimit >0) query.setMaxResults(resultLimit);
+		List<Long> peopleReferences = query 
 				.setParameter("surname", surname)
 				.setParameter("forename", forename)
 				.setParameter("email", email)
@@ -89,8 +95,6 @@ public class PersonService {
 				.setParameter("postCode", postCode)
 				.setParameter("city", city)
 				.setParameter("groupAlias", groupAlias)
-				.setFirstResult(resultOffSet)
-				.setMaxResults(resultLimit)
 				.getResultList();
 		
 		final Person[] people = peopleReferences
@@ -191,7 +195,6 @@ public class PersonService {
 	) {
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		final long identity = personIdentity == 0 ? requesterIdentity : personIdentity;
-		
 		final Person person = em.find(Person.class, identity);
 		if (person == null) throw new ClientErrorException(NOT_FOUND);
 
@@ -219,6 +222,7 @@ public class PersonService {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		final Document avatar = em.find(Person.class, personIdentity).getAvatar();
+		if (avatar == null) throw new ClientErrorException(NOT_FOUND);
 		byte[] content = avatar.getContent();
 		if (content == null) throw new ClientErrorException(NOT_FOUND);
 		if(width  > 0 && height > 0 ) {
@@ -246,7 +250,6 @@ public class PersonService {
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		final Document avatar = em.find(Person.class, personIdentity).getAvatar();
-		
 		if (avatar == null) throw new ClientErrorException(NOT_FOUND);
 		else {
 			avatar.setContent(content);
@@ -361,6 +364,7 @@ public class PersonService {
 			@FormParam("newObservedId") long newObservedId) {
 		
 		Person person = em.find(Person.class, identity);
+		if (person == null) throw new ClientErrorException(NOT_FOUND);
 		boolean exists = person.getPeopleObserved().stream().anyMatch(p -> p.getIdentity() == newObservedId);
 		if(!exists) person.getPeopleObserved().add(em.find(Person.class, newObservedId));
 		else person.getPeopleObserved().remove(em.find(Person.class, newObservedId));
