@@ -80,10 +80,7 @@ public class PersonService {
 			@QueryParam("groupAlias") Group groupAlias
 	){
 	
-		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");			
-	
-		int resultOffSet = 1;
-		int resultLimit = 20;
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");		//TODO überarbeiten message
 		List<Long> peopleReferences = em.createQuery(QUERY_PEOPLE, Long.class)
 				.setParameter("surname", surname)
 				.setParameter("forename", forename)

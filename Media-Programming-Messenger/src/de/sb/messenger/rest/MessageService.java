@@ -1,5 +1,6 @@
 package de.sb.messenger.rest;
 
+import static de.sb.messenger.rest.BasicAuthenticationFilter.REQUESTER_IDENTITY;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
@@ -7,6 +8,7 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.validation.constraints.Positive;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -30,7 +32,8 @@ public class MessageService {
 
 	static private final String QUERY_MESSAGES = "Select m.identity from Message as m where "
 			+ "(:body = m.body) and "
-			+ "(:timestamp = m.timestamp)";
+			+ "(:lowerCreationTimestamp <= m.creationTimestamp) and "
+			+ "(:upperCreationTimestamp >= m.creationTimestamp)";
 	
 	/**
 	 * Returning all messages matching the given criteria.
@@ -42,23 +45,30 @@ public class MessageService {
 	 */
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public Message[] getMessages (@QueryParam("body") String body,@QueryParam("timestamp") long timestamp ) {
+	public Message[] queryMessages (
+			@QueryParam("resultOffSet") @Positive int resultOffSet,
+			@QueryParam("resultLimit") @Positive int resultLimit,
+			@QueryParam("body") String body, 
+			@QueryParam("lowerCreationTimestamp") long lowerCreationTimestamp,
+			@QueryParam("upperCreationTimestamp") long upperCreationTimestamp
+	) {
 		 
 		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		int resultOffSet = 1;
-		int resultLimit = 20;
-		final Message[] messages = (Message[]) em.createQuery(QUERY_MESSAGES)
-				.setParameter("body", body)
-				.setParameter("timestamp", timestamp)
-				.setFirstResult(resultOffSet)
-				.setMaxResults(resultLimit)
-				.getResultList()
-				.toArray();
+		final TypedQuery<Long> query = em.createQuery(QUERY_MESSAGES, Long.class);
+		if (resultOffSet > 0) query.setFirstResult(resultOffSet);
+		if (resultLimit > 0) query.setMaxResults(resultLimit);
 		
-		//messages = em.find();
-		if (messages == null) throw new ClientErrorException(NOT_FOUND);
-
+		final Message[] messages = query
+				.setParameter("body", body)
+				.setParameter("lowerCreationTimestamp", lowerCreationTimestamp)
+				.setParameter("upperCreationTimestamp", upperCreationTimestamp)
+				.getResultList()
+				.stream()
+				.map(identity -> em.find(Message.class, identity))
+				.filter(message -> message != null)
+				.sorted()
+				.toArray(length -> new Message[length]);
 		return messages;
 	}
 	
@@ -98,14 +108,22 @@ public class MessageService {
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
 	@POST
-	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_PLAIN)
-	public void setMessage( @HeaderParam("body") String body,@HeaderParam("author") Person author,BaseEntity subject) {
-		
-		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+	public long createMessage( 
+			@HeaderParam("body") String body,
+			@HeaderParam(REQUESTER_IDENTITY) @Positive final long requesterIdentity, 
+			@QueryParam("subjectReference") final long subjectReference
+	) {
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");// todo find when null 404
 		Message message = new Message(author, subject);
-		em.getTransaction().begin();
+		message.setBody(body);
 		em.persist(message);
-		em.getTransaction().commit();
+		try {
+			em.getTransaction().commit();
+		} finally {
+			em.getTransaction().begin();
+		}
+		return message.getIdentity();
 	}
 }
