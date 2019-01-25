@@ -115,8 +115,12 @@ public class MessageService {
 			@HeaderParam(REQUESTER_IDENTITY) @Positive final long requesterIdentity, 
 			@QueryParam("subjectReference") final long subjectReference
 	) {
-		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");// todo find when null 404
-		Message message = new Message(author, subject);
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+		final Person person = em.find(Person.class, requesterIdentity);
+		if (person == null) throw new ClientErrorException(NOT_FOUND);
+		final BaseEntity be = em.find(BaseEntity.class, subjectReference);
+		if (be == null) throw new ClientErrorException(NOT_FOUND);
+		Message message = new Message(person, be);
 		message.setBody(body);
 		em.persist(message);
 		try {
