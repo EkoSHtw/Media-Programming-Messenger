@@ -128,6 +128,7 @@ public class PersonService {
 	 * @throws PersistenceException (HTTP 500) if there is a problem with the persistence layer
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
+	//Application xml weg?
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Produces(MediaType.TEXT_PLAIN)
@@ -214,9 +215,12 @@ public class PersonService {
 	 * @throws PersistenceException (HTTP 500) if there is a problem with the persistence layer
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
+	
+	//produces: Applicationjson ...xml, remove wildcard 
+	// alt:produces wildcard
 	@GET
 	@Path("/{id}/avatar")
-	@Produces({MediaType.WILDCARD})
+	@Produces({APPLICATION_JSON})
 	public Document getAvatar (@HeaderParam(REQUESTER_IDENTITY) @Positive final long personIdentity, @QueryParam("width") @Nullable int width, 
 			@QueryParam("height") @Nullable int height) {
 		
@@ -243,8 +247,10 @@ public class PersonService {
 	 * @throws PersistenceException (HTTP 500) if there is a problem with the persistence layer
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
+	//produces text plain
 	@PUT
 	@Consumes({MediaType.WILDCARD})
+	@Produces({MediaType.TEXT_PLAIN})
 	@Path("/{id}/avatar")
 	public void updateAvatar (@HeaderParam(REQUESTER_IDENTITY) @Positive final long personIdentity, byte[] content) {
 		
@@ -352,11 +358,12 @@ public class PersonService {
 		em.flush();
 	}
 	
-	
-	
+	//consumes application/x-www-form-urlencoded
+	//produces textplain
+	//alt: produced und consumes: applicationjson and application xml
 	@PUT
-	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
-	@Produces({ APPLICATION_JSON, APPLICATION_XML })
+	@Consumes({"application/x-www-form-urlencoded"})
+	@Produces({ MediaType.TEXT_PLAIN })
 	@Path("/{id}/peopleObserved")
 	public void updatePeopleObserved(
 			EntityManager em, 

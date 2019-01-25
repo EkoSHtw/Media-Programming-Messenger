@@ -169,7 +169,7 @@ public class Person extends BaseEntity {
 
 
 	@JsonbProperty 
-	@XmlAttribute 
+	@XmlElement
 	public Object getGroup() {
 		return groupAlias;
 	}
