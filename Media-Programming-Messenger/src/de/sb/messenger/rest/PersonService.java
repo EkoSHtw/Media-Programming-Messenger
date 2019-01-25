@@ -142,7 +142,7 @@ public class PersonService {
 		final Person person;
 		final boolean insertMode = personTemplate.getIdentity() == 0;
 		if(insertMode) {
-			person = new Person();
+			person = em.find(Person.class, requesterIdentity);
 			
 		}else{
 			person = em.find(Person.class, personTemplate.getIdentity());

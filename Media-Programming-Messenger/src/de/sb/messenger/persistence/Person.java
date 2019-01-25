@@ -93,7 +93,7 @@ public class Person extends BaseEntity {
 	
 	
 	
-	public Person() {
+	protected Person() {
 		this(null);
 	}	
 	
