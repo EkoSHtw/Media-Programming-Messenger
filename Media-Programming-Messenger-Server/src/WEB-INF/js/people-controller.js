@@ -96,8 +96,8 @@
 			this.displayError();
 			
 			try{
-				//TODO is header requester identity already there? probably not but its needed?
-				const response = JSON.parse(await Controller.xhr("/services/people/"+ personIdentity +"/peopleObserved", "PUT", {"Accept": "application/json"}));
+				//TODO is header requester identity already there? probably not but its needed? Yes
+				const response = JSON.parse(await this.xhr("/services/people/"+ personIdentity +"/peopleObserved", "PUT", {"Accept": "application/json", "Content-Type": "application/json"} ));
 				// adding and removing is handled by the service
 				if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
 			}catch(error){

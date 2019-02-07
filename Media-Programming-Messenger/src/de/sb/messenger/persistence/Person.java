@@ -68,7 +68,7 @@ public class Person extends BaseEntity {
 	@JoinColumn(name="avatarReference", nullable = false, updatable = true)
 	private Document avatar;
 	
-	@NotNull
+
 	@OneToMany(mappedBy = "author", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
 	private Set<Message> messagesAuthored;
 	
@@ -165,6 +165,10 @@ public class Person extends BaseEntity {
 	@XmlTransient
 	public Document getAvatar() {
 		return avatar;
+	}
+	
+	public void setAvatar(Document avatar) {
+		this.avatar = avatar;
 	}
 
 

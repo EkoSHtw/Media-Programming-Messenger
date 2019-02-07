@@ -51,6 +51,9 @@ public class PersonService {
 			+ "(:city is null or :city = p.address.city) and "
 			+ "(:groupAlias is null or :groupAlias = p.group)";
 	
+	static private final String QUERY_AVATAR = "Select p.identity from Document as p where"
+			+ "(:contentHash = p.contentHash ";
+	
 	static private final Comparator<Person> PERSON_COMPARATOR = Comparator
 			.comparing(Person::getName)
 			.thenComparing(Person::getEmail);
@@ -82,7 +85,6 @@ public class PersonService {
 			@QueryParam("city") String city,
 			@QueryParam("groupAlias") Group group
 	){
-	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");		//TODO überarbeiten message
 		TypedQuery<Long> query = em.createQuery(QUERY_PEOPLE, Long.class);
 		if (resultOffset > 0 ) query.setFirstResult(resultOffset);
@@ -257,7 +259,7 @@ public class PersonService {
 	public long updateAvatar (
 			@HeaderParam(REQUESTER_IDENTITY) @Positive final long personIdentity, 
 			@HeaderParam("Content-Type") @NotNull final String contentType,
-			@NotNull byte[] content
+			@NotNull @HeaderParam("Content") byte[] content
 	) {
 		//TODO hashcode berechnen von content
 		// query nach document mit diesem hashcode -> id zurückgeben
@@ -269,15 +271,38 @@ public class PersonService {
 		// person.setavatar
 		// commit.begin
 		// return id of avatar
+		
+		byte[] hash = HashTools.sha256HashCode(content);
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+		TypedQuery query = em.createQuery(QUERY_AVATAR, Long.class);
+		int avatarId = query
+		.setParameter("hashCode", hash)
+		.getFirstResult(); 
+		Document avatar;
+		if( avatarId > 0 ) {
+		 avatar = em.find(Document.class, avatarId);
+		 avatar.setVersion(avatar.getVersion() + 1);
+		 avatar.setContent(content);
+		 em.persist(avatar);
+		}else{
+			avatar = new Document();
+			avatar.setContent(content);
+			em.flush();
+		}
 		
-		avatar.setContent(content);
+		
 		em.getTransaction().begin();
-		em.persist(avatar);
-		em.getTransaction().commit();
+		Person p = em.find(Person.class, personIdentity);
+		p.setAvatar(avatar);
+		try {
+			em.getTransaction().commit();
+		}catch(RollbackException e){
+			throw new ClientErrorException(Status.CONFLICT);
+		}finally {
+			em.getTransaction().begin();
+		}
 		em.flush();
-		
-		return 0;
+		return avatar.getIdentity();
 	}
 	
 	
@@ -288,7 +313,7 @@ public class PersonService {
 	//alt: produced und consumes: applicationjson and application xml
 	@PUT
 	@Consumes({"application/x-www-form-urlencoded"})
-	@Produces({ MediaType.TEXT_PLAIN })
+	@Produces({ APPLICATION_JSON })
 	@Path("/{id}/peopleObserved")
 	public void updatePeopleObserved(
 			EntityManager em, 
