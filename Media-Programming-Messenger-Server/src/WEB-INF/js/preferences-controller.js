@@ -74,10 +74,10 @@
 			activeElements[1].value = sessionOwner.group;
 			activeElements[2].value = sessionOwner.email;
 			activeElements[3].value = "";
-			activeElements[4].value = sessionOwner.name.given;
-			activeElements[5].value = sessionOwner.name.family;
+			activeElements[4].value = sessionOwner.name.forename;
+			activeElements[5].value = sessionOwner.name.surname;
 			activeElements[6].value = sessionOwner.address.street;
-			activeElements[7].value = sessionOwner.address.postcode;
+			activeElements[7].value = sessionOwner.address.postCode;
 			activeElements[8].value = sessionOwner.address.city;
 		}
 	});
