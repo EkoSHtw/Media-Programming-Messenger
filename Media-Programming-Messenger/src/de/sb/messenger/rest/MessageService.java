@@ -120,9 +120,11 @@ public class MessageService {
 		if (person == null) throw new ClientErrorException(NOT_FOUND);
 		final BaseEntity be = em.find(BaseEntity.class, subjectReference);
 		if (be == null) throw new ClientErrorException(NOT_FOUND);
+		
 		Message message = new Message(person, be);
 		message.setBody(body);
 		em.persist(message);
+		
 		try {
 			em.getTransaction().commit();
 		} finally {

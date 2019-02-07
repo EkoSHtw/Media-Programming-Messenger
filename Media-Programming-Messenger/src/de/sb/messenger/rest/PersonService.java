@@ -49,7 +49,7 @@ public class PersonService {
 			+ "(:street is null or :street = p.address.street) and "
 			+ "(:postCode is null or :postCode = p.address.postCode) and "
 			+ "(:city is null or :city = p.address.city) and "
-			+ "(:groupAlias is null or :groupAlias = p.groupAlias)";
+			+ "(:groupAlias is null or :groupAlias = p.group)";
 	
 	static private final Comparator<Person> PERSON_COMPARATOR = Comparator
 			.comparing(Person::getName)
@@ -80,7 +80,7 @@ public class PersonService {
 			@QueryParam("street") String street,
 			@QueryParam("postCode") String postCode,
 			@QueryParam("city") String city,
-			@QueryParam("groupAlias") Group groupAlias
+			@QueryParam("groupAlias") Group group
 	){
 	
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");		//TODO überarbeiten message
@@ -94,7 +94,7 @@ public class PersonService {
 				.setParameter("street", street)
 				.setParameter("postCode", postCode)
 				.setParameter("city", city)
-				.setParameter("groupAlias", groupAlias)
+				.setParameter("groupAlias", group.name())
 				.getResultList();
 		
 		final Person[] people = peopleReferences
@@ -102,7 +102,7 @@ public class PersonService {
 				.map(reference -> em.find(Person.class, reference))
 				.filter(person -> person != null)
 				.sorted(PERSON_COMPARATOR)
-				.toArray(Length -> new Person[Length]);
+				.toArray(length -> new Person[length]);
 
 		return people;
 	}
@@ -132,7 +132,7 @@ public class PersonService {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Produces(MediaType.TEXT_PLAIN)
-	public long modifyPerson(
+	public long modifyOrCreatePerson(
 			@HeaderParam(REQUESTER_IDENTITY) @Positive final long requesterIdentity,
 			@HeaderParam("Set-Password") @Size(min=4) String password,
 			@NotNull Person personTemplate
@@ -143,10 +143,12 @@ public class PersonService {
 		final Person person;
 		final boolean insertMode = personTemplate.getIdentity() == 0;
 		if(insertMode) {
-			person = em.find(Person.class, requesterIdentity);
-			
-		}else{
+			final Document avatar = em.find(Document.class, 1l);
+			if (avatar == null) throw new ClientErrorException(Status.NOT_FOUND);
+			person = new Person(avatar);
+		} else {
 			person = em.find(Person.class, personTemplate.getIdentity());
+			if (person == null) throw new ClientErrorException(Status.NOT_FOUND);
 		}
 		//get set data from person template into person
 		
@@ -156,8 +158,8 @@ public class PersonService {
 		person.getAddress().setStreet(personTemplate.getAddress().getStreet());
 		person.getAddress().setCity(personTemplate.getAddress().getCity());
 		person.getAddress().setPostCode(personTemplate.getAddress().getPostCode());
-		person.setPasswordHash(HashTools.sha256HashCode(password));
 		person.setVersion(personTemplate.getVersion());
+		if (password != null) person.setPasswordHash(HashTools.sha256HashCode(password));
 		
 		if(insertMode) {
 			em.persist(person);
@@ -172,7 +174,7 @@ public class PersonService {
 		}finally {
 			em.getTransaction().begin();
 		}
-		em.close();
+
 		return person.getIdentity();
 	}
 	
@@ -252,111 +254,34 @@ public class PersonService {
 	@Consumes({MediaType.WILDCARD})
 	@Produces({MediaType.TEXT_PLAIN})
 	@Path("/{id}/avatar")
-	public void updateAvatar (@HeaderParam(REQUESTER_IDENTITY) @Positive final long personIdentity, byte[] content) {
-		
+	public long updateAvatar (
+			@HeaderParam(REQUESTER_IDENTITY) @Positive final long personIdentity, 
+			@HeaderParam("Content-Type") @NotNull final String contentType,
+			@NotNull byte[] content
+	) {
+		//TODO hashcode berechnen von content
+		// query nach document mit diesem hashcode -> id zurückgeben
+		// 1) wenn nicht existiert avatar neu erzeugen
+		// 2) wenn existiert avatar mit find (id) besorgen
+		// content und contenttype aus  header  setzen im avatar
+		// bei 1) persist, bei 2) flush
+		// commit begin
+		// person.setavatar
+		// commit.begin
+		// return id of avatar
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		final Document avatar = em.find(Person.class, personIdentity).getAvatar();
-		if (avatar == null) throw new ClientErrorException(NOT_FOUND);
-		else {
-			avatar.setContent(content);
-			em.getTransaction().begin();
-			em.persist(avatar);
-			em.getTransaction().commit();
-			em.flush();
-		}
-	}
-	
-	
-	
-	
-	
-	
-	/**
-	 * Creates a new person
-	 * @param em
-	 * @param surName
-	 * @param firstName
-	 * @param email
-	 * @param street
-	 * @param postCode
-	 * @param city
-	 * @param password
-	 * @param avatar
-	 */
-	@POST
-	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
-	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	public void createPerson(
-			EntityManager em, 
-			@FormParam("surName") String surName, 
-			@FormParam("firstName") String firstName, 
-			@FormParam("email") String email,
-			@FormParam("street") String street, 
-			@FormParam("postCode") String postCode,
-			@FormParam("city") String city, 
-			@FormParam("password") String password,
-			@FormParam("avatar") Document avatar) {
 		
-		Person person = new Person(avatar);
-		person.getAddress().setCity(city);
-		person.getAddress().setPostCode(postCode);
-		person.getAddress().setStreet(street);
-		person.getName().setForename(firstName);
-		person.getName().setSurname(surName);
-		person.setEmail(email);
-		person.setPasswordHash(HashTools.sha256HashCode(password));
-		
+		avatar.setContent(content);
 		em.getTransaction().begin();
-		em.persist(person);
+		em.persist(avatar);
 		em.getTransaction().commit();
 		em.flush();
+		
+		return 0;
 	}
 	
 	
-	
-	
-	
-	/**
-	 * Updates an existing person
-	 * @param em
-	 * @param identity
-	 * @param surName
-	 * @param firstName
-	 * @param email
-	 * @param street
-	 * @param postCode
-	 * @param city
-	 * @param avatar
-	 * @param group
-	 */
-	@PUT
-	@Consumes({ APPLICATION_JSON, APPLICATION_XML })
-	@Produces({ APPLICATION_JSON, APPLICATION_XML })
-	@Path("/{id}")
-	public void updatePerson(
-			EntityManager em, 
-			@FormParam("id") long identity, 
-			@FormParam("surName")String surName,
-			@FormParam("firstName") String firstName,
-			@FormParam("email") String email, 
-			@FormParam("street")String street, 
-			@FormParam("postCode")String postCode, 
-			@FormParam("city")String city, 
-			@FormParam("avatar")Document avatar, 
-			@FormParam("group")Group group) {
-		
-		Person person = em.find(Person.class, identity);
 
-		em.getTransaction().begin();
-		person.getAddress().setCity(city);
-		person.getAddress().setPostCode(postCode);
-		person.getAddress().setStreet(street);
-		person.getName().setForename(firstName);
-		person.getName().setSurname(surName);
-		person.setEmail(email);
-		em.getTransaction().commit();
-		em.flush();
-	}
 	
 	//consumes application/x-www-form-urlencoded
 	//produces textplain
@@ -375,6 +300,11 @@ public class PersonService {
 		boolean exists = person.getPeopleObserved().stream().anyMatch(p -> p.getIdentity() == newObservedId);
 		if(!exists) person.getPeopleObserved().add(em.find(Person.class, newObservedId));
 		else person.getPeopleObserved().remove(em.find(Person.class, newObservedId));
+		
+		// TODO evict all people that have been added or removed from relation from second lvl cache
+		// evict person from second lvl cache TODO 01743345975
+		
+		final Cache cache = em.getEntityManagerFactory().getCache();
 		
 		em.getTransaction().begin();
 		em.persist(person);
