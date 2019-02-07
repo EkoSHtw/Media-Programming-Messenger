@@ -8,6 +8,7 @@ import static de.sb.messenger.rest.BasicAuthenticationFilter.REQUESTER_IDENTITY;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.persistence.Cache;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
@@ -270,6 +271,23 @@ public class PersonService {
 		// commit.begin
 		// return id of avatar
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+
+		TypedQuery<Long> query = em.createQuery(QUERY_AVATAR, Long.class);
+		int avatarId = query
+		.setParameter("hashCode", hash)
+		.getFirstResult(); 
+		Document avatar;
+		if( avatarId > 0 ) {
+		 avatar = em.find(Document.class, avatarId);
+		 avatar.setVersion(avatar.getVersion() + 1);
+		 avatar.setContent(content);
+		 em.persist(avatar);
+		}else{
+			avatar = new Document();
+			avatar.setContent(content);
+			em.flush();
+		}
+		
 		
 		avatar.setContent(content);
 		em.getTransaction().begin();
@@ -302,9 +320,10 @@ public class PersonService {
 		else person.getPeopleObserved().remove(em.find(Person.class, newObservedId));
 		
 		// TODO evict all people that have been added or removed from relation from second lvl cache
-		// evict person from second lvl cache TODO 01743345975
+		// evict person from second lvl cache TODO 
 		
 		final Cache cache = em.getEntityManagerFactory().getCache();
+		cache.evict(Person.class, newObservedId);
 		
 		em.getTransaction().begin();
 		em.persist(person);
