@@ -8,6 +8,7 @@ import static de.sb.messenger.rest.BasicAuthenticationFilter.REQUESTER_IDENTITY;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.persistence.Cache;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
@@ -259,7 +260,7 @@ public class PersonService {
 	public long updateAvatar (
 			@HeaderParam(REQUESTER_IDENTITY) @Positive final long personIdentity, 
 			@HeaderParam("Content-Type") @NotNull final String contentType,
-			@NotNull @HeaderParam("Content") byte[] content
+			@NotNull byte[] content
 	) {
 		//TODO hashcode berechnen von content
 		// query nach document mit diesem hashcode -> id zurückgeben
@@ -274,7 +275,7 @@ public class PersonService {
 		
 		byte[] hash = HashTools.sha256HashCode(content);
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
-		TypedQuery query = em.createQuery(QUERY_AVATAR, Long.class);
+		TypedQuery<Long> query = em.createQuery(QUERY_AVATAR, Long.class);
 		int avatarId = query
 		.setParameter("hashCode", hash)
 		.getFirstResult(); 
@@ -327,10 +328,10 @@ public class PersonService {
 		else person.getPeopleObserved().remove(em.find(Person.class, newObservedId));
 		
 		// TODO evict all people that have been added or removed from relation from second lvl cache
-		// evict person from second lvl cache TODO 01743345975
+		// evict person from second lvl cache TODO 
 		
 		final Cache cache = em.getEntityManagerFactory().getCache();
-		
+		cache.evict(Person.class, newObservedId);
 		em.getTransaction().begin();
 		em.persist(person);
 		em.getTransaction().commit();
