@@ -84,7 +84,7 @@ public class PersonService {
 			@QueryParam("groupAlias") Group group
 	){
 	
-		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");		//TODO überarbeiten message
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");		//TODO ï¿½berarbeiten message
 		TypedQuery<Long> query = em.createQuery(QUERY_PEOPLE, Long.class);
 		if (resultOffset > 0 ) query.setFirstResult(resultOffset);
 		if(resultLimit >0) query.setMaxResults(resultLimit);
@@ -261,7 +261,7 @@ public class PersonService {
 			@NotNull byte[] content
 	) {
 		//TODO hashcode berechnen von content
-		// query nach document mit diesem hashcode -> id zurückgeben
+		// query nach document mit diesem hashcode -> id zurï¿½ckgeben
 		// 1) wenn nicht existiert avatar neu erzeugen
 		// 2) wenn existiert avatar mit find (id) besorgen
 		// content und contenttype aus  header  setzen im avatar
@@ -324,6 +324,9 @@ public class PersonService {
 		
 		final Cache cache = em.getEntityManagerFactory().getCache();
 		cache.evict(Person.class, newObservedId);
+		if(cache.contains(Person.class, person.getIdentity())) {
+		   cache.evict(Person.class, person.getIdentity());
+		}
 		
 		em.getTransaction().begin();
 		em.persist(person);
