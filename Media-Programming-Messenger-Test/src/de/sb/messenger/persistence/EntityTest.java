@@ -1,6 +1,8 @@
 package de.sb.messenger.persistence;
 
 import static java.util.logging.Level.WARNING;
+import static org.junit.Assert.assertEquals;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -12,6 +14,8 @@ import javax.validation.ValidatorFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Test;
+
 import de.sb.toolbox.Copyright;
 
 
@@ -103,5 +107,23 @@ public abstract class EntityTest {
 		} finally {
 			entityManager.close();
 		}
+	}
+	
+	@Test
+	public void peopleTest() {
+		
+		final EntityManager em = getEntityManagerFactory().createEntityManager();
+		
+		Person p = new Person();
+		p.getName().setForename("V2");
+		p.getName().setSurname("V3");
+		em.getTransaction().begin();
+		em.persist(p);
+		em.getTransaction().commit();
+		
+		Person p2 = em.find(Person.class, p.getIdentity());
+		
+		assertEquals("V2", p2.getName().getForename(), "Succcesfull");
+		
 	}
 }
