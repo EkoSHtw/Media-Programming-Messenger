@@ -60,8 +60,8 @@
 		configurable: false,
 		value: async function () {
 			if (!Controller.sessionOwner) return;
-			this.displayError();
 			
+			this.displayError();
 			try{
 				const sectionElement = document.querySelector("section.candidates");
 				const inputElements = sectionElement.querySelectorAll("input");
@@ -72,11 +72,21 @@
 				const street = inputElements[3].value.trim();
 				const city = inputElements[4].value.trim();
 				
-				const people = JSON.parse(await Controller.xhr("/services/people", "GET", {"Accept": "application/json"}, email, given, family, street, city));
+				let querybuilder = new URLSearchParams();
+				if (email.length > 0) querybuilder.set("email", email);
+				if (given.length > 0) querybuilder.set("forename", given);
+				if (family.length > 0) querybuilder.set("surname", family);
+				if (street.length > 0) querybuilder.set("street", street);
+				if (city.length > 0) querybuilder.set("city", city);
+				const query = querybuilder.toString();
+				const uri = "/services/people" + (query.length > 0 ? "?" + query : "");
 				
-				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people);
-			}
-			catch(error){
+				let response = await fetch(uri, { method: "GET", headers: {"Accept": "application/json"}, credencials: "include"});
+				if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
+				const people = await response.json();
+
+				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people.map(person => person.identity, person => this.toggleObservation(person.identity)));
+			} catch (error) {
 				this.displayError(error);
 			}
 		}
@@ -95,11 +105,14 @@
 			if (!Controller.sessionOwner) return;
 			this.displayError();
 			
+			const uri = "/services/people/"+ personIdentity +"/peopleObserved";
+			const sectionElement = document.querySelector("section.people-observed");
+			const people = sectionElement.querySelectorAll("a");
+			
 			try{
-				//TODO is header requester identity already there? probably not but its needed? Yes
-				const response = JSON.parse(await this.xhr("/services/people/"+ personIdentity +"/peopleObserved", "PUT", {"Accept": "application/json", "Content-Type": "application/json"} ));
-				// adding and removing is handled by the service
+				let response = await fetch(uri, { method: "PUT", headers: {"Content-Type": "application/json"}, credencials: "include", body: people});
 				if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
+				// adding and removing is handled by the service
 			}catch(error){
 				this.displayError(error);
 			}

@@ -142,24 +142,23 @@
 			const imageElement = document.querySelector("section.preferences img");
 			const sessionOwner = Controller.sessionOwner;
 			this.displayError();
-
-			// TODO: call PUT /services/people/{id}/avatar" to store the given avatar file, using
-			// either fetch() or Controller.xhr(). 
+			
+			if (!avatarFile.type.startsWith("image/")) throw new Error("Invalid file type. Must be an image.");
+			
+			const uri = "/services/people/"+ sessionOwner.identity +"/avatar";
 			try{
-				const response = JSON.parse(await this.xhr("/services/people/{id}/avatar", "PUT", {"Accept": "application/json"}, "", "text", email, password));
-				//  Throw an exception if the call fails.
+				let response = await fetch(uri, { method: "PUT", headers: {"Content-Type": avatarFile.type}, credencials: "include", body: avatarFile});
 				if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
+				const avatarIdentity = await response.text();
+				
 				// If it succeeds, increment the version of Controller.sessionOwner by 1.
-				// TODO
-				sessionOwner.setVersion(sessionOwner.getVersion() + 1)
+				sessionOwner.version += 1; // immer wenn objekt in der db verändert wird
 			// In case of an error, call this.displayError(error). 
 			} catch (error) {
 				this.displayError(error);
 			}
-			// In any case, alter the src-property of the imageElement
-			// to "/services/people/{id}/avatar?cache-bust=" + Date.now() in order to bypass the
-			// browser's image cache and display the modified image.
-			imageElement.src = "/services/people/" + sessionOwner.identity + "/avatar?cache-bust=" + Date.now();
+			
+			imageElement.src = uri + "?cache-bust=" + Date.now();
 		}
 	});
 

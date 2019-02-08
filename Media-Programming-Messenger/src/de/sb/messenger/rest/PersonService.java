@@ -42,7 +42,14 @@ import de.sb.toolbox.net.RestJpaLifecycleProvider;
 
 @Path("/people")
 public class PersonService {
-	static private final String QUERY_PEOPLE = "Select p.identity from Person as p where " + "(:surname is null or :surname = p.name.surname) and " + "(:forename is null or :forename = p.name.forename) and " + "(:email is null or :email = p.email) and " + "(:street is null or :street = p.address.street) and " + "(:postCode is null or :postCode = p.address.postCode) and " + "(:city is null or :city = p.address.city) and " + "(:groupAlias is null or :groupAlias = p.group)";
+	static private final String QUERY_PEOPLE = "Select p.identity from Person as p where " 
+			+ "(:surname is null or :surname = p.name.surname) and " 
+			+ "(:forename is null or :forename = p.name.forename) and " 
+			+ "(:email is null or :email = p.email) and " 
+			+ "(:street is null or :street = p.address.street) and " 
+			+ "(:postCode is null or :postCode = p.address.postCode) and " 
+			+ "(:city is null or :city = p.address.city) and " 
+			+ "(:group is null or :group = p.group)";
 	static private final String QUERY_DOCUMENT = "Select p.identity from Document as p where :contentHash = p.contentHash";
 	static private final Comparator<Person> PERSON_COMPARATOR = Comparator.comparing(Person::getName).thenComparing(Person::getEmail);
 
@@ -64,21 +71,29 @@ public class PersonService {
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	public Person[] queryPeople(
-			@QueryParam("resultOffset") @Positive int resultOffset, 
-			@QueryParam("resultLimit") @Positive int resultLimit,
+			@QueryParam("resultOffset") @PositiveOrZero int resultOffset, 
+			@QueryParam("resultLimit") @PositiveOrZero int resultLimit,
 			@QueryParam("email") String email, 
 			@QueryParam("surname") String surname, 
 			@QueryParam("forename") String forename, 
 			@QueryParam("street") String street, 
 			@QueryParam("postCode") String postCode, 
 			@QueryParam("city") String city, 
-			@QueryParam("groupAlias") Group group
+			@QueryParam("group") Group group
 	) {
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		TypedQuery<Long> query = em.createQuery(QUERY_PEOPLE, Long.class);
 		if (resultOffset > 0) query.setFirstResult(resultOffset);
 		if (resultLimit > 0) query.setMaxResults(resultLimit);
-		List<Long> peopleReferences = query.setParameter("surname", surname).setParameter("forename", forename).setParameter("email", email).setParameter("street", street).setParameter("postCode", postCode).setParameter("city", city).setParameter("groupAlias", group.name()).getResultList();
+		List<Long> peopleReferences = query
+				.setParameter("surname", surname)
+				.setParameter("forename", forename)
+				.setParameter("email", email)
+				.setParameter("street", street)
+				.setParameter("postCode", postCode)
+				.setParameter("city", city)
+				.setParameter("group", group)
+				.getResultList();
 
 		final Person[] people = peopleReferences.stream().map(reference -> em.find(Person.class, reference)).filter(person -> person != null).sorted(PERSON_COMPARATOR).toArray(length -> new Person[length]);
 		return people;
@@ -209,10 +224,9 @@ public class PersonService {
 	 * @throws PersistenceException  (HTTP 500) if there is a problem with the persistence layer
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
-	// produces text plain
 	@PUT
-	@Consumes("image/*")
-	@Produces({ MediaType.TEXT_PLAIN })
+	@Consumes(MediaType.WILDCARD)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/{id}/avatar")
 	public long updateAvatar(
 			@HeaderParam(REQUESTER_IDENTITY) @Positive final long requesterIdentity, 
@@ -225,19 +239,19 @@ public class PersonService {
 
 		final byte[] hash = HashTools.sha256HashCode(content);
 		final TypedQuery<Long> query = em.createQuery(QUERY_DOCUMENT, Long.class);
-		final int avatarId = query.setParameter("hashCode", hash).getFirstResult();
+		final List<Long> avatarReferences = query.setParameter("contentHash", hash).getResultList();
 
 		final Document avatar;
-		if (avatarId > 0) {
-			avatar = em.find(Document.class, avatarId);
-			if (avatar == null) throw new ClientErrorException(NOT_FOUND);
-		} else {
+		if (avatarReferences.isEmpty()) {
 			avatar = new Document();
 			avatar.setContent(content);
+		} else {
+			avatar = em.find(Document.class, avatarReferences.get(0));
+			if (avatar == null) throw new ClientErrorException(NOT_FOUND);
 		}
 
 		avatar.setContentType(contentType);
-		if (avatarId > 0) em.flush(); else em.persist(avatar);
+		if (avatarReferences.isEmpty())em.persist(avatar); else em.flush();
 
 		try {
 			em.getTransaction().commit();

@@ -71,9 +71,10 @@ public class Person extends BaseEntity {
 	@OneToMany(mappedBy = "author", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
 	private Set<Message> messagesAuthored;
 	
-	@Enumerated(EnumType.STRING)
 	@NotNull
-	private Group groupAlias;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "groupAlias", nullable = false, updatable = true)
+	private Group group;
 	
 	@NotNull
 	@ManyToMany(mappedBy = "peopleObserved", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
@@ -98,14 +99,14 @@ public class Person extends BaseEntity {
 	
 	public Person( Document avatar) {			
 		this.name = new Name();
+		this.address = new Address();
 		this.email = null;
 		this.passwordHash = DEFAULT_PASSWORD_HASH;
 		this.avatar = avatar;
 		this.messagesAuthored = Collections.emptySet();
-		this.groupAlias = Group.USER;
+		this.group = Group.USER;
 		this.peopleObserving = Collections.emptySet();
 		this.peopleObserved = new HashSet<>();
-		this.address = new Address();
 	}
 	
 	
@@ -134,6 +135,10 @@ public class Person extends BaseEntity {
 		return name;
 	}
 	
+	protected void setName (Name name) {
+		this.name = name;
+	}
+	
 	@JsonbProperty
 	@XmlAttribute 
 	public String getEmail() {
@@ -160,6 +165,10 @@ public class Person extends BaseEntity {
 		return address;
 	}
 	
+	protected void setAddress(Address address) {
+		this.address = address;
+	}
+	
 	@JsonbTransient
 	@XmlTransient
 	public Document getAvatar() {
@@ -173,8 +182,12 @@ public class Person extends BaseEntity {
 
 	@JsonbProperty 
 	@XmlElement
-	public Object getGroup() {
-		return groupAlias;
+	public Group getGroup() {
+		return group;
+	}
+	
+	public void setGroup(Group group) {
+		this.group = group;
 	}
 	
 	@JsonbTransient 
