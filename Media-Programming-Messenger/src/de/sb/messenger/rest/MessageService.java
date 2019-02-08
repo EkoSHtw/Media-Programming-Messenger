@@ -4,10 +4,8 @@ import static de.sb.messenger.rest.BasicAuthenticationFilter.REQUESTER_IDENTITY;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.Positive;
 import javax.ws.rs.ClientErrorException;
@@ -20,7 +18,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
 import de.sb.messenger.persistence.BaseEntity;
 import de.sb.messenger.persistence.Message;
 import de.sb.messenger.persistence.Person;

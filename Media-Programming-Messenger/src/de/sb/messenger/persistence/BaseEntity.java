@@ -2,17 +2,9 @@ package de.sb.messenger.persistence;
 
 import java.util.Collections;
 import java.util.Set;
-
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlTransient;
-
-import com.sun.xml.internal.txw2.annotation.XmlAttribute;
-
-import javax.xml.bind.annotation.XmlAccessType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -24,6 +16,11 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
+import com.sun.xml.internal.txw2.annotation.XmlAttribute;
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
 @Entity

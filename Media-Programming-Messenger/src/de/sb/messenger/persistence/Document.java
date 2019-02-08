@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
@@ -21,9 +20,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-
 import com.sun.xml.internal.txw2.annotation.XmlAttribute;
-
 import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 
 
@@ -74,6 +71,10 @@ public class Document extends BaseEntity{
 	@XmlAttribute 
 	public String getContentType() {
 		return contentType;
+	}
+	
+	public void setContentType( String contentType) {
+		this.contentType = contentType;
 	}
 
 	@JsonbTransient

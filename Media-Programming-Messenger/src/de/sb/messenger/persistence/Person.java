@@ -3,7 +3,6 @@ package de.sb.messenger.persistence;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbVisibility;
