@@ -27,19 +27,20 @@
             mainElement.appendChild(document.querySelector("#messages-template").content.cloneNode(true).firstElementChild);
             mainElement.appendChild(document.querySelector("#message-output-template").content.cloneNode(true).firstElementChild);
             mainElement.appendChild(document.querySelector("#message-input-template").content.cloneNode(true).firstElementChild);
-            
-            mainElement.querySelector("button").addEventListener("click", event => this.sendMessage());
+            mainElement.querySelector("slider").addEventListener("click", event => this.displayRootMessages());
+            //mainElement.querySelector("button").addEventListener("click", event => this.sendMessage());
+
+            this.displaySubjects();
         }
     });
     
 
 
     /**
-     * Sends Messeages
+     * displays messages
      */
 
-
-    Object.defineProperty(PeopleController.prototype, "sendMessage", {
+    Object.defineProperty(MessagesController.prototype, "displayMessages", {
 		enumerable: false,
 		configurable: false,
 		value: async function () {
@@ -47,8 +48,103 @@
 			this.displayError();
 			
 			try{
-				const sectionElement = document.querySelector("section.message input");
-				const inputElements = sectionElement.querySelectorAll("input");
+                //there is no section class for input and uses li for listitems
+				const sectionElement = document.querySelector("");
+                
+                const uri = "/services/messages/"
+				const message = await fetch(uri, { method: "PUT", headers: {"Content-Type": "application/json"}});
+				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), message);
+			}
+			catch(error){
+				this.displayError(error);
+			}
+		}
+	});
+
+    /**
+     * 
+     */
+
+    Object.defineProperty(MessagesController.prototype, "displayRootMessages", {
+		enumerable: false,
+		configurable: false,
+		value: async function () {
+			if (!Controller.sessionOwner) return;
+			this.displayError();
+			
+			try{
+				const sectionElement = document.querySelector("");
+			
+				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people);
+			}
+			catch(error){
+				this.displayError(error);
+			}
+		}
+	});
+
+
+
+    Object.defineProperty(MessagesController.prototype, "toggleChildMessages", {
+		enumerable: false,
+		configurable: false,
+		value: async function () {
+			if (!Controller.sessionOwner) return;
+			this.displayError();
+			
+			try{
+				const sectionElement = document.querySelector("li.message");
+				const inputElements = sectionElement.querySelectorAll("img, textarea");
+				
+				const message = JSON.parse(await Controller.xhr("/services/people", "GET", {"Accept": "application/json"}, email, given, family, street, city));
+				
+				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people);
+			}
+			catch(error){
+				this.displayError(error);
+			}
+		}
+    });
+    
+
+    Object.defineProperty(MessagesController.prototype, "displayMessageEditor", {
+		enumerable: false,
+		configurable: false,
+		value: async function (parentElement, subjectIdentity) {
+			if (!Controller.sessionOwner) return;
+			this.displayError();
+			
+			try{
+				const sectionElement = document.querySelector("li.message");
+				const inputElements = sectionElement.querySelectorAll("img, textarea");
+				
+				const message = JSON.parse(await Controller.xhr("/services/people", "GET", {"Accept": "application/json"}, email, given, family, street, city));
+				
+				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people);
+			}
+			catch(error){
+				this.displayError(error);
+			}
+		}
+	});
+
+
+
+    /**
+     * Sends Messeages
+     */
+
+    Object.defineProperty(MessagesController.prototype, "persistsMessages", {
+		enumerable: false,
+		configurable: false,
+		value: async function (parentElement, subjectIdentity) {
+			if (!Controller.sessionOwner) return;
+			this.displayError();
+			
+			try{
+                //there is no section class for input and uses li for listitems
+				const sectionElement = document.querySelector("li.message");
+				const inputElements = sectionElement.querySelectorAll("img, textarea");
 				
 				const message = JSON.parse(await Controller.xhr("/services/people", "GET", {"Accept": "application/json"}, email, given, family, street, city));
 				
@@ -62,9 +158,9 @@
 
 
     window.addEventListener("load", event => {
-        const anchor = document.querySelector("header li:nth-of-type(4) > a");
+        const anchor = document.querySelector("header li:nth-of-type(1) > a");
 		const controller = new MessagesController();
-		anchor.addEventListener("click", event => controller.display());
+		anchor.addEventListener("click", event => controller.displayMessageEditor());
 	});
 
 })
