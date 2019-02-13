@@ -76,12 +76,21 @@ public class PersonService {
 			@QueryParam("email") String email, 
 			@QueryParam("surname") String surname, 
 			@QueryParam("forename") String forename, 
+<<<<<<< Updated upstream
 			@QueryParam("street") String street, 
 			@QueryParam("postCode") String postCode, 
 			@QueryParam("city") String city, 
 			@QueryParam("group") Group group
 	) {
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
+=======
+			@QueryParam("street") String street,
+			@QueryParam("postCode") String postCode,
+			@QueryParam("city") String city,
+			@QueryParam("groupAlias") Group group
+	){
+		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");		//TODO �berarbeiten message
+>>>>>>> Stashed changes
 		TypedQuery<Long> query = em.createQuery(QUERY_PEOPLE, Long.class);
 		if (resultOffset > 0) query.setFirstResult(resultOffset);
 		if (resultLimit > 0) query.setMaxResults(resultLimit);
@@ -234,7 +243,22 @@ public class PersonService {
 			@PathParam("id") @Positive final long personIdentity, 
 			@NotNull byte[] content
 	) {
+<<<<<<< Updated upstream
 		if (requesterIdentity != personIdentity) throw new ClientErrorException(FORBIDDEN);
+=======
+		//TODO hashcode berechnen von content
+		// query nach document mit diesem hashcode -> id zur�ckgeben
+		// 1) wenn nicht existiert avatar neu erzeugen
+		// 2) wenn existiert avatar mit find (id) besorgen
+		// content und contenttype aus  header  setzen im avatar
+		// bei 1) persist, bei 2) flush
+		// commit begin
+		// person.setavatar
+		// commit.begin
+		// return id of avatar
+		
+		byte[] hash = HashTools.sha256HashCode(content);
+>>>>>>> Stashed changes
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 
 		final byte[] hash = HashTools.sha256HashCode(content);
