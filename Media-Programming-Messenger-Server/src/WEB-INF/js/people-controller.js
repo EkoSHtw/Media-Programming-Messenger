@@ -105,12 +105,17 @@
 			if (!Controller.sessionOwner) return;
 			this.displayError();
 			
-			const uri = "/services/people/"+ personIdentity +"/peopleObserved";
 			const sectionElement = document.querySelector("section.people-observed");
 			const people = sectionElement.querySelectorAll("a");
 			
+			let querybuilder = new URLSearchParams();
+			//TODO foreach über people und den querybuilder setzen
+			querybuilder.set("personIdentity", personIdentity);
+			const query = querybuilder.toString();
+			const uri = "/services/people/"+ personIdentity +"/peopleObserved" + (query.length > 0 ? "?" + query : "");
+			
 			try{
-				let response = await fetch(uri, { method: "PUT", headers: {"Content-Type": "application/json"}, credencials: "include", body: people});
+				let response = await fetch(uri, { method: "PUT", headers: {"Content-Type": "application/json"}, credencials: "include"});
 				if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
 				// adding and removing is handled by the service
 			}catch(error){
