@@ -28,7 +28,7 @@
             mainElement.appendChild(document.querySelector("#message-output-template").content.cloneNode(true).firstElementChild);
             mainElement.appendChild(document.querySelector("#message-input-template").content.cloneNode(true).firstElementChild);
             mainElement.querySelector("slider").addEventListener("click", event => this.displayRootMessages());
-            //mainElement.querySelector("button").addEventListener("click", event => this.sendMessage());
+            
 
             this.displaySubjects();
         }
@@ -48,7 +48,10 @@
 			this.displayError();
 			
 			try{
-                //there is no section class for input and uses li for listitems
+                //select avatar... how to get the current avatar
+                mainElement.querySelector("").addEventListener("click", event => this.displayMessageEditor());
+                //select plus
+                mainElement.querySelector("").addEventListener("click", event => this.toggleChildMessages());
 				const sectionElement = document.querySelector("");
                 
                 const uri = "/services/messages/"
@@ -73,8 +76,20 @@
 			this.displayError();
 			
 			try{
-				const sectionElement = document.querySelector("");
-			
+                const sectionElement = document.querySelector("");
+                
+                const uri = "/services/entities/"+ entityIdentity+"/messagesCaused"
+            
+                try{
+                    let response = await fetch(uri, { method: "PUT", headers: {"Content-Type": "application/json"}});
+                    if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
+                    
+                    //etwas mit displaymessages...
+                    this.displayMessages()
+                }catch(error){
+                
+                }
+                
 				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people);
 			}
 			catch(error){
@@ -93,12 +108,6 @@
 			this.displayError();
 			
 			try{
-				const sectionElement = document.querySelector("li.message");
-				const inputElements = sectionElement.querySelectorAll("img, textarea");
-				
-				const message = JSON.parse(await Controller.xhr("/services/people", "GET", {"Accept": "application/json"}, email, given, family, street, city));
-				
-				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people);
 			}
 			catch(error){
 				this.displayError(error);
@@ -116,11 +125,10 @@
 			
 			try{
 				const sectionElement = document.querySelector("li.message");
-				const inputElements = sectionElement.querySelectorAll("img, textarea");
-				
-				const message = JSON.parse(await Controller.xhr("/services/people", "GET", {"Accept": "application/json"}, email, given, family, street, city));
-				
-				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people);
+                const inputElements = sectionElement.querySelectorAll("img, textarea");
+                
+
+				sectionElement.querySelector("button").addEventListener("click", event => this.persistsMessages());
 			}
 			catch(error){
 				this.displayError(error);
@@ -134,7 +142,7 @@
      * Sends Messeages
      */
 
-    Object.defineProperty(MessagesController.prototype, "persistsMessages", {
+    Object.defineProperty(MessagesController.prototype, "persistMessages", {
 		enumerable: false,
 		configurable: false,
 		value: async function (parentElement, subjectIdentity) {
@@ -142,13 +150,7 @@
 			this.displayError();
 			
 			try{
-                //there is no section class for input and uses li for listitems
-				const sectionElement = document.querySelector("li.message");
-				const inputElements = sectionElement.querySelectorAll("img, textarea");
-				
-				const message = JSON.parse(await Controller.xhr("/services/people", "GET", {"Accept": "application/json"}, email, given, family, street, city));
-				
-				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people);
+                //call server to save messages
 			}
 			catch(error){
 				this.displayError(error);
