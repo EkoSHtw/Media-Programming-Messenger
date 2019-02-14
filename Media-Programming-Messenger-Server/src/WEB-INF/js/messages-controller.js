@@ -1,4 +1,4 @@
-"use-strict"
+"use-strict";
 
 (function(){
 
@@ -11,7 +11,7 @@
     MessagesController.prototype = Object.create(Controller.prototype);
 	MessagesController.prototype.constructor = MessagesController;
 
-    	/**
+    /**
 	 * Displays the associated view.
 	 */
 	Object.defineProperty(MessagesController.prototype, "display", {
@@ -19,18 +19,25 @@
 		configurable: false,
 		writable: true,
 		value: function () {
-			Controller.sessionOwner = null;
-			Controller.entityCache.clear();
+			if (!Controller.sessionOwner) return;
+			this.displayError();
+			
+			try{
+				const subjectElement = document.querySelector("#subjects-template").content.cloneNode(true).firstElementChild;
+				this.refreshAvatarSlider(subjectElement.querySelector("span.slider"), Controller.sessionOwner.peopleObservedReferences, person => this.toggleObservation(person.identity));
+				
+				const mainElement = document.querySelector("main");
+	            mainElement.appendChild(subjectElement);
+	            mainElement.appendChild(document.querySelector("#messages-template").content.cloneNode(true).firstElementChild);
+	            mainElement.appendChild(document.querySelector("#message-output-template").content.cloneNode(true).firstElementChild);
+	            mainElement.appendChild(document.querySelector("#message-input-template").content.cloneNode(true).firstElementChild);
+	            mainElement.querySelector("slider").addEventListener("click", event => this.displayRootMessages());
 
-            const mainElement = document.querySelector("main");
-            mainElement.appendChild(document.querySelector("#subjects-template").content.cloneNode(true).firstElementChild);
-            mainElement.appendChild(document.querySelector("#messages-template").content.cloneNode(true).firstElementChild);
-            mainElement.appendChild(document.querySelector("#message-output-template").content.cloneNode(true).firstElementChild);
-            mainElement.appendChild(document.querySelector("#message-input-template").content.cloneNode(true).firstElementChild);
-            mainElement.querySelector("slider").addEventListener("click", event => this.displayRootMessages());
-            
-
-            this.displaySubjects();
+	            this.displaySubjects();
+			}
+			 catch (error) {
+				this.displayError(error);
+			}
         }
     });
     
@@ -160,9 +167,9 @@
 
 
     window.addEventListener("load", event => {
-        const anchor = document.querySelector("header li:nth-of-type(1) > a");
+        const anchor = document.querySelector("header li:nth-of-type(2) > a");
 		const controller = new MessagesController();
-		anchor.addEventListener("click", event => controller.displayMessageEditor());
+		anchor.addEventListener("click", event => controller.display());
 	});
 
-})
+} ());
