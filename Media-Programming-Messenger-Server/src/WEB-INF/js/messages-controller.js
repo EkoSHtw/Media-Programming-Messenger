@@ -23,17 +23,21 @@
 			this.displayError();
 			
 			try{
+				const mainElement = document.querySelector("main");
 				const subjectElement = document.querySelector("#subjects-template").content.cloneNode(true).firstElementChild;
 				this.refreshAvatarSlider(subjectElement.querySelector("span.slider"), Controller.sessionOwner.peopleObservedReferences, person => this.toggleObservation(person.identity));
+				mainElement.appendChild(subjectElement);
 				
-				const mainElement = document.querySelector("main");
-	            mainElement.appendChild(subjectElement);
-	            mainElement.appendChild(document.querySelector("#messages-template").content.cloneNode(true).firstElementChild);
-	            mainElement.appendChild(document.querySelector("#message-output-template").content.cloneNode(true).firstElementChild);
-	            mainElement.appendChild(document.querySelector("#message-input-template").content.cloneNode(true).firstElementChild);
-	            mainElement.querySelector("slider").addEventListener("click", event => this.displayRootMessages());
-
-	            this.displaySubjects();
+				subjectElement.querySelector("span.slider").addEventListener("click", function(event){
+					const url = event.target.getAttribute("src"); // just for img click = bad
+					this.displayMessageEditor(mainElement, url); // does not find function
+				});
+				
+//	            const personAvatars = subjectElement.querySelectorAll("span.slider a");
+//	            personAvatars.forEach(function(pA) {
+//	                pA.addEventListener("click", event => controller.displayMessageEditor(mainElement, pA));
+//	            });
+//				subjectElement.querySelector(".slider").addEventListener("click", event => this.displayRootMessages());
 			}
 			 catch (error) {
 				this.displayError(error);
@@ -131,9 +135,12 @@
 			this.displayError();
 			
 			try{
+				parentElement.appendChild(document.querySelector("#messages-template").content.cloneNode(true).firstElementChild);
+				parentElement.appendChild(document.querySelector("#message-output-template").content.cloneNode(true).firstElementChild);
+				parentElement.appendChild(document.querySelector("#message-input-template").content.cloneNode(true).firstElementChild);
+				
 				const sectionElement = document.querySelector("li.message");
                 const inputElements = sectionElement.querySelectorAll("img, textarea");
-                
 
 				sectionElement.querySelector("button").addEventListener("click", event => this.persistsMessages());
 			}
