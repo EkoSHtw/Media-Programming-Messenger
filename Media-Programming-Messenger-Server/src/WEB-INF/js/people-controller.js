@@ -34,12 +34,12 @@
 			this.displayError();
 
 			try {
-				const observingElement = document.querySelector("#people-observing-template").content.cloneNode(true).firstElementChild;
-				const observedElement = document.querySelector("#people-observed-template").content.cloneNode(true).firstElementChild;
-				this.refreshAvatarSlider(observingElement.querySelector("span.slider"), Controller.sessionOwner.peopleObservingReferences, person => this.toggleObservation(person.identity));
+				let observingElement = document.querySelector("#people-observing-template").content.cloneNode(true).firstElementChild;
+				let observedElement = document.querySelector("#people-observed-template").content.cloneNode(true).firstElementChild;
+				this.refreshAvatarSlider(observingElement.querySelector("span.slider"), Controller.sessionOwner.peopleObservingReferences, person => {});
 				this.refreshAvatarSlider(observedElement.querySelector("span.slider"), Controller.sessionOwner.peopleObservedReferences, person => this.toggleObservation(person.identity));
 
-				const mainElement = document.querySelector("main");
+				let mainElement = document.querySelector("main");
 				mainElement.appendChild(observingElement);
 				mainElement.appendChild(observedElement);
 				mainElement.appendChild(document.querySelector("#candidates-template").content.cloneNode(true).firstElementChild);
@@ -85,7 +85,7 @@
 				if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
 				const people = await response.json();
 
-				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people.map(person => person.identity, person => this.toggleObservation(person.identity)));
+				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people.map(person => person.identity), person => this.toggleObservation(person.identity));
 			} catch (error) {
 				this.displayError(error);
 			}
@@ -107,15 +107,22 @@
 			
 			const sectionElement = document.querySelector("section.people-observed");
 			const people = sectionElement.querySelectorAll("a");
+			let peopleObservedReferences = Controller.sessionOwner.peopleObservedReferences;
+			const index = peopleObservedReferences.indexOf(personIdentity);
+			if (index === -1) peopleObservedReferences.push(personIdentity);
+			else peopleObservedReferences.splice(index, 1);
 			
 			let querybuilder = new URLSearchParams();
-			querybuilder.set("personIdentity", personIdentity);
+			querybuilder.set("observedReference", personIdentity);
 			const query = querybuilder.toString();
-			const uri = "/services/people/"+ personIdentity +"/peopleObserved" + (query.length > 0 ? "?" + query : "");
+			const uri = "/services/people/" + Controller.sessionOwner.identity + "/peopleObserved" + (query.length > 0 ? "?" + query : "");
 			
 			try{
 				let response = await fetch(uri, { method: "PUT", headers: {"Content-Type": "application/json"}, credencials: "include"});
 				if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
+				
+				let anchor = document.querySelector("header li:nth-of-type(3) > a");
+				anchor.click();
 			}catch(error){
 				this.displayError(error);
 			}
@@ -127,8 +134,8 @@
 	 * Perform controller callback registration during DOM load event handling.
 	 */
 	window.addEventListener("load", event => {
-		const anchor = document.querySelector("header li:nth-of-type(3) > a");
-		const controller = new PeopleController();
+		let anchor = document.querySelector("header li:nth-of-type(3) > a");
+		let controller = new PeopleController();
 		anchor.addEventListener("click", event => controller.display());
 	});
 } ());

@@ -18,41 +18,41 @@ public class Name implements Comparable<Name> {
 	
 	@NotNull
 	@Size(min = 1, max = 31)
-	@Column(nullable = false, updatable = true)
-	private String surname;
+	@Column(name = "surname", nullable = false, updatable = true)
+	private String family;
 	
 	@NotNull
 	@Size(min = 1, max = 31)
-	@Column(nullable = false, updatable = true)
-	private String forename;
+	@Column(name = "forename", nullable = false, updatable = true)
+	private String given;
 
 	
 	
 	
 	@Override
 	public int compareTo(Name o) {
-		int last = this.surname.compareTo(o.surname);
-		return last == 0 ? this.forename.compareTo(o.forename) : last;
+		int last = this.family.compareTo(o.family);
+		return last == 0 ? this.given.compareTo(o.given) : last;
 	}
 
 	@JsonbProperty 
 	@XmlAttribute
-	public String getForename() {
-		return forename;
+	public String getGiven() {
+		return given;
 	}
 	
-	public void setForename(String name) {
-		this.forename = name;
+	public void setGiven(String name) {
+		this.given = name;
 	}
 	
 	@JsonbProperty 
 	@XmlAttribute
-	public String getSurname() {
-		return surname;
+	public String getFamily() {
+		return family;
 	}
 	
-	public void setSurname(String name) {
-		this.surname = name;
+	public void setFamily(String name) {
+		this.family = name;
 	}
 	
 	

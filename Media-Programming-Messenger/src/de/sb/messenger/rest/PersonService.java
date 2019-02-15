@@ -42,15 +42,15 @@ import de.sb.toolbox.net.RestJpaLifecycleProvider;
 
 @Path("/people")
 public class PersonService {
-	static private final String QUERY_PEOPLE = "Select p.identity from Person as p where " 
-			+ "(:surname is null or :surname = p.name.surname) and " 
-			+ "(:forename is null or :forename = p.name.forename) and " 
+	static private final String QUERY_PEOPLE = "select p.identity from Person as p where " 
+			+ "(:surname is null or :surname = p.name.family) and " 
+			+ "(:forename is null or :forename = p.name.given) and " 
 			+ "(:email is null or :email = p.email) and " 
 			+ "(:street is null or :street = p.address.street) and " 
 			+ "(:postCode is null or :postCode = p.address.postCode) and " 
 			+ "(:city is null or :city = p.address.city) and " 
 			+ "(:group is null or :group = p.group)";
-	static private final String QUERY_DOCUMENT = "Select p.identity from Document as p where :contentHash = p.contentHash";
+	static private final String QUERY_DOCUMENT = "select d.identity from Document as d where :contentHash = d.contentHash";
 	static private final Comparator<Person> PERSON_COMPARATOR = Comparator.comparing(Person::getName).thenComparing(Person::getEmail);
 
 	/**
@@ -139,8 +139,8 @@ public class PersonService {
 			if (person == null) throw new ClientErrorException(Status.NOT_FOUND);
 		}
 
-		person.getName().setSurname(personTemplate.getName().getSurname());
-		person.getName().setForename(personTemplate.getName().getForename());
+		person.getName().setFamily(personTemplate.getName().getFamily());
+		person.getName().setGiven(personTemplate.getName().getGiven());
 		person.setEmail(personTemplate.getEmail());
 		person.getAddress().setStreet(personTemplate.getAddress().getStreet());
 		person.getAddress().setCity(personTemplate.getAddress().getCity());
@@ -203,13 +203,15 @@ public class PersonService {
 	@Path("/{id}/avatar")
 	@Produces("image/*")
 	public Response getAvatar(
-			@HeaderParam(REQUESTER_IDENTITY) @Positive final long personIdentity, 
+			@PathParam("id") @Positive final long personIdentity, 
 			@QueryParam("width") @Nullable int width, 
 			@QueryParam("height") @Nullable int height
 	) {
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		final Document avatar = em.find(Person.class, personIdentity).getAvatar();
 		if (avatar == null) throw new ClientErrorException(NOT_FOUND);
+		if (!avatar.getContentType().startsWith("image/")) throw new ClientErrorException(Status.UNSUPPORTED_MEDIA_TYPE);
+		
 		byte[] content = avatar.getContent();
 		if (width > 0 && height > 0) content = Document.scaledImageContent(content, width, height);
 		return Response.ok(content, avatar.getContentType()).build();
@@ -249,9 +251,10 @@ public class PersonService {
 			avatar = em.find(Document.class, avatarReferences.get(0));
 			if (avatar == null) throw new ClientErrorException(NOT_FOUND);
 		}
-
+		
 		avatar.setContentType(contentType);
-		if (avatarReferences.isEmpty())em.persist(avatar); else em.flush();
+		if (avatarReferences.isEmpty()) em.persist(avatar); 
+		else em.flush();
 
 		try {
 			em.getTransaction().commit();
@@ -261,10 +264,10 @@ public class PersonService {
 			em.getTransaction().begin();
 		}
 
-		Person p = em.find(Person.class, personIdentity);
-		if (p == null) throw new ClientErrorException(NOT_FOUND);
+		Person person = em.find(Person.class, personIdentity);
+		if (person == null) throw new ClientErrorException(NOT_FOUND);
 
-		p.setAvatar(avatar);
+		person.setAvatar(avatar);
 		em.flush();
 
 		try {
@@ -284,7 +287,7 @@ public class PersonService {
 	public void updatePeopleObserved(
 			@HeaderParam(REQUESTER_IDENTITY) @Positive final long requesterIdentity, 
 			@PathParam("id") @Positive final long personIdentity,
-			@QueryParam("observedReference") final Set<Long> observedReferences
+			@QueryParam("observedReference") @NotNull final Set<Long> observedReferences
 	) {
 		if (requesterIdentity != personIdentity) throw new ClientErrorException(FORBIDDEN);
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");

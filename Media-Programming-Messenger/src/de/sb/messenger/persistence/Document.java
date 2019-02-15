@@ -30,7 +30,7 @@ import de.sb.toolbox.bind.JsonProtectedPropertyStrategy;
 @JsonbVisibility(value = JsonProtectedPropertyStrategy.class)
 @XmlRootElement
 @XmlType
-public class Document extends BaseEntity{
+public class Document extends BaseEntity {
 	
 	static private final byte[] DEFAULT_CONTENT = new byte[0];
 	static private final byte[] DEFAULT_CONTENT_HASH = HashTools.sha256HashCode(DEFAULT_CONTENT);
@@ -85,6 +85,7 @@ public class Document extends BaseEntity{
 	
 	public void setContent(byte[] content) {
 		this.content = content;
+		this.contentHash = HashTools.sha256HashCode(content);
 	}
 	
 	
