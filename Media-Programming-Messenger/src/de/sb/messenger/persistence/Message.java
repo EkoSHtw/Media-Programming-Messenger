@@ -51,18 +51,6 @@ public class Message extends BaseEntity {
 		this.subject = subject;
 	}
 
-	@JsonbProperty
-	@XmlAttribute
-	protected long getAuthorReference() {
-		return this.author == null ? 0 : this.author.getIdentity();
-		
-	}
-	
-	@JsonbProperty
-	@XmlAttribute
-	protected long getSubjectReference() {
-		return this.subject == null ? 0 : this.subject.getIdentity();
-	}
 	
 	@JsonbTransient
 	@XmlTransient
@@ -70,11 +58,23 @@ public class Message extends BaseEntity {
 		return author;
 	}
 	
+	@JsonbProperty
+	@XmlAttribute
+	protected long getAuthorReference() {
+		return this.author == null ? 0 : this.author.getIdentity();
+	}
+	
 
 	@JsonbTransient
 	@XmlTransient
 	public BaseEntity getSubject() {
 		return subject;
+	}
+	
+	@JsonbProperty
+	@XmlAttribute
+	protected long getSubjectReference() {
+		return this.subject == null ? 0 : this.subject.getIdentity();
 	}
 
 	@JsonbProperty

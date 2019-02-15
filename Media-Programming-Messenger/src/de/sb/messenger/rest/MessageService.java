@@ -7,7 +7,9 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -23,7 +25,7 @@ import de.sb.messenger.persistence.Message;
 import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 
-@Path("/messages")
+@Path("messages")
 public class MessageService {
 
 
@@ -43,14 +45,12 @@ public class MessageService {
 	@GET
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	public Message[] queryMessages (
-			@QueryParam("resultOffSet") @Positive int resultOffSet,
-			@QueryParam("resultLimit") @Positive int resultLimit,
+			@QueryParam("resultOffSet") @PositiveOrZero int resultOffSet,
+			@QueryParam("resultLimit") @PositiveOrZero int resultLimit,
 			@QueryParam("body") String body, 
-			@QueryParam("lowerCreationTimestamp") long lowerCreationTimestamp,
-			@QueryParam("upperCreationTimestamp") long upperCreationTimestamp
+			@QueryParam("lowerCreationTimestamp") Long lowerCreationTimestamp,
+			@QueryParam("upperCreationTimestamp") Long upperCreationTimestamp
 	) {
-		 
-		
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		final TypedQuery<Long> query = em.createQuery(QUERY_MESSAGES, Long.class);
 		if (resultOffSet > 0) query.setFirstResult(resultOffSet);
@@ -107,10 +107,10 @@ public class MessageService {
 	@POST
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_PLAIN)
-	public long createMessage( 
-			@HeaderParam("body") String body,
+	public long createMessage ( 
 			@HeaderParam(REQUESTER_IDENTITY) @Positive final long requesterIdentity, 
-			@QueryParam("subjectReference") final long subjectReference
+			@QueryParam("subjectReference") @Positive final long subjectReference,
+			@NotNull String body
 	) {
 		final EntityManager em = RestJpaLifecycleProvider.entityManager("messenger");
 		final Person person = em.find(Person.class, requesterIdentity);

@@ -40,7 +40,7 @@ import de.sb.messenger.persistence.Person;
 import de.sb.toolbox.net.RestJpaLifecycleProvider;
 
 
-@Path("/people")
+@Path("people")
 public class PersonService {
 	static private final String QUERY_PEOPLE = "select p.identity from Person as p where " 
 			+ "(:surname is null or :surname = p.name.family) and " 
@@ -176,7 +176,7 @@ public class PersonService {
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
 	@GET
-	@Path("/{id}")
+	@Path("{id}")
 	@Produces({ APPLICATION_JSON, APPLICATION_XML })
 	public Person findPerson(
 			@HeaderParam(REQUESTER_IDENTITY) @Positive final long requesterIdentity, 
@@ -200,7 +200,7 @@ public class PersonService {
 	 * @throws IllegalStateException (HTTP 500) if the entity manager associated with the current thread is not open
 	 */
 	@GET
-	@Path("/{id}/avatar")
+	@Path("{id}/avatar")
 	@Produces("image/*")
 	public Response getAvatar(
 			@PathParam("id") @Positive final long personIdentity, 
@@ -229,7 +229,7 @@ public class PersonService {
 	@PUT
 	@Consumes(MediaType.WILDCARD)
 	@Produces(MediaType.TEXT_PLAIN)
-	@Path("/{id}/avatar")
+	@Path("{id}/avatar")
 	public long updateAvatar(
 			@HeaderParam(REQUESTER_IDENTITY) @Positive final long requesterIdentity, 
 			@HeaderParam("Content-Type") @NotNull final String contentType, 
@@ -283,7 +283,7 @@ public class PersonService {
 
 	
 	@PUT
-	@Path("/{id}/peopleObserved")
+	@Path("{id}/peopleObserved")
 	public void updatePeopleObserved(
 			@HeaderParam(REQUESTER_IDENTITY) @Positive final long requesterIdentity, 
 			@PathParam("id") @Positive final long personIdentity,

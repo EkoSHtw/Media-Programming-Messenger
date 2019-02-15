@@ -72,7 +72,11 @@ public class ApplicationContainer {
 		// JSON and XML marshaling; however, for XML marshaling make sure that
 		// every type marshaled is annotated with @XmlRootElement!
 		final ResourceConfig configuration = new ResourceConfig()
-			.packages(ApplicationContainer.class.getPackage().toString())
+			.register(BasicAuthenticationFilter.class)
+			.register(EntityService.class)
+			.register(PersonService.class)
+			.register(MessageService.class)
+//			.packages(ApplicationContainer.class.getPackage().toString())
 			.register(RestResponseCodeProvider.class)
 			.register(RestCorsHeaderProvider.class)
 			.register(RestJpaLifecycleProvider.open("messenger"));

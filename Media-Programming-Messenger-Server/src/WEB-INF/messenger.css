@@ -163,8 +163,16 @@ section.subjects img {
 	padding: 0 1px;
 }
 
-section.messages img {
-	
+section.messages img.plus {
+	src: url("WEB-INF/image/toggle-plus.gif");
+}
+
+section.messages img.minus {
+	src: url("WEB-INF/image/toggle-minus.gif");
+}
+
+section.messages img.avatar {
+	width: 4em; height: 4em;
 }
 
 section.messages > ul {

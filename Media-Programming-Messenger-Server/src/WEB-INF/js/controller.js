@@ -110,12 +110,12 @@ this.de_sb_messenger = this.de_sb_messenger || {};
 			while (sliderElement.lastChild) sliderElement.removeChild(sliderElement.lastChild);
 	
 			for (const personIdentity of personIdentities) {
-				const person = await Controller.entityCache.get(personIdentity);
+				let person = await Controller.entityCache.get(personIdentity);
 
-				const imageElement = document.createElement("img");
+				let imageElement = document.createElement("img");
 				imageElement.src = "/services/people/" + person.identity + "/avatar";
 
-				const anchorElement = document.createElement("a");
+				let anchorElement = document.createElement("a");
 				anchorElement.appendChild(imageElement);
 				anchorElement.appendChild(document.createTextNode(person.name.given));
 				anchorElement.title = person.name.given + " " + person.name.family;

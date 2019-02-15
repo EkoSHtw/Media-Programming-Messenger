@@ -15,109 +15,97 @@
 	 * Displays the associated view.
 	 */
 	Object.defineProperty(MessagesController.prototype, "display", {
-		enumerable: false,
-		configurable: false,
 		writable: true,
 		value: function () {
 			if (!Controller.sessionOwner) return;
-			this.displayError();
 			
-			try{
-				const mainElement = document.querySelector("main");
-				const subjectElement = document.querySelector("#subjects-template").content.cloneNode(true).firstElementChild;
-				this.refreshAvatarSlider(subjectElement.querySelector("span.slider"), Controller.sessionOwner.peopleObservedReferences, person => this.toggleObservation(person.identity));
+			this.displayError();
+			try {
+				let rootSubjectReferences = [ Controller.sessionOwner.identity ];
+				rootSubjectReferences.push.apply( rootSubjectReferences, Controller.sessionOwner.peopleObservedReferences );
+				
+				let mainElement = document.querySelector("main");
+				let subjectElement = document.querySelector("#subjects-template").content.cloneNode(true).firstElementChild;
+				let messagesElement = document.querySelector("#messages-template").content.cloneNode(true).firstElementChild;
+				this.refreshAvatarSlider(subjectElement.querySelector("span.slider"), rootSubjectReferences, person => this.displayMessageEditor(mainElement, person.identity));
 				mainElement.appendChild(subjectElement);
+				mainElement.appendChild(messagesElement);
 				
-				subjectElement.querySelector("span.slider").addEventListener("click", function(event){
-					const url = event.target.getAttribute("src"); // just for img click = bad
-					this.displayMessageEditor(mainElement, url); // does not find function
-				});
-				
-//	            const personAvatars = subjectElement.querySelectorAll("span.slider a");
-//	            personAvatars.forEach(function(pA) {
-//	                pA.addEventListener("click", event => controller.displayMessageEditor(mainElement, pA));
-//	            });
-//				subjectElement.querySelector(".slider").addEventListener("click", event => this.displayRootMessages());
-			}
-			 catch (error) {
+				this.displayRootMessages(rootSubjectReferences);
+			} catch (error) {
 				this.displayError(error);
 			}
         }
     });
     
+    /**
+     * 
+     */
+    Object.defineProperty(MessagesController.prototype, "displayRootMessages", {
+		value: async function (rootSubjectReferences) {
 
+			this.displayError();			
+			try {
+                let sectionElement = document.querySelector("main section.messages");
+                
+                let messageReferences = [];
+                for (let rootSubjectReference of rootSubjectReferences) {
+                	let person = await Controller.entityCache.get(rootSubjectReference);
+                	messageReferences.push.apply(messageReferences, person.messageAuthoredReferences);
+//                	messageReferences.push.apply(messageReferences, person.messageCausedReferences);
+                }
+                
+                 this.displayMessages(sectionElement, messageReferences);
+			} catch (error) {
+				this.displayError(error);
+			}
+		}
+	});
 
     /**
      * displays messages
      */
 
     Object.defineProperty(MessagesController.prototype, "displayMessages", {
-		enumerable: false,
-		configurable: false,
-		value: async function () {
-			if (!Controller.sessionOwner) return;
+		value: async function (parentMessageElement, messageReferences) {
 			this.displayError();
-			
-			try{
-                //select avatar... how to get the current avatar
-                mainElement.querySelector("").addEventListener("click", event => this.displayMessageEditor());
-                //select plus
-                mainElement.querySelector("").addEventListener("click", event => this.toggleChildMessages());
-				const sectionElement = document.querySelector("");
-                
-                const uri = "/services/messages/"
-				const message = await fetch(uri, { method: "PUT", headers: {"Content-Type": "application/json"}});
-				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), message);
-			}
-			catch(error){
-				this.displayError(error);
-			}
-		}
-	});
-
-    /**
-     * 
-     */
-
-    Object.defineProperty(MessagesController.prototype, "displayRootMessages", {
-		enumerable: false,
-		configurable: false,
-		value: async function () {
-			if (!Controller.sessionOwner) return;
-			this.displayError();
-			
-			try{
-                const sectionElement = document.querySelector("");
-                
-                const uri = "/services/entities/"+ entityIdentity+"/messagesCaused"
-            
-                try{
-                    let response = await fetch(uri, { method: "PUT", headers: {"Content-Type": "application/json"}});
-                    if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
-                    
-                    //etwas mit displaymessages...
-                    this.displayMessages()
-                }catch(error){
-                
+			try {
+				 let promises = [], messages = [];
+	             for (let messageReference of messageReferences) {
+	            	const uri = "/services/messages/" + messageReference;
+	             	let promise = fetch(uri, { method: "GET", headers: {"Accept": "application/json"}, credentials: "include" });
+	               	promises.push(promise);
+	             }
+	                
+	             for (let promise of promises) {
+	               	let response = await promise;
+	               	if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
+	               	messages.push.apply(messages, await response.json());
+	             }
+				
+				let messageList = parentMessageElement.querySelector("ul");
+                for (let message of messages) {
+                	let messageCell = document.querySelector("#message-output-template").content.cloneNode(true).firstElementChild;
+                	let avatar = messageCell.querySelector("img.avatar");
+                	avatar.src = "/services/people/" + message.authorReference + "/avatar";
+                	avatar.addEventListener("click", event => this.displayMessageEditor(messageCell, message.subjectReference));
+                	
+                	let toggle = messageCell.querySelector("img.plus");
+                	toggle.addEventListener("click", event => this.toggleChildMessages(messageCell, message));
+                	
+                	messageList.appendChild(messageCell);
                 }
-                
-				this.refreshAvatarSlider(sectionElement.querySelector("span.slider"), people);
-			}
-			catch(error){
+			} catch (error) {
 				this.displayError(error);
 			}
 		}
 	});
-
 
 
     Object.defineProperty(MessagesController.prototype, "toggleChildMessages", {
-		enumerable: false,
-		configurable: false,
-		value: async function () {
-			if (!Controller.sessionOwner) return;
+		value: async function (messageCell, message) {
+
 			this.displayError();
-			
 			try{
 			}
 			catch(error){
@@ -128,45 +116,44 @@
     
 
     Object.defineProperty(MessagesController.prototype, "displayMessageEditor", {
-		enumerable: false,
-		configurable: false,
 		value: async function (parentElement, subjectIdentity) {
-			if (!Controller.sessionOwner) return;
 			this.displayError();
-			
-			try{
-				parentElement.appendChild(document.querySelector("#messages-template").content.cloneNode(true).firstElementChild);
-				parentElement.appendChild(document.querySelector("#message-output-template").content.cloneNode(true).firstElementChild);
-				parentElement.appendChild(document.querySelector("#message-input-template").content.cloneNode(true).firstElementChild);
-				
-				const sectionElement = document.querySelector("li.message");
-                const inputElements = sectionElement.querySelectorAll("img, textarea");
-
-				sectionElement.querySelector("button").addEventListener("click", event => this.persistsMessages());
-			}
-			catch(error){
+			try {
+				let editorCell = document.querySelector("#message-input-template").content.cloneNode(true).firstElementChild;
+				let avatar = editorCell.querySelector("img.avatar");
+				avatar.src = "/services/people/" + Controller.sessionOwner.identity + "/avatar";
+                let output = editorCell.querySelector("output");
+                output.value = Controller.sessionOwner.name.given + " " + Controller.sessionOwner.name.family;
+                
+                editorCell.querySelector("button").addEventListener("click", event => this.persistMessage(parentElement, subjectIdentity));
+				parentElement.appendChild(editorCell);
+			} catch (error) {
 				this.displayError(error);
 			}
 		}
 	});
+    
 
 
 
     /**
      * Sends Messeages
      */
-
-    Object.defineProperty(MessagesController.prototype, "persistMessages", {
-		enumerable: false,
-		configurable: false,
+    Object.defineProperty(MessagesController.prototype, "persistMessage", {
 		value: async function (parentElement, subjectIdentity) {
-			if (!Controller.sessionOwner) return;
 			this.displayError();
-			
-			try{
-                //call server to save messages
-			}
-			catch(error){
+			try {
+				let editorCell = parentElement.querySelector("li.message-input");
+				let messageBody = editorCell.querySelector("textarea").value;
+				editorCell.remove();
+				
+				const uri = "/services/messages";
+				let response = await fetch(uri, { method: "POST", headers: {"Content-Type": "text/plain"}, credentials: "include", body: messageBody });
+				if (!response.ok) throw new Error("HTTP " + response.status + " " + response.statusText);
+				
+				let messageIdentity = await response.text();
+				this.displayMessages(parentElement, [messageIdentity]);
+			} catch (error) {
 				this.displayError(error);
 			}
 		}

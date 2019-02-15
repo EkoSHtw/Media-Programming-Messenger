@@ -67,7 +67,7 @@ public class Person extends BaseEntity {
 	@JoinColumn(name="avatarReference", nullable = false, updatable = true)
 	private Document avatar;
 	
-
+	@NotNull
 	@OneToMany(mappedBy = "author", cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
 	private Set<Message> messagesAuthored;
 	
@@ -102,32 +102,12 @@ public class Person extends BaseEntity {
 		this.address = new Address();
 		this.email = null;
 		this.passwordHash = DEFAULT_PASSWORD_HASH;
+		this.group = Group.USER;
 		this.avatar = avatar;
 		this.messagesAuthored = Collections.emptySet();
-		this.group = Group.USER;
 		this.peopleObserving = Collections.emptySet();
 		this.peopleObserved = new HashSet<>();
 	}
-	
-	
-	@JsonbProperty
-	@XmlElement
-	protected long[] getPeopleObservingReferences() {
-		return this.peopleObserving.stream().sorted().mapToLong(Person::getIdentity).toArray();
-	}
-	
-	@JsonbProperty
-	@XmlAttribute
-	protected long getAvatarReference(){
-		return this.avatar == null ? 0 : this.avatar.getIdentity();
-	}
-	
-	@JsonbProperty
-	@XmlElement
-	protected long[] getPeopleObservedReferences(){
-		return this.peopleObserved.stream().sorted().mapToLong(Person::getIdentity).toArray();
-	}
-	
 	
 	@JsonbProperty 
 	@XmlElement
@@ -178,6 +158,12 @@ public class Person extends BaseEntity {
 	public void setAvatar(Document avatar) {
 		this.avatar = avatar;
 	}
+	
+	@JsonbProperty
+	@XmlAttribute
+	protected long getAvatarReference(){
+		return this.avatar == null ? 0 : this.avatar.getIdentity();
+	}
 
 
 	@JsonbProperty 
@@ -195,16 +181,34 @@ public class Person extends BaseEntity {
 	public Set<Person> getPeopleObserving() {
 		return peopleObserving;
 	}
+	
+	@JsonbProperty
+	@XmlElement
+	protected long[] getPeopleObservingReferences() {
+		return this.peopleObserving.stream().sorted().mapToLong(Person::getIdentity).toArray();
+	}
 
 	@JsonbTransient 
 	@XmlTransient	
 	public Set<Person> getPeopleObserved(){
 		return peopleObserved;
 	}
+	
+	@JsonbProperty
+	@XmlElement
+	protected long[] getPeopleObservedReferences(){
+		return this.peopleObserved.stream().sorted().mapToLong(Person::getIdentity).toArray();
+	}
 
 	@JsonbTransient 
 	@XmlTransient	
 	public Set<Message> getMessagesAuthored(){
 		return messagesAuthored;
+	}
+	
+	@JsonbProperty
+	@XmlElement
+	protected long[] getMessageAuthoredReferences(){
+		return this.messagesAuthored.stream().sorted().mapToLong(Message::getIdentity).toArray();
 	}
 }
